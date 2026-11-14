@@ -1,0 +1,35 @@
+{
+    "name": "Tobías Gutiérrez — Mobile Software Engineer",
+    "short_name": "Tobías Gutiérrez",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#080A0C",
+    "theme_color": "#080A0C",
+    "description": "Tobías Gutiérrez — Mobile Software Engineer. Production Flutter, iOS, and Android applications with Clean Architecture, serverless AI pipelines, and automated test suites.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

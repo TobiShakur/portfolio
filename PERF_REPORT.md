@@ -1,0 +1,105 @@
+# Performance Engineering Report — `tobias-portfolio-web`
+
+**Live URL:** `https://tobias-portfolio-web.web.app`  
+**Debug HUD URL:** `https://tobias-portfolio-web.web.app/?perf=1`  
+**Keyboard Shortcut:** `Ctrl + Shift + P` or `Alt + P` (toggles `PerfDebugOverlay` anytime; zero runtime overhead when hidden)
+
+---
+
+## 1. Telemetry & Debug Tooling Implemented
+
+### 1.1 Browser-Level Boot & Resource Instrumentation (`window.__portfolioPerf`)
+- **Files:** `web/index.html`, `web/flutter_bootstrap.js`
+- **Captured Timeline Marks & Stage Durations (`performance.now()` + `PerformanceObserver`):**
+  - `htmlFirstPaintMs` — First Paint / First Contentful Paint (`first-contentful-paint` / `first-paint`) of the HTML `#initial-loader` curtain.
+  - `engineLoadMs` — `_flutter.loader.load` start through `engineInitializer.initializeEngine()` completion (WASM/Skwasm bootstrap & download).
+  - `dartBootMs` — `appRunner.runApp()` execution time.
+  - `assetsAndFontsMs` — Time from `runApp()` completion until Dart dispatches `portfolio-ready`.
+  - `totalReadyMs` — Total wall time from navigation `timeOrigin` until `portfolio-ready` opens `#initial-loader` (`readySource`: `'flutter'` vs `'fallback-timeout'`).
+- **Network & Memory Breakdown (`performance.getEntriesByType('resource')` + `performance.memory`):**
+  - `transferSizeKb` and `decodedBodySizeKb` segmented by `wasm`, `js`, `images`, `fonts`, and `other`.
+  - Distinguishes **cache hits** (`transferSize === 0 && decodedBodySize > 0`), **network transfers**, and **opaque cross-origin CDN entries** (`transferSize === 0 && decodedBodySize === 0`, e.g., `gstatic.com` `skwasm.wasm` without `Timing-Allow-Origin`).
+  - `jsHeapUsedMb` / `jsHeapTotalMb` via `performance.memory` (Chromium/Edge/Brave; gracefully falls back to `Chromium only` on Firefox/Safari).
+  - Exposes `window.__portfolioPerf.snapshot()` and `window.__portfolioPerf.snapshotJson()` for live polling from Flutter Web (`dart:js_interop`).
+
+### 1.2 In-App DevTools HUD (`PerfDebugOverlay`)
+- **Files:**
+  - `lib/core/services/perf_telemetry_models.dart`
+  - `lib/core/services/perf_telemetry_service.dart` / `_web.dart` / `_stub.dart`
+  - `lib/features/portfolio/presentation/widgets/debug/perf_debug_overlay.dart`
+- **Features:**
+  - **Zero-overhead default:** Renders `SizedBox.shrink()` when inactive; `SchedulerBinding.instance.addTimingsCallback` is registered only while the HUD is open.
+  - **Boot Timeline:** Proportional stacked stage bar + per-stage `ms` table + renderer (`skwasm`) and `readySource` badges. Automatically polls until `totalReadyMs` settles when opened via `?perf=1`.
+  - **Memory & Network:** `JS Heap (MB)`, live Flutter `Raster Cache` (`PaintingBinding.instance.imageCache` image count & MB), `Network Transfer (KB)` / `Decoded Body (KB)`, cache-hit badge, and per-type pills (`wasm`, `js`, `images`, `fonts`).
+  - **Live FPS & Frame Timing:** Rolling 60-frame window computing average `FPS`, `UI Build ms`, `GPU Raster ms`, and `Jank (>16.6ms)` count.
+  - **Baseline vs. Current Comparator (`localStorage` key `portfolio_perf_baseline_v1`):** `Save as Baseline`, `Clear`, and `Refresh` actions display signed percentage/unit deltas next to every metric (green `#34D399` for improvements, red `#F87171` for regressions).
+
+---
+
+## 2. Optimizations Applied
+
+### 2.1 Round 1 — WebP Asset Optimization, `ImageCache` Deduplication & `RepaintBoundary` Isolation
+1. **Asset Compression & Right-Sizing (`assets/` -> WebP):**
+   - `nutrilens_sample_meal`: JPG `1200×896` (`976.9 KB`) -> WebP `640×478` (`74.1 KB`, **-92.4%**)
+   - `setpoint_map_zoom`: PNG `504×833` (`387.0 KB`) -> WebP `504×833` (`67.2 KB`, **-82.6%**)
+   - `setpoint_match_doubles`: PNG `504×834` (`327.1 KB`) -> WebP `504×834` (`39.6 KB`, **-87.9%**)
+   - `setpoint_feed`: PNG `503×834` (`172.6 KB`) -> WebP `503×834` (`36.5 KB`, **-78.8%**)
+   - `setpoint_filters`: PNG `502×832` (`49.8 KB`) -> WebP `502×832` (`18.8 KB`, **-62.3%**)
+   - `nutrilens_icon`: PNG `512×512` (`207.8 KB`) -> WebP `128×128` (`3.6 KB`, **-98.3%**)
+   - `setpoint_icon`: PNG `512×512` (`296.8 KB`) -> WebP `128×128` (`2.8 KB`, **-99.1%**)
+   - **Total `assets/` images (7 files):** **`2,418.0 KB` -> `242.6 KB` (`-90.0%`, -2.12 MB)**.
+2. **Eliminated Duplicate Icon `ImageCache` Keys:** Removed mismatched `cacheWidth` overrides on `128×128` icons (`sidebar_nav_item.dart`, `project_showcase_section.dart`, `nutrilens_preview_screens.dart`) so all icon widgets share the single precached entry.
+3. **`RepaintBoundary` & Rebuild Isolation:**
+   - Wrapped `InteractiveRightPhoneMockup` and `StoryboardPreviewPlayer`'s `AnimatedSwitcher` in `RepaintBoundary` and hoisted `PreviewMediaPlayer` into `TweenAnimationBuilder.child`.
+   - Removed redundant `notifyListeners()` in `PortfolioNavigationController.setHoveredSidebarSection` and scoped `ListenableBuilder` + `RepaintBoundary` on `_AmbientCanvasGlow`, `FloatingPillSidebar`, and `MobileBottomPillDock`.
+
+### 2.2 Round 2 — Unblocking the Curtain & Bundling Subsetted Local Fonts
+1. **Non-Blocking Deferred Precache (`lib/app.dart`):**
+   - `_awaitInitialAssetsAndNotify()` now awaits **only** `addPostFrameCallback` + the 2 icons visible in the initial Hero/Sidebar viewport (`nutrilens_icon.webp` `3.6 KB` + `setpoint_icon.webp` `2.8 KB` = **`6.4 KB`**) before calling `notifyPortfolioReady()`.
+   - Off-screen Section 3 & 4 screenshots (`nutrilens_sample_meal.webp`, `setpoint_map_zoom.webp`, `setpoint_feed.webp`) are precached asynchronously (`unawaited(_precacheDeferredProjectImages())`) **after** the curtain opens.
+2. **Subsetted Same-Origin Local Fonts (`assets/fonts/` + `pubspec.yaml`):**
+   - Removed `google_fonts` dependency (and unused `fonts.googleapis.com` CSS `<link>`/`preconnect` tags in `web/index.html`), eliminating 12 runtime font requests (`835.6 KB` transferred / `1,548.9 KB` decoded).
+   - Bundled subsetted static `.ttf` weights locally in `assets/fonts/` (`Inter` 400/500/600/700 at ~`50.3 KB` each + `Plus Jakarta Sans` 600/700 at `24.9 KB` each = **`251.1 KB` on disk**, **`109.2 KB` Brotli-transferred** from same-origin Firebase Hosting with `Cache-Control: immutable`).
+   - Registered both families in `pubspec.yaml` under `fonts:`, updated `AppTextStyles` (`app_text_styles.dart`), and set `fontFamily: 'Inter'` in `AppTheme.dark()` (`app_theme.dart`).
+
+---
+
+## 3. Measured Progression: Baseline -> Round 1 -> Round 2 (Headless Edge CDP @ `https://tobias-portfolio-web.web.app`)
+
+### 3.1 Cold Cache Comparison (Network Cache Disabled)
+| Metric | Baseline (Pre-Perf) | Round 1 (WebP + Boundaries) | Round 2 (Deferred Precache + Local Subset Fonts) | Total Change (Baseline / R1 -> R2) |
+|---|---:|---:|---:|---:|
+| **Image Assets on Disk** | `2,418.0 KB` | `242.6 KB` | `242.6 KB` | **-90.0% (-2,175.4 KB)** |
+| **Critical Images Before Curtain** | `2,037.0 KB` (5 imgs) | `185.0 KB` (5 imgs) | **`6.4 KB` (2 icons)** | **-99.7% (-2,030.6 KB)** |
+| **`main.dart.wasm` Transfer / Decoded** | `498.3 KB` / `1,711.8 KB` | `515.3 KB` / `1,760.9 KB` | **`503.2 KB` / `1,724.0 KB`** | `-12.1 KB` vs R1 (removed `google_fonts`) |
+| **Fonts Network Transfer / Decoded** | `835.4 KB` / `1,548.6 KB` | `835.6 KB` / `1,548.9 KB` | **`175.8 KB` / `321.5 KB`** | **-79.0% transfer / -79.2% decoded** |
+| **Total Cold Network Transfer** | ~`3,400+ KB` *(est. w/ 2 MB imgs)* | `1,557.8–1,569.6 KB` | **`885.7 KB`** | **-43.6% vs R1** |
+| **Total Cold Decoded Body** | ~`5,400+ KB` | `3,562.2–3,575.1 KB` | **`2,297.4 KB`** | **-35.7% vs R1** |
+| **`assetsAndFontsMs`** | — *(uninstrumented)* | `702.6–1,513.7 ms` | **`765.2 ms`** | Consistently well below `1500ms` timeout |
+| **`totalReadyMs` (`portfolio-ready`)** | ~`3,856 ms` *(est. before 580ms leave)* | `1,600.2–4,222.0 ms` | **`3,425.0 ms`** *(incl. 1.94s cold TLS/WASM)* | Cold network variance; `dartBootMs: 11.6 ms` |
+| **`loaderGoneWallMs` (DOM removed)** | `4,436 ms` | `2,287–4,945 ms` | **`4,066 ms`** | — |
+| **Cold `JS Heap` (Used / Total)** | `12.30 / 29.96 MB` | `10.59 / 28.17 MB` | **`7.98 / 12.68 MB`** | **-35.1% used / -57.7% total heap** |
+
+### 3.2 Warm Cache Comparison (`https://tobias-portfolio-web.web.app/?perf=1`)
+| Metric | Round 1 (Warm `?perf=1`) | Round 2 (Warm `?perf=1`) | Delta (R1 -> R2) |
+|---|---:|---:|---:|
+| **`htmlFirstPaintMs` (FCP)** | `408 ms` | **`264 ms`** | **-35.3% (-144 ms)** |
+| **`engineLoadMs` (`skwasm`)** | `109.6 ms` | `140.9 ms` | `+31.3 ms` |
+| **`dartBootMs` (`runApp`)** | `0.8 ms` | `3.5 ms` | `+2.7 ms` |
+| **`assetsAndFontsMs`** | `471.3 ms` | **`310.8 ms`** | **-34.1% (-160.5 ms)** |
+| **`totalReadyMs` (`portfolio-ready`)** | `1,200.3 ms` | **`874.9 ms`** | **-27.1% (-325.4 ms)** |
+| **`loaderGoneWallMs` (DOM removed)** | `1,811 ms` | **`1,462 ms`** | **-19.3% (-349 ms)** |
+| **Network Transfer** | `7.9 KB` (`21` cached) | **`7.8 KB`** (`18` cached, `wasm/images/fonts = 0 KB`) | **99.7% cached** |
+| **Decoded Body** | `3,561.3 KB` | **`2,296.5 KB`** | **-35.5% (-1,264.8 KB)** |
+| **`JS Heap` (at `totalReadyMs`)** | `18.26 / 51.95 MB` | **`13.81 / 21.48 MB`** | **-24.4% used / -58.7% total** |
+| **`JS Heap` (HUD rendered + settled)** | `24.1 / 56.6 MB` | **`12.9 / 21.4 MB`** | **-46.5% used / -62.2% total** |
+| **Live FPS / Jank (settled)** | — | **`Idle (60.0)` / `0/0` jank** | Verified clean |
+
+---
+
+## 4. Automated Verification
+
+- `flutter analyze`: **0 issues**.
+- `flutter test`: **21/21 passed** (including `perf_telemetry_models_test.dart` and `perf_debug_overlay_test.dart`).
+- `flutter build web --release --wasm`: **exit code 0** (`skwasm` active, `52 files in build/web`).
+- Live Edge CDP (`https://tobias-portfolio-web.web.app` & `?perf=1`): **0 console errors**, **0 uncaught exceptions**, `window.__portfolioPerf.snapshot()` populated, `PerfDebugOverlay` verified rendered with all timeline stages, memory/network buckets, and frame timings.
