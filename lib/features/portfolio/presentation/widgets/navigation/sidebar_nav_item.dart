@@ -212,6 +212,12 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
             fontWeight: FontWeight.w700,
           ).copyWith(letterSpacing: -0.4),
         ),
+      PortfolioSectionId.howIHelp => CustomPaint(
+          size: const Size.square(20.0),
+          painter: _TimelineStepsPainter(
+            color: highlighted ? accent : AppColors.textSecondary,
+          ),
+        ),
       PortfolioSectionId.engineering => CustomPaint(
           size: const Size.square(20.0),
           painter: _ArchitectureLayersPainter(
@@ -265,6 +271,52 @@ class _ArchitectureLayersPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _ArchitectureLayersPainter oldDelegate) {
+    return oldDelegate.color != color;
+  }
+}
+
+class _TimelineStepsPainter extends CustomPainter {
+  const _TimelineStepsPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final strokePaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5
+      ..strokeCap = StrokeCap.round;
+
+    final fillPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
+    final w = size.width;
+    final h = size.height;
+    final x = w * 0.28;
+
+    // Vertical connector spine
+    canvas.drawLine(
+      Offset(x, h * 0.24),
+      Offset(x, h * 0.76),
+      strokePaint,
+    );
+
+    // Three timeline nodes + short horizontal step labels
+    for (final yFactor in [0.22, 0.50, 0.78]) {
+      final y = h * yFactor;
+      canvas.drawCircle(Offset(x, y), 2.1, fillPaint);
+      canvas.drawLine(
+        Offset(w * 0.48, y),
+        Offset(w * 0.84, y),
+        strokePaint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _TimelineStepsPainter oldDelegate) {
     return oldDelegate.color != color;
   }
 }

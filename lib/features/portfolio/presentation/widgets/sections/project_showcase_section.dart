@@ -51,31 +51,35 @@ class ProjectShowcaseSection extends StatelessWidget {
   Widget _buildDesktopLayout() {
     final effectiveHeight = sectionHeight ?? 900.0;
     final compact = !isWideDesktop || effectiveHeight < 820.0;
+    final leftPad = isWideDesktop
+        ? AppSpacing.showcaseLeftSafePadding
+        : AppSpacing.desktopLeftSafePadding;
     final rightPad = isWideDesktop
-        ? AppSpacing.desktopRightPaddingWide
+        ? AppSpacing.showcaseRightPaddingWide
         : AppSpacing.desktopRightPaddingCompact;
 
     final maxPhoneHeight =
-        effectiveHeight * (footerProfile != null ? 0.59 : 0.63);
+        effectiveHeight * (footerProfile != null ? 0.54 : 0.60);
     final maxPhoneWidthByHeight =
-        math.max(200.0, maxPhoneHeight - 46.0) * AppSpacing.phoneAspectRatio;
+        math.max(175.0, maxPhoneHeight - 46.0) * AppSpacing.phoneAspectRatio;
     final leftPhoneWidth =
-        math.min(isWideDesktop ? 245.0 : 205.0, maxPhoneWidthByHeight * 0.94);
+        math.min(isWideDesktop ? 225.0 : 190.0, maxPhoneWidthByHeight * 0.94);
     final rightPhoneWidth =
-        math.min(isWideDesktop ? 260.0 : 218.0, maxPhoneWidthByHeight);
+        math.min(isWideDesktop ? 242.0 : 204.0, maxPhoneWidthByHeight);
 
     return SizedBox(
       height: effectiveHeight,
       child: Center(
         child: ConstrainedBox(
-          constraints:
-              const BoxConstraints(maxWidth: AppSpacing.maxContentWidth),
+          constraints: const BoxConstraints(
+            maxWidth: AppSpacing.maxShowcaseContentWidth,
+          ),
           child: Padding(
             padding: EdgeInsets.only(
-              left: AppSpacing.desktopLeftSafePadding,
+              left: leftPad,
               right: rightPad,
-              top: compact ? 18.0 : 28.0,
-              bottom: compact ? 16.0 : 24.0,
+              top: compact ? 10.0 : 24.0,
+              bottom: compact ? 8.0 : 20.0,
             ),
             child: Column(
               children: [
@@ -84,7 +88,7 @@ class ProjectShowcaseSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        flex: 26,
+                        flex: 21,
                         child: Center(
                           child: TiltedLeftPhoneMockup(
                             project: project,
@@ -92,18 +96,18 @@ class ProjectShowcaseSection extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: isWideDesktop ? 28.0 : 18.0),
+                      SizedBox(width: isWideDesktop && !compact ? 24.0 : 18.0),
                       Expanded(
-                        flex: 44,
+                        flex: 56,
                         child: LayoutBuilder(
                           builder: (context, narrativeConstraints) {
-                            return SingleChildScrollView(
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  minHeight: narrativeConstraints.maxHeight,
-                                ),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
+                            return Align(
+                              alignment: Alignment.centerLeft,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: SizedBox(
+                                  width: narrativeConstraints.maxWidth,
                                   child: _ProjectNarrativeColumn(
                                     project: project,
                                     isMobile: false,
@@ -116,9 +120,9 @@ class ProjectShowcaseSection extends StatelessWidget {
                           },
                         ),
                       ),
-                      SizedBox(width: isWideDesktop ? 28.0 : 18.0),
+                      SizedBox(width: isWideDesktop && !compact ? 24.0 : 18.0),
                       Expanded(
-                        flex: 30,
+                        flex: 23,
                         child: Center(
                           child: InteractiveRightPhoneMockup(
                             project: project,
@@ -131,7 +135,7 @@ class ProjectShowcaseSection extends StatelessWidget {
                   ),
                 ),
                 if (footerProfile != null) ...[
-                  const SizedBox(height: 12.0),
+                  SizedBox(height: compact ? 8.0 : 12.0),
                   PortfolioFooterStrip(
                     profile: footerProfile!,
                     onOpenUrl: onOpenUrl,
@@ -271,8 +275,8 @@ class _ProjectNarrativeColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bulletBodyStyle = AppTextStyles.bodyDefault().copyWith(
-      fontSize: compact ? 13.5 : 14.5,
-      height: compact ? 1.42 : 1.5,
+      fontSize: compact ? 13.0 : 14.5,
+      height: compact ? 1.36 : 1.48,
     );
 
     return Column(
@@ -312,7 +316,7 @@ class _ProjectNarrativeColumn extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: compact ? 14.0 : 20.0),
+        SizedBox(height: compact ? 8.0 : 16.0),
         Text(
           'THE PROBLEM',
           style: AppTextStyles.labelSmall(
@@ -320,17 +324,17 @@ class _ProjectNarrativeColumn extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ).copyWith(letterSpacing: 1.1),
         ),
-        const SizedBox(height: 6.0),
+        SizedBox(height: compact ? 3.0 : 6.0),
         Text(
           project.problemStatement,
           style: AppTextStyles.bodyDefault(
             color: AppColors.textPrimary.withValues(alpha: 0.9),
           ).copyWith(
-            fontSize: compact ? 14.0 : 15.0,
-            height: compact ? 1.44 : 1.52,
+            fontSize: compact ? 13.25 : 15.0,
+            height: compact ? 1.35 : 1.5,
           ),
         ),
-        SizedBox(height: compact ? 14.0 : 18.0),
+        SizedBox(height: compact ? 8.0 : 16.0),
         Text(
           'HOW IT\'S BUILT',
           style: AppTextStyles.labelSmall(
@@ -338,7 +342,7 @@ class _ProjectNarrativeColumn extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ).copyWith(letterSpacing: 1.1),
         ),
-        const SizedBox(height: 8.0),
+        SizedBox(height: compact ? 5.0 : 8.0),
         for (var i = 0; i < project.engineeringHighlights.length; i++) ...[
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -379,12 +383,12 @@ class _ProjectNarrativeColumn extends StatelessWidget {
             ],
           ),
           if (i < project.engineeringHighlights.length - 1)
-            SizedBox(height: compact ? 7.0 : 10.0),
+            SizedBox(height: compact ? 5.0 : 10.0),
         ],
-        SizedBox(height: compact ? 14.0 : 18.0),
+        SizedBox(height: compact ? 10.0 : 16.0),
         Wrap(
-          spacing: 8.0,
-          runSpacing: 8.0,
+          spacing: compact ? 6.0 : 8.0,
+          runSpacing: compact ? 6.0 : 8.0,
           children: [
             for (final item in project.techStack)
               TechStackChip(
@@ -399,45 +403,16 @@ class _ProjectNarrativeColumn extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: compact ? 12.0 : 16.0),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(
-            horizontal: 12.0,
-            vertical: compact ? 9.0 : 11.0,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.bgSurface,
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(
-              color: project.accentColor.withValues(alpha: 0.25),
-              width: 1.0,
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                project.scopeSummary,
-                style: AppTextStyles.labelSmall(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w600,
-                ).copyWith(height: 1.35),
-              ),
-              const SizedBox(height: 4.0),
-              Text(
-                project.quickDemoHint,
-                style: AppTextStyles.labelSmall(
-                  color: project.accentColor,
-                  fontWeight: FontWeight.w500,
-                ).copyWith(height: 1.35),
-              ),
-            ],
-          ),
+        SizedBox(height: compact ? 8.0 : 12.0),
+        Text(
+          '${project.scopeSummary}  •  ${project.quickDemoHint}',
+          style: AppTextStyles.labelSmall(
+            color: project.accentColor,
+            fontWeight: FontWeight.w500,
+          ).copyWith(height: 1.35),
         ),
         if (includeActionButtons) ...[
-          SizedBox(height: compact ? 14.0 : 20.0),
+          SizedBox(height: compact ? 10.0 : 14.0),
           Wrap(
             spacing: 12.0,
             runSpacing: 10.0,
@@ -445,13 +420,13 @@ class _ProjectNarrativeColumn extends StatelessWidget {
               PortfolioActionButton(
                 label: 'View Source on GitHub ↗',
                 variant: PortfolioButtonVariant.secondary,
-                height: 46.0,
+                height: compact ? 44.0 : 46.0,
                 onPressed: () => onOpenUrl(project.repoUrl),
               ),
               PortfolioActionButton(
                 label: 'Open Live Demo ↗',
                 variant: PortfolioButtonVariant.secondary,
-                height: 46.0,
+                height: compact ? 44.0 : 46.0,
                 onPressed: () => onOpenUrl(project.liveDemoUrl),
               ),
             ],

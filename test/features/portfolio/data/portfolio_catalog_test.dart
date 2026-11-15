@@ -15,12 +15,10 @@ void main() {
         row.label,
         row.value,
       ],
+      PortfolioCatalog.howIHelpSectionTitle,
+      PortfolioCatalog.howIHelpSectionSubtitle,
       PortfolioCatalog.engineeringSectionTitle,
       PortfolioCatalog.engineeringSectionSubtitle,
-      for (final mode in PortfolioCatalog.engagementModes) ...[
-        mode.title,
-        mode.summary,
-      ],
       for (final pillar in PortfolioCatalog.engineeringPillars) ...[
         pillar.title,
         pillar.description,

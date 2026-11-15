@@ -26,15 +26,3 @@ final class EngineeringPillar {
   final EngineeringIconKind iconKind;
   final List<TechBrandChipItem> badges;
 }
-
-/// Client engagement model displayed below the capability pillars.
-@immutable
-final class EngagementMode {
-  const EngagementMode({
-    required this.title,
-    required this.summary,
-  });
-
-  final String title;
-  final String summary;
-}

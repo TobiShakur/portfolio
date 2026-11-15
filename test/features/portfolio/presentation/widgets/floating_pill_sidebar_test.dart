@@ -48,12 +48,12 @@ void main() {
           matching: find.byType(Container),
         ).first,
       );
-      expect(pillBox.height, lessThanOrEqualTo(240.0));
+      expect(pillBox.height, lessThanOrEqualTo(280.0));
       expect(pillBox.width, AppSpacing.sidebarWidth);
 
       final navItems = find.byType(SidebarNavItem);
-      expect(navItems, findsNWidgets(4));
-      for (var i = 0; i < 4; i++) {
+      expect(navItems, findsNWidgets(5));
+      for (var i = 0; i < 5; i++) {
         final size = tester.getSize(navItems.at(i));
         expect(size.width, greaterThanOrEqualTo(44.0));
         expect(size.height, greaterThanOrEqualTo(44.0));
@@ -62,12 +62,16 @@ void main() {
       // Real Image.asset icons for NutriLens AI and SetPoint
       expect(find.byType(Image), findsNWidgets(2));
 
-      // Tap each item
-      await tester.tap(navItems.at(2));
+      // Tap items
+      await tester.tap(navItems.at(1));
+      await tester.pump();
+      expect(selected, PortfolioSectionId.howIHelp);
+
+      await tester.tap(navItems.at(3));
       await tester.pump();
       expect(selected, PortfolioSectionId.nutrilens);
 
-      await tester.tap(navItems.at(3));
+      await tester.tap(navItems.at(4));
       await tester.pump();
       expect(selected, PortfolioSectionId.setpoint);
     });
@@ -93,7 +97,7 @@ void main() {
         ),
       );
 
-      final nutrilensItem = find.byType(SidebarNavItem).at(2);
+      final nutrilensItem = find.byType(SidebarNavItem).at(3);
       final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
       await gesture.addPointer(location: Offset.zero);
       addTearDown(gesture.removePointer);

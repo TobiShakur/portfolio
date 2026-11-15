@@ -5,8 +5,10 @@ import 'package:portfolio/features/portfolio/data/portfolio_catalog.dart';
 import 'package:portfolio/features/portfolio/domain/entities/portfolio_section_id.dart';
 import 'package:portfolio/features/portfolio/presentation/controllers/portfolio_navigation_controller.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/navigation/floating_pill_sidebar.dart';
+import 'package:portfolio/features/portfolio/presentation/widgets/common/portfolio_action_button.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/navigation/mobile_bottom_pill_dock.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/navigation/sidebar_nav_item.dart';
+import 'package:portfolio/features/portfolio/presentation/widgets/sections/portfolio_footer_strip.dart';
 
 import '../../../../fakes/fake_clipboard_service.dart';
 import '../../../../fakes/fake_external_link_launcher.dart';
@@ -64,9 +66,8 @@ void main() {
         find.text('TOBÍAS GUTIÉRREZ · MOBILE SOFTWARE ENGINEER · GMT-3'),
         findsOneWidget,
       );
-      expect(find.text('HOW I HELP TEAMS'), findsOneWidget);
-      expect(find.text('Capabilities & Cloud Stack'), findsOneWidget);
-      expect(find.text('ENGAGEMENT MODES'), findsOneWidget);
+      expect(find.text('How I Help Teams'), findsOneWidget);
+      expect(find.text('Core Stack & Deliverables'), findsOneWidget);
       expect(find.text('Hover to launch live demo ↗'), findsNWidgets(2));
       expect(find.text('NutriLens AI'), findsWidgets);
       expect(find.text('SetPoint'), findsWidgets);
@@ -87,20 +88,27 @@ void main() {
         PortfolioCatalog.profile.linkedInUrl,
       ]);
 
-      // Sidebar navigation scrolls to exact section offsets
+      // Sidebar navigation scrolls to exact 5-section offsets
       final sidebarItems = find.descendant(
         of: find.byType(FloatingPillSidebar),
         matching: find.byType(SidebarNavItem),
       );
-      await tester.tap(sidebarItems.at(2));
+      expect(sidebarItems, findsNWidgets(5));
+
+      await tester.tap(sidebarItems.at(1));
       await tester.pumpAndSettle();
-      expect(controller.activeSection, PortfolioSectionId.nutrilens);
-      expect(controller.scrollController.offset, closeTo(1800.0, 1.0));
+      expect(controller.activeSection, PortfolioSectionId.howIHelp);
+      expect(controller.scrollController.offset, closeTo(900.0, 1.0));
 
       await tester.tap(sidebarItems.at(3));
       await tester.pumpAndSettle();
-      expect(controller.activeSection, PortfolioSectionId.setpoint);
+      expect(controller.activeSection, PortfolioSectionId.nutrilens);
       expect(controller.scrollController.offset, closeTo(2700.0, 1.0));
+
+      await tester.tap(sidebarItems.at(4));
+      await tester.pumpAndSettle();
+      expect(controller.activeSection, PortfolioSectionId.setpoint);
+      expect(controller.scrollController.offset, closeTo(3600.0, 1.0));
 
       // Project repo & live demo buttons pass exact URLs
       await tester.ensureVisible(find.text('View Source on GitHub ↗').last);
@@ -110,6 +118,65 @@ void main() {
 
       // Advance past email copy reset timer so no pending timers remain.
       await tester.pump(const Duration(milliseconds: 2300));
+    });
+
+    testWidgets(
+        'renders at 1280x720 Laptop Desktop without clipping SetPoint CTAs against footer',
+        (tester) async {
+      final linkLauncher = FakeExternalLinkLauncher();
+      final clipboardService = FakeClipboardService();
+      final controller = PortfolioNavigationController(
+        linkLauncher: linkLauncher,
+        clipboardService: clipboardService,
+      );
+      addTearDown(controller.dispose);
+
+      await pumpPortfolioAtSize(
+        tester,
+        size: const Size(1280, 720),
+        linkLauncher: linkLauncher,
+        clipboardService: clipboardService,
+        controller: controller,
+      );
+
+      expect(tester.takeException(), isNull);
+      await controller.scrollToSection(
+        PortfolioSectionId.nutrilens,
+        reduceMotion: true,
+      );
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      final nutrilensDemoRect = tester.getRect(
+        find.ancestor(
+          of: find.text('Open Live Demo ↗').first,
+          matching: find.byType(PortfolioActionButton),
+        ),
+      );
+      expect(nutrilensDemoRect.bottom, lessThanOrEqualTo(720.0));
+
+      await controller.scrollToSection(
+        PortfolioSectionId.setpoint,
+        reduceMotion: true,
+      );
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+
+      final repoBtnRect = tester.getRect(
+        find.ancestor(
+          of: find.text('View Source on GitHub ↗').last,
+          matching: find.byType(PortfolioActionButton),
+        ),
+      );
+      final demoBtnRect = tester.getRect(
+        find.ancestor(
+          of: find.text('Open Live Demo ↗').last,
+          matching: find.byType(PortfolioActionButton),
+        ),
+      );
+      final footerRect = tester.getRect(find.byType(PortfolioFooterStrip));
+      expect(repoBtnRect.bottom, lessThanOrEqualTo(footerRect.top));
+      expect(demoBtnRect.bottom, lessThanOrEqualTo(footerRect.top));
+      expect(demoBtnRect.bottom, lessThanOrEqualTo(720.0));
     });
 
     testWidgets('renders at 1024x768 Compact Desktop with zero overflows',
@@ -126,9 +193,8 @@ void main() {
 
       expect(tester.takeException(), isNull);
       expect(find.byType(FloatingPillSidebar), findsOneWidget);
-      expect(find.text('HOW I HELP TEAMS'), findsOneWidget);
-      expect(find.text('Capabilities & Cloud Stack'), findsOneWidget);
-      expect(find.text('ENGAGEMENT MODES'), findsOneWidget);
+      expect(find.text('How I Help Teams'), findsOneWidget);
+      expect(find.text('Core Stack & Deliverables'), findsOneWidget);
       expect(find.text('NutriLens AI'), findsWidgets);
       expect(find.text('SetPoint'), findsWidgets);
     });

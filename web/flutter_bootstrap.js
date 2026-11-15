@@ -2,7 +2,7 @@
 {{flutter_build_config}}
 
 (function () {
-  var buildVersion = 'r6';
+  var buildVersion = 'r7';
   if (
     window._flutter &&
     _flutter.buildConfig &&

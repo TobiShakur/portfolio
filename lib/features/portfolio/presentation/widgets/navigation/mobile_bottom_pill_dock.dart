@@ -50,6 +50,13 @@ class MobileBottomPillDock extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.sidebarGap),
               SidebarNavItem(
+                section: PortfolioSectionId.howIHelp,
+                isActive: activeSection == PortfolioSectionId.howIHelp,
+                showTooltipOnHover: false,
+                onTap: () => onSelectSection(PortfolioSectionId.howIHelp),
+              ),
+              const SizedBox(width: AppSpacing.sidebarGap),
+              SidebarNavItem(
                 section: PortfolioSectionId.engineering,
                 isActive: activeSection == PortfolioSectionId.engineering,
                 showTooltipOnHover: false,

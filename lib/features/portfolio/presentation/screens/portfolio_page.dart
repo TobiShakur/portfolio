@@ -10,6 +10,7 @@ import 'package:portfolio/features/portfolio/presentation/widgets/debug/perf_deb
 import 'package:portfolio/features/portfolio/presentation/widgets/navigation/floating_pill_sidebar.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/navigation/mobile_bottom_pill_dock.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/sections/engineering_approach_section.dart';
+import 'package:portfolio/features/portfolio/presentation/widgets/sections/how_i_help_section.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/sections/overview_hero_section.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/sections/project_showcase_section.dart';
 
@@ -85,6 +86,15 @@ class PortfolioPage extends StatelessWidget {
                             PortfolioCatalog.profile.email,
                           ),
                         ),
+                      ),
+                    ),
+                    KeyedSubtree(
+                      key: controller.sectionKeys[PortfolioSectionId.howIHelp],
+                      child: HowIHelpSection(
+                        steps: PortfolioCatalog.profile.snapshotHighlights,
+                        isDesktop: isDesktop,
+                        isMobile: isMobile,
+                        sectionHeight: isDesktop ? sectionHeight : null,
                       ),
                     ),
                     KeyedSubtree(
@@ -194,6 +204,7 @@ class _AmbientCanvasGlow extends StatelessWidget {
   Widget build(BuildContext context) {
     final tint = switch (activeSection) {
       PortfolioSectionId.overview ||
+      PortfolioSectionId.howIHelp ||
       PortfolioSectionId.engineering =>
         AppColors.accentEngineering,
       PortfolioSectionId.nutrilens => AppColors.accentNutriLensDeep,

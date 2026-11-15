@@ -60,6 +60,14 @@ class FloatingPillSidebar extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.sidebarGap),
               SidebarNavItem(
+                section: PortfolioSectionId.howIHelp,
+                isActive: activeSection == PortfolioSectionId.howIHelp,
+                onTap: () => onSelectSection(PortfolioSectionId.howIHelp),
+                onHoverChanged: (hovered) => onHoverSection
+                    ?.call(hovered ? PortfolioSectionId.howIHelp : null),
+              ),
+              const SizedBox(height: AppSpacing.sidebarGap),
+              SidebarNavItem(
                 section: PortfolioSectionId.engineering,
                 isActive: activeSection == PortfolioSectionId.engineering,
                 onTap: () => onSelectSection(PortfolioSectionId.engineering),

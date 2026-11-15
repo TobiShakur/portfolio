@@ -8,9 +8,14 @@ enum PortfolioSectionId {
     navLabel: 'Overview',
     accentColor: AppColors.accentEngineering,
   ),
+  howIHelp(
+    anchor: 'how-i-help',
+    navLabel: 'How I Help',
+    accentColor: AppColors.accentEngineering,
+  ),
   engineering(
-    anchor: 'engineering',
-    navLabel: 'Engineering',
+    anchor: 'stack',
+    navLabel: 'Core Stack',
     accentColor: AppColors.accentEngineering,
   ),
   nutrilens(

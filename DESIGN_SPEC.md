@@ -26,18 +26,19 @@ Inspired by **Linear** and **Vercel** engineering surfaces: deep obsidian/soot d
 ## 1. Stage 1 — Wireframe Kit & Spatial Architecture
 
 ### 1.1 Viewport Cadence (`100vh` Full-Viewport Sections)
-On Desktop (`>= 960px`), the page is structured as **4 distinct `100vh` (`MediaQuery.sizeOf(context).height`) sections** driven by a single `ScrollController` with smooth programmatic snap-scroll on sidebar click (plus optional soft wheel/snap assist that never hijacks inner scrolling on smaller viewports).
+On Desktop (`>= 960px`), the page is structured as **5 distinct `100vh` (`MediaQuery.sizeOf(context).height`) sections** driven by a single `ScrollController` with smooth programmatic snap-scroll on sidebar click (plus optional soft wheel/snap assist that never hijacks inner scrolling on smaller viewports).
 
 | Index | Section ID | Viewport Height | Purpose |
 |---|---|---|---|
-| `0` | `#overview` | `100vh` | **Hero — Freelance Pitch, Stack Logos & How I Help Teams** |
-| `1` | `#engineering` | `100vh` | **Capabilities & Cloud Stack — Deliverables + Engagement Modes** |
-| `2` | `#nutrilens` | `100vh` | **NutriLens AI** — 3-Column Interactive Showcase + Live Demo Portal |
-| `3` | `#setpoint` | `100vh` | **SetPoint** — 3-Column Interactive Showcase + Live Demo Portal + Minimal Footer |
+| `0` | `#overview` | `100vh` | **Hero — Direct Freelance Pitch, CTAs & Key Flutter/Dart Hiring Stack** |
+| `1` | `#how-i-help` | `100vh` | **How I Help Teams — Vertical `1 → 2 → 3 → 4` Delivery Stepper** |
+| `2` | `#stack` | `100vh` | **Core Stack & Deliverables — Concise 2×2 Engineering Matrix** |
+| `3` | `#nutrilens` | `100vh` | **NutriLens AI** — Wide-Center (`22/54/24`) Showcase + Live Demo Portal |
+| `4` | `#setpoint` | `100vh` | **SetPoint** — Wide-Center (`22/54/24`) Showcase + Live Demo Portal + Minimal Footer |
 
 ### 1.2 Spacing Grid (`4pt / 8pt` Rhythm) & Safe Zones
 - **Base Unit:** `8.0` (`4.0` micro-gaps inside chips/badges).
-- **Desktop Left Sidebar Safe Zone:** The compact Floating Pill Sidebar is positioned via `Align(alignment: Alignment.centerLeft)` with `margin: EdgeInsets.only(left: 24)` (`16px` on `960–1199px`), intrinsic width `~64px` (`44px` items + `10px` horizontal padding) and intrinsic height `MainAxisSize.min` (`~226px` — **never** full viewport height). It occupies roughly `x: 24px .. 88px` in the vertical middle only. Therefore, **all desktop section content containers MUST enforce `paddingLeft >= 112px`** (with balanced `paddingRight >= 64px` or centered inside a `maxWidth: 1280px` container offset clear of `x = 108px`) so content never collides with the sidebar at `1280px`, `1440px`, or `1920px`.
+- **Desktop Left Sidebar Safe Zone:** The compact Floating Pill Sidebar is positioned via `Align(alignment: Alignment.centerLeft)` with `margin: EdgeInsets.only(left: 24)` (`16px` on `960–1199px`), intrinsic width `~64px` (`44px` items + `8px` horizontal padding) and intrinsic height `MainAxisSize.min` (`~268px` — **never** full viewport height). It occupies roughly `x: 24px .. 88px` in the vertical middle only. Therefore, **all desktop section content containers MUST enforce `paddingLeft >= 112px`** so content never collides with the sidebar at `1280px`, `1440px`, or `1920px`.
 - **Touch Target Minimum:** Every interactive element (sidebar pills, CTA buttons, GitHub/LinkedIn/Email links, mobile live-demo buttons) **must be `>= 44x44px`** (`48x48px` on mobile touch viewports).
 
 ### 1.3 Desktop Wireframe Blueprints (`>= 1200px` & `960–1199px`)
@@ -50,104 +51,34 @@ On Desktop (`>= 960px`), the page is structured as **4 distinct `100vh` (`MediaQ
   |
   |   +-------+   <-- marginLeft: 24px, Alignment.centerLeft
   |   | (TG)  |       Section 0: Overview (Hero)       [44x44px]
-  |   |       |       gap: 10px
-  |   | (--)  |       Section 1: Engineering & Stack   [44x44px]
-  |   |       |       gap: 10px
-  |   | [NL]  |       Section 2: NutriLens AI          [44x44px, Icon-512.png]
-  |   |       |       gap: 10px
-  |   | [SP]  |       Section 3: SetPoint              [44x44px, Icon-512.png]
-  |   +-------+   <-- MainAxisSize.min (~226px total height), borderRadius: 999
+  |   |  (•)  |       Section 1: How I Help (Stepper)  [44x44px]
+  |   | (--)  |       Section 2: Core Stack            [44x44px]
+  |   | [NL]  |       Section 3: NutriLens AI          [44x44px, Icon-512.png]
+  |   | [SP]  |       Section 4: SetPoint              [44x44px, Icon-512.png]
+  |   +-------+   <-- MainAxisSize.min (~268px inner / ~272px outer), borderRadius: 999
   |                   Fill: #050608 (deep black) | Border: 1.75px solid #303642
   |  (empty space below — does NOT stretch to bottom)
 ```
-- **Intrinsic Sizing (`MainAxisSize.min`):** Height equals strictly `topPadding (10) + 4 × item (44) + 3 × gap (10) + bottomPadding (10) = 226px` (never `Expanded` or full-height column).
-- **On Hover:** Item emits a subtle accent-tinted background + border glow, and reveals a floating label tooltip immediately to the right (`left: 100px`, e.g., `Overview`, `Engineering`, `NutriLens AI`, `SetPoint`).
+- **Intrinsic Sizing (`MainAxisSize.min`):** Height equals strictly `topPadding (8) + 5 × item (44) + 4 × gap (8) + bottomPadding (8) = 268px` (+ `3.5px` border = `~272px`, never `Expanded` or full-height column).
+- **On Hover:** Item emits a subtle accent-tinted background + border glow, and reveals a floating label tooltip immediately to the right (`left: 100px`, e.g., `Overview`, `How I Help`, `Core Stack`, `NutriLens AI`, `SetPoint`).
 - **On Active Section:** Smoothly highlighted pill ring + accent indicator matching the active section's token.
 
-#### Section 1: Hero — Freelance Pitch, Stack Logos & How I Help Teams (`100vh`)
-```text
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|  .-------.  [ Left Column (~58%) ]              [ Right Column (~38%, >=920px) ]  |
-|  | (TG)  |  TOBÍAS GUTIÉRREZ ·                  +-------------------------------+ |
-|  | (--)  |  MOBILE SOFTWARE ENGINEER · GMT-3    | HOW I HELP TEAMS              | |
-|  | [NL]  |                                      |                               | |
-|  | [SP]  |  Flutter & native apps,              | End-to-End Delivery           | |
-|  '-------'  from Figma to the stores.           | iOS, Android & Flutter Web —  | |
-|  (floats at                                     | Figma to App/Play Store.      | |
-|  centerLeft) I help startups and product teams  |-------------------------------| |
-|             ship iOS, Android, and Web apps—    | Backend & AI Included         | |
-|             with Firebase, AI pipelines & QA.   | Firebase + Cloudflare AI      | |
-|                                                 | proxies (no extra backend).   | |
-|             [ Explore Projects ↓ ]              |-------------------------------| |
-|             [ GitHub ↗ ] [ LinkedIn ↗ ]         | Verified Quality              | |
-|             [ tobigutierrez26@gmail.com  Copy ] | Clean Arch & 177 Tests        | |
-|                                                 |-------------------------------| |
-|             [Flutter] [Dart] [Firebase]         | Availability & Overlap        | |
-|             [Cloudflare] [Gemini] [iOS/Android] | GMT-3 (US East / EU) · EN/ES  | |
-|                                                 | Live Demos: [NL ↗] [SP ↗]     | |
-|                                                 +-------------------------------+ |
-+-----------------------------------------------------------------------------------+
-```
-*Note on alignment & balance:* Asymmetric 2-column Hero (`58% / 38%`, gap `36px`) vertically centered inside `100vh` (`maxWidth: 1220px`, `paddingLeft >= 112px`). Each H1 line uses `FittedBox(fit: BoxFit.scaleDown)` so it stays strictly **2 lines** across desktop and compact viewports without orphan words. On `< 920px`, **HOW I HELP TEAMS** stacks cleanly below the Stack Logo Strip.
+#### Section 1: Clean Hero & Core Hiring Stack (`100vh`)
+Single breathable center-aligned column (`maxWidth: 960px`, `paddingLeft: 116px`) without distracting side cards: `TOBÍAS GUTIÉRREZ · MOBILE SOFTWARE ENGINEER · GMT-3`, exact 2-line `FittedBox` H1 (`Flutter & native apps, / from Figma to the stores.`), crisp 2-line client subtitle, primary contact CTAs, and an 8-chip Flutter/Dart hiring bar (`Flutter`, `Dart 3`, `BLoC / Riverpod`, `Firebase`, `REST & AI APIs`, `iOS & Android`, `Figma`, `GitHub Actions`).
 
-#### Section 2: Capabilities & Cloud Stack (`100vh`)
-```text
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|              Capabilities & Cloud Stack                                           |
-|              End-to-end mobile delivery from Figma to App Store & Play Store.     |
-|                                                                                   |
-|  .-------.   +------------------------------+  +------------------------------+   |
-|  | (TG)  |   | Figma-to-Production Apps     |  | Firebase Cloud & Real-Time   |   |
-|  | (--)  |   | Pixel-accurate iOS, Android  |  | Production Auth, Firestore,  |   |
-|  | [NL]  |   | & Web Flutter apps at 60fps. |  | Cloud Functions & Push FCM.  |   |
-|  | [SP]  |   | [Flutter][Dart][iOS][Figma]  |  | [Firebase][Firestore][FCM]   |   |
-|  '-------'   +------------------------------+  +------------------------------+   |
-|                                                                                   |
-|              +------------------------------+  +------------------------------+   |
-|              | Secure AI & Edge Proxies     |  | Maps, Offline & QA           |   |
-|              | Serverless Cloudflare proxies|  | Clustered OpenStreetMap,     |   |
-|              | with CORS & rate limits.     |  | 177 tests & CI/CD delivery.  |   |
-|              | [Gemini][Cloudflare][REST]   |  | [OSM][GitHub Actions][Tests] |   |
-|              +------------------------------+  +------------------------------+   |
-|                                                                                   |
-|              ENGAGEMENT MODES                                                     |
-|              • 0→1 MVP Development | • AI & Cloud Integrations | • Remote Product |
-+-----------------------------------------------------------------------------------+
-```
-*Design rule:* Clean 2x2 client-outcome matrix (`#101318`, `1px borderHairline`, concise 2-line pitch per card + embedded vector brand logo pills) anchored by a crisp 3-column **Engagement Modes** bar below (*0→1 MVP Development*, *AI & Cloud Integrations*, *Remote Product Engineering*).
+#### Section 2: How I Help Teams — Vertical Stepper `1 → 2 → 3 → 4` (`100vh`)
+Minimal vertical timeline (`32x32` numbered nodes linked by `1.5px` `#2A313D` line, `maxWidth: 740px`): (1) End-to-End Mobile Delivery, (2) Backend & AI Included for MVPs, (3) Clean Architecture & Automated QA, (4) Direct Overlap & Bilingual Communication.
 
-#### Sections 3 & 4: App Showcases (`100vh` each — NutriLens AI & SetPoint)
-```text
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                [ Col 1: ~26% ]         [ Col 2: ~44% ]        [ Col 3: ~30% ]     |
-|                                                                                   |
-|  .-------.      +-----------+      [App Icon] NutriLens AI      +-------------+   |
-|  | (TG)  |     /  [Island] /|      Pantry-First Meal Tracker    |  [Island]   |   |
-|  | (--)  |    |  -- 32px -- |                                   | -- 32px --  |   |
-|  | [NL]  |    |  Key Static |      THE PROBLEM                  |   Looping   |   |
-|  | [SP]  |    |  Screen     |      Manual calorie tracking...   |   App Demo  |   |
-|  '-------'    |  (Safe Fit, |                                   |   Preview   |   |
-|               |   No Crop)  |      HOW IT'S BUILT               |  (No Crop)  |   |
-|                \           \|      • Pantry-first 3-mode scan   |  (On Hover: |   |
-|                 +-----------+      • Prepared meal cross-match  |   Blur +    |   |
-|                                    • On-demand AI Health Score  |  "Try Live  |   |
-|                                    • Cloudflare Worker proxy    |   App ↗")   |   |
-|                                                                 +-------------+   |
-|                                    [Dart] [Clean Arch] [153 Tests]  Hover to      |
-|                                    [ View Source on GitHub ↗ ]      launch demo ↗ |
-+-----------------------------------------------------------------------------------+
-```
-- **Column 1 (Left):** Subtle 3D angled iPhone mockup (`perspective` + `rotateY(+14deg)` + `rotateX(-2deg)`) with **`32px` top safe-area inset below Dynamic Island** and full-frame `BoxFit.contain` / `Alignment.topCenter` rendering so **zero UI text or toggles are ever covered or cropped**.
-- **Column 2 (Center):** Project header with real `Icon-512.png`, crisp problem statement, 4 scannable technical bullet points, verified stack/test chips, compact **`Scope` + `Try in 10s` callout**, and `"View Source on GitHub ↗"` / `"Open Live Demo ↗"` buttons.
-- **Column 3 (Right):** Upright front-facing iPhone mockup with `30–32px` top safe-area clearance under Dynamic Island, cycling screens strictly disjoint from the tilted left screen (zero duplicate initial/loop screens). **Hover / Focus triggers smooth backdrop blur + dark scrim + centered `"Try Live Interactive App ↗"` pill button**. Below the right iPhone on desktop, display a subtle `13px` caption (`Hover to launch live demo ↗`).
+#### Section 3: Core Stack & Deliverables (`100vh`)
+Simplified 2×2 capability matrix (`#101318`, `1px borderHairline`, concise 1–2 line summary + embedded `TechBrandIcon` badges) without repeating Section 2.
+
+#### Sections 4 & 5: App Showcases (`100vh` each — NutriLens AI & SetPoint, `flex: 22 / 54 / 24`)
+Widened showcase (`maxWidth: 1360px`, `paddingLeft: 112px`, `paddingRight: 40px`) giving the center narrative **~39% more horizontal space (`flex: 54`, `~580–650px`)** with 1–2 line problem, **3 concise highlights**, single-line `Scope • Try in 10s:` hint, and responsive phone sizing so bottom CTAs remain 100% unclipped above `PortfolioFooterStrip` even at `1280×720`.
 
 ### 1.4 Responsive Breakpoints & Mobile Adaptation
 | Breakpoint | Width | Navigation | Section Height | App Showcase Layout |
 |---|---|---|---|---|
-| **Wide Desktop** | `>= 1200px` | Left Floating Pill (`24px` inset) | `100vh` exact | 3-column row (`26% / 44% / 30%`, phones `~260x560px` scaled to fit height) |
+| **Wide Desktop** | `>= 1200px` | Left Floating Pill (`24px` inset) | `100vh` exact | 3-column row (`22% / 54% / 24%`, phones scaled to fit height without clipping footer CTAs at `1280×720`) |
 | **Compact Desktop** | `960px – 1199px` | Left Floating Pill (`16px` inset) | `100vh` exact | 3-column row with tighter phone scale (`~220x475px`) and `20px` column gaps |
 | **Tablet** | `600px – 959px` | Bottom Floating Pill Dock (`bottom: 16px`, centered) | `minHeight: 100vh` (natural scroll) | Top: Center Project Info (`maxWidth: 640px`). Bottom: 2-column Phone Row (Static Screen + Interactive Live Preview with visible CTA) |
 | **Mobile** | `< 600px` | Bottom Floating Pill Dock (`height: 56px`, safe-area padding) | Natural content height + `64px` vertical padding | Single column: 1. Project Header & Problem/Solutions -> 2. Front-facing iPhone Preview with **persistent bottom `"Try Live Interactive App ↗"` pill button** (no hover-only dependency!) -> 3. Secondary Screen Showcase + GitHub CTA. |

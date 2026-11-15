@@ -136,3 +136,17 @@ Replaced NutriLens's synthetic canvas mockup (`NutriLensPreviewScreens`) and mis
   - `flutter analyze`: **0 issues** (`No issues found!`).
   - `flutter test`: **22/22 passed**.
   - Live visual audit at `1440×900` (`https://tobias-portfolio-web.web.app` & `https://tobishakur.github.io/portfolio/`): **0 console errors**, **0 uncaught exceptions**; all 4 iPhone mockups across Sections 3 (`NutriLens AI`) and 4 (`SetPoint`) confirmed sharp, centered, and unclipped, with `PerfDebugOverlay` (`?perf=1`) active at `Idle (60.0) FPS / 0/0 jank`.
+
+---
+
+## 6. Round 6 — Commercial Hero/Capabilities Layout & Disjoint Mockup Carousels (`?v=r6`)
+
+- **UI/Content Polish Verified Visually (`1440×900`):**
+  - **Hero:** 2-line H1 (`Flutter & native apps, / from Figma to the stores.`) with `HOW I HELP TEAMS` card + `GMT-3` overlap.
+  - **Capabilities:** 4 deliverable cards + balanced 3-column `ENGAGEMENT MODES` bar (eliminating the orphan `GitHub Actions` chip).
+  - **Sections 3 & 4 (`NutriLens AI` & `SetPoint`):** Disjoint left/right phone screens (left fixed on Dashboard / Map; right rotating `Scan -> Analysis -> Pantry` and `Feed -> Filters -> Match Detail`) + `Scope` & `Try in 10s` box.
+- **Round 6 Live Telemetry (`Headless Edge CDP @ 1440×900`, `?v=r6`):**
+  - **Firebase Hosting (Cold):** `htmlFirstPaintMs: 328 ms`, `engineLoadMs: 2,503.7 ms`, `dartBootMs: 12.3 ms`, `assetsAndFontsMs: 945.7 ms`, `totalReadyMs: 4,025.8 ms`, `942.7 KB` transfer (`2,359.7 KB` decoded), `JS Heap 7.61 / 14.02 MB`, `0` console errors / `0` exceptions.
+  - **Firebase Hosting (Warm `?perf=1`):** `htmlFirstPaintMs: 300 ms`, `engineLoadMs: 1,228.7 ms`, `dartBootMs: 1.2 ms`, `assetsAndFontsMs: 825.7 ms`, `totalReadyMs: 2,472.5 ms`, `15` cached resources (`images: 0 / 245.5 KB`, `fonts: 0.45 / 321.5 KB`), `520.2 KB` transfer.
+  - **GitHub Pages (Cold):** `htmlFirstPaintMs: 452 ms`, `engineLoadMs: 1,794.3 ms`, `dartBootMs: 7.1 ms`, `assetsAndFontsMs: 683.5 ms`, `totalReadyMs: 3,185.7 ms`, `1,106.1 KB` transfer (`2,359.7 KB` decoded), `JS Heap 8.29 / 14.18 MB`, `0` console errors / `0` exceptions.
+- **Local Verification (`?v=r6`):** `flutter analyze` (`0 issues`), `flutter test` (`23/23 passed`).

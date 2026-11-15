@@ -13,9 +13,8 @@ abstract final class PortfolioCatalog {
     headlineLine1: 'Flutter & native apps,',
     headlineLine2: 'from Figma to the stores.',
     supportingPitch:
-        'I help startups and product teams ship iOS, Android, and Web '
-        'apps—complete with Firebase backends, secure AI pipelines, and '
-        'automated test coverage.',
+        'I build production iOS, Android, and Web apps with Firebase backends, '
+        'secure AI pipelines, and automated tests.',
     githubUrl: 'https://github.com/TobiShakur',
     linkedInUrl: 'https://linkedin.com/in/tobias-gutierrez',
     email: 'tobigutierrez26@gmail.com',
@@ -27,50 +26,59 @@ abstract final class PortfolioCatalog {
     ],
     coreStackLogos: [
       TechBrandChipItem(label: 'Flutter', brand: TechBrand.flutter),
-      TechBrandChipItem(label: 'Dart', brand: TechBrand.dart),
+      TechBrandChipItem(label: 'Dart 3', brand: TechBrand.dart),
+      TechBrandChipItem(label: 'BLoC / Riverpod'),
       TechBrandChipItem(label: 'Firebase', brand: TechBrand.firebase),
-      TechBrandChipItem(label: 'Cloudflare', brand: TechBrand.cloudflare),
-      TechBrandChipItem(label: 'Gemini AI', brand: TechBrand.gemini),
-      TechBrandChipItem(label: 'iOS', brand: TechBrand.appleIos),
-      TechBrandChipItem(label: 'Android', brand: TechBrand.android),
+      TechBrandChipItem(label: 'REST & AI APIs', brand: TechBrand.gemini),
+      TechBrandChipItem(label: 'iOS & Android', brand: TechBrand.android),
+      TechBrandChipItem(label: 'Figma', brand: TechBrand.figma),
+      TechBrandChipItem(
+        label: 'GitHub Actions',
+        brand: TechBrand.githubActions,
+      ),
     ],
     snapshotHighlights: [
       SnapshotHighlight(
-        label: 'End-to-End Delivery',
+        label: 'End-to-End Mobile Delivery',
         value:
-            'iOS, Android & Flutter Web — from Figma specs to App Store & Play Store releases.',
+            'Full iOS, Android & Flutter Web apps from Figma specs to App Store & Play Store release.',
       ),
       SnapshotHighlight(
-        label: 'Backend & AI Included',
+        label: 'Backend & AI Included for MVPs',
         value:
-            'No separate backend hire needed for MVPs: Firebase (Auth, Firestore, Functions, Push) & Cloudflare AI proxies.',
+            'No separate backend hire needed: Firebase (Auth, Firestore, Functions, Push) and Cloudflare AI proxies.',
       ),
       SnapshotHighlight(
-        label: 'Verified Quality',
+        label: 'Clean Architecture & Automated QA',
         value:
-            'Clean Architecture (BLoC / Provider), weekly testable web builds & 177 automated tests.',
+            'BLoC, Provider & Riverpod state machines, testable web builds every sprint, and 177 automated tests.',
         tabular: true,
       ),
       SnapshotHighlight(
-        label: 'Availability & Overlap',
+        label: 'Direct Overlap & Bilingual Communication',
         value:
-            'Freelance MVPs & Remote Roles · GMT-3 (Full US East & EU overlap) · EN / ES',
+            'Available for freelance builds and remote roles in GMT-3 (full US East & EU overlap), English & Spanish.',
       ),
     ],
   );
 
-  static const String engineeringSectionTitle = 'Capabilities & Cloud Stack';
+  static const String howIHelpSectionTitle = 'How I Help Teams';
+  static const String howIHelpSectionSubtitle =
+      'Clear scope, direct communication, and full ownership from architecture '
+      'to store release.';
+
+  static const String engineeringSectionTitle = 'Core Stack & Deliverables';
   static const String engineeringSectionSubtitle =
-      'End-to-end mobile delivery for startups and product teams—from Figma '
-      'specs to cloud-backed App Store & Play Store releases.';
+      'Production-proven technologies behind every mobile app, backend, and '
+      'automated release.';
 
   static const List<EngineeringPillar> engineeringPillars = [
     EngineeringPillar(
       id: 'mobile-delivery',
-      title: 'Figma-to-Production Mobile Apps',
+      title: 'Cross-Platform UI & Native',
       description:
-          'Pixel-accurate iOS, Android, and Web apps built in Flutter with '
-          'native bridges and responsive, 60fps UI.',
+          'Pixel-accurate Flutter apps for iOS, Android, and Web built from '
+          'Figma specs at 60fps.',
       iconKind: EngineeringIconKind.architecture,
       badges: [
         TechBrandChipItem(label: 'Flutter', brand: TechBrand.flutter),
@@ -82,10 +90,10 @@ abstract final class PortfolioCatalog {
     ),
     EngineeringPillar(
       id: 'firebase-cloud',
-      title: 'Firebase Cloud & Real-Time Data',
+      title: 'Firebase & Cloud Backends',
       description:
-          'Production authentication, real-time Firestore streams, Cloud '
-          'Functions, Storage rules, and FCM / APNs push delivery.',
+          'Production auth, real-time Firestore streams, Cloud Functions, and '
+          'FCM / APNs push delivery.',
       iconKind: EngineeringIconKind.security,
       badges: [
         TechBrandChipItem(label: 'Firebase', brand: TechBrand.firebase),
@@ -96,10 +104,10 @@ abstract final class PortfolioCatalog {
     ),
     EngineeringPillar(
       id: 'ai-edge',
-      title: 'Secure AI & Edge Proxies',
+      title: 'AI & Serverless Edge APIs',
       description:
-          'Serverless Cloudflare Worker proxies keeping LLM API keys off '
-          'client bundles with CORS, allowlists, and rate limits.',
+          'Cloudflare Worker proxies keeping LLM API keys off client bundles '
+          'with CORS and rate limits.',
       iconKind: EngineeringIconKind.geospatial,
       badges: [
         TechBrandChipItem(label: 'Gemini AI', brand: TechBrand.gemini),
@@ -109,10 +117,10 @@ abstract final class PortfolioCatalog {
     ),
     EngineeringPillar(
       id: 'maps-qa',
-      title: 'Maps, Offline Resilience & QA',
+      title: 'Maps, State & Automated QA',
       description:
           'Clustered OpenStreetMap viewports, local persistence fallbacks, '
-          'CI/CD release pipelines, and automated test suites.',
+          'CI/CD, and automated tests.',
       iconKind: EngineeringIconKind.verification,
       badges: [
         TechBrandChipItem(
@@ -128,34 +136,14 @@ abstract final class PortfolioCatalog {
     ),
   ];
 
-  static const List<EngagementMode> engagementModes = [
-    EngagementMode(
-      title: '0→1 MVP Development',
-      summary:
-          'Full iOS, Android & Web app + Firebase/Cloud backend ready for launch.',
-    ),
-    EngagementMode(
-      title: 'AI & Cloud Integrations',
-      summary:
-          'Secure LLM/Vision pipelines, real-time Firestore, maps & auth.',
-    ),
-    EngagementMode(
-      title: 'Remote Product Engineering',
-      summary:
-          'Clean Architecture, feature delivery, performance & automated QA.',
-    ),
-  ];
-
   static const ProjectShowcase nutriLens = ProjectShowcase(
     id: PortfolioSectionId.nutrilens,
     title: 'NutriLens AI',
     subtitle: 'Pantry-First Meal & Macro Tracker',
     problemStatement:
         'Calorie trackers fail on home-cooked meals—forcing manual weighing '
-        'or inaccurate generic averages instead of using the real brands in '
-        'your kitchen.',
-    scopeSummary:
-        'Solo End-to-End · UI · MVVM + Provider · Cloudflare Proxy · 153 Tests',
+        'instead of using the actual ingredients in your kitchen.',
+    scopeSummary: 'Solo End-to-End · 153 Tests',
     quickDemoHint:
         'Try in 10s: Open Live Demo → Camera → tap "Sample" to run AI Vision',
     engineeringHighlights: [
@@ -166,22 +154,16 @@ abstract final class PortfolioCatalog {
             'fallback), package photo, or nutrition label OCR.',
       ),
       EngineeringHighlight(
-        title: 'Home-Cooked Meal Matching:',
+        title: 'Home-Cooked Match & AI Health Score:',
         detail:
-            'Snap a prepared dish and Gemini Vision matches ingredients '
-            'against your personal pantry for accurate macros.',
+            'Gemini Vision matches plated dishes to your pantry and scores '
+            '0–100 macro balance with written rationale.',
       ),
       EngineeringHighlight(
-        title: 'On-Demand AI Health Score:',
+        title: 'Edge Security Proxy:',
         detail:
-            'Scores 0–100 macro and micronutrient balance with written rationale '
-            'and stale-edit recalculation.',
-      ),
-      EngineeringHighlight(
-        title: 'Edge Security & Live Demo:',
-        detail:
-            'Cloudflare Worker proxy enforces Origin CORS, model allowlists, '
-            '16 MB caps, and 30 req/min rate limits.',
+            'Cloudflare Worker keeps Gemini keys off clients with Origin CORS, '
+            'model allowlists, 16 MB caps, and 30 req/min rate limits.',
       ),
     ],
     techStack: [
@@ -189,7 +171,6 @@ abstract final class PortfolioCatalog {
       'Clean Architecture',
       'MVVM + Provider',
       'Gemini Vision',
-      'Open Food Facts v2',
       'Cloudflare Workers',
     ],
     testCount: 153,
@@ -214,44 +195,36 @@ abstract final class PortfolioCatalog {
     title: 'SetPoint',
     subtitle: 'Mobile Tennis Matchmaking Platform',
     problemStatement:
-        'Organizing tennis matches over group chats breaks down fast—mismatched '
-        'skill levels, unclear court surfaces, and manual headcounts waste hours.',
-    scopeSummary:
-        'Solo End-to-End · UI · BLoC 8.1 · Map Clustering · 24 Tests',
+        'Group chats break down for tennis—mismatched skill levels, unclear '
+        'court surfaces, and manual headcounts waste hours.',
+    scopeSummary: 'Solo End-to-End · 24 Tests',
     quickDemoHint:
         'Try in 10s: Open Live Demo → switch List / Map & filter by surface or radius',
     engineeringHighlights: [
       EngineeringHighlight(
-        title: 'Dual Feed & Map Clustering:',
+        title: 'Dual Feed & OpenStreetMap Clustering:',
         detail:
-            'Switch between match feed and interactive OpenStreetMap clustering '
-            'with 5–20 km radius filtering.',
+            'Switch between match feed and interactive OpenStreetMap pins with '
+            '5–20 km radius filtering.',
       ),
       EngineeringHighlight(
-        title: 'Live Multi-Criteria Filtering:',
+        title: 'Live Filtering & Court Tactics:',
         detail:
-            'Filter matches in real time by format (Singles / Doubles), court '
-            'surface (Clay, Hard, Grass), and 5-tier skill.',
+            'Filter matches by format (Singles / Doubles), court surface, and '
+            '5-tier skill with 1v1 / 2v2 court views.',
       ),
       EngineeringHighlight(
-        title: 'Tactical Court & Match Chat:',
+        title: 'UGC Moderation & Offline BLoC:',
         detail:
-            'Surface-themed 1v1 / 2v2 formations with participant chat and '
-            'App Store-ready UGC moderation (report & block).',
-      ),
-      EngineeringHighlight(
-        title: 'Offline-Resilient BLoC:',
-        detail:
-            'Clean Architecture + BLoC 8.1 with Dart 3 sealed domain errors and '
-            'deterministic offline mock repositories.',
+            'Participant chat with App Store report/block moderation, Clean '
+            'Architecture + BLoC 8.1, and sealed errors.',
       ),
     ],
     techStack: [
       'Dart 3 & Flutter',
       'Clean Architecture',
       'BLoC 8.1',
-      'OpenStreetMap + Clustering',
-      'Dark Glassmorphism',
+      'OpenStreetMap',
     ],
     testCount: 24,
     testLabel: '24 Unit & BLoC Tests',

@@ -6,8 +6,7 @@ import 'package:portfolio/features/portfolio/data/portfolio_catalog.dart';
 import 'package:portfolio/features/portfolio/domain/entities/engineering_pillar.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/common/tech_stack_chip.dart';
 
-/// Section 1 (#engineering): 2x2 client capability matrix plus Core Ecosystem
-/// brand strip.
+/// Section 2 (#stack): Simplified 2x2 Core Stack & Deliverables matrix.
 class EngineeringApproachSection extends StatelessWidget {
   const EngineeringApproachSection({
     required this.pillars,
@@ -133,83 +132,6 @@ class EngineeringApproachSection extends StatelessWidget {
                     ),
                   ],
                 ),
-              SizedBox(height: compactVertical ? 18.0 : 26.0),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(compactVertical ? 16.0 : 20.0),
-                decoration: BoxDecoration(
-                  color: AppColors.bgSurface,
-                  borderRadius: BorderRadius.circular(14.0),
-                  border: Border.all(
-                    color: AppColors.borderHairline,
-                    width: 1.0,
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'ENGAGEMENT MODES',
-                      style: AppTextStyles.labelSmall(
-                        color: AppColors.accentEngineering,
-                        fontWeight: FontWeight.w700,
-                      ).copyWith(letterSpacing: 1.2),
-                    ),
-                    const SizedBox(height: 14.0),
-                    if (isMobile)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (var i = 0;
-                              i < PortfolioCatalog.engagementModes.length;
-                              i++) ...[
-                            _EngagementModeItem(
-                              mode: PortfolioCatalog.engagementModes[i],
-                            ),
-                            if (i <
-                                PortfolioCatalog.engagementModes.length - 1)
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 12.0),
-                                child: Divider(
-                                  height: 1.0,
-                                  thickness: 1.0,
-                                  color: AppColors.borderHairline,
-                                ),
-                              ),
-                          ],
-                        ],
-                      )
-                    else
-                      IntrinsicHeight(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            for (var i = 0;
-                                i < PortfolioCatalog.engagementModes.length;
-                                i++) ...[
-                              Expanded(
-                                child: _EngagementModeItem(
-                                  mode: PortfolioCatalog.engagementModes[i],
-                                ),
-                              ),
-                              if (i <
-                                  PortfolioCatalog.engagementModes.length - 1)
-                                const Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: VerticalDivider(
-                                    width: 1.0,
-                                    thickness: 1.0,
-                                    color: AppColors.borderHairline,
-                                  ),
-                                ),
-                            ],
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-              ),
             ],
           ),
         ),
@@ -404,53 +326,5 @@ class _PillarVectorPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _PillarVectorPainter oldDelegate) {
     return oldDelegate.kind != kind || oldDelegate.color != color;
-  }
-}
-
-class _EngagementModeItem extends StatelessWidget {
-  const _EngagementModeItem({required this.mode});
-
-  final EngagementMode mode;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 6.0,
-              height: 6.0,
-              decoration: const BoxDecoration(
-                color: AppColors.accentEngineering,
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 8.0),
-            Expanded(
-              child: Text(
-                mode.title,
-                style: AppTextStyles.bodyDefault(
-                  color: AppColors.textPrimary,
-                ).copyWith(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 6.0),
-        Text(
-          mode.summary,
-          style: AppTextStyles.bodyDefault(
-            color: AppColors.textSecondary,
-          ).copyWith(fontSize: 13.5, height: 1.45),
-        ),
-      ],
-    );
   }
 }

@@ -45,6 +45,7 @@ void main() {
                   SizedBox(height: vh),
                   SizedBox(height: vh),
                   SizedBox(height: vh),
+                  SizedBox(height: vh),
                 ],
               ),
             ),
@@ -57,13 +58,17 @@ void main() {
 
       scrollController.jumpTo(1 * vh);
       await tester.pump();
-      expect(controller.activeSection, PortfolioSectionId.engineering);
+      expect(controller.activeSection, PortfolioSectionId.howIHelp);
 
       scrollController.jumpTo(2 * vh);
       await tester.pump();
-      expect(controller.activeSection, PortfolioSectionId.nutrilens);
+      expect(controller.activeSection, PortfolioSectionId.engineering);
 
       scrollController.jumpTo(3 * vh);
+      await tester.pump();
+      expect(controller.activeSection, PortfolioSectionId.nutrilens);
+
+      scrollController.jumpTo(4 * vh);
       await tester.pump();
       expect(controller.activeSection, PortfolioSectionId.setpoint);
 
@@ -72,7 +77,7 @@ void main() {
         reduceMotion: true,
       );
       await tester.pump();
-      expect(scrollController.offset, 2 * vh);
+      expect(scrollController.offset, 3 * vh);
       expect(controller.activeSection, PortfolioSectionId.nutrilens);
     });
 
