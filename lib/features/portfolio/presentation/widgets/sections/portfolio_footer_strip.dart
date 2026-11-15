@@ -141,18 +141,21 @@ class _PortfolioFooterLinkState extends State<PortfolioFooterLink> {
               minHeight: AppSpacing.minTouchTarget,
             ),
             padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-            alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
               border: _focused
                   ? Border.all(color: AppColors.accentEngineering, width: 2.0)
                   : null,
             ),
-            child: Text(
-              widget.label,
-              style: AppTextStyles.labelSmall(
-                color: active ? AppColors.textPrimary : AppColors.textSecondary,
-                fontWeight: active ? FontWeight.w600 : FontWeight.w500,
+            child: Center(
+              widthFactor: 1.0,
+              heightFactor: 1.0,
+              child: Text(
+                widget.label,
+                style: AppTextStyles.labelSmall(
+                  color: active ? AppColors.textPrimary : AppColors.textSecondary,
+                  fontWeight: active ? FontWeight.w600 : FontWeight.w500,
+                ),
               ),
             ),
           ),

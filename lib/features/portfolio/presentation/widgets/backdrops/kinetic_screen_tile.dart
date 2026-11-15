@@ -3,7 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:portfolio/core/theme/app_spacing.dart';
 
 /// Shared thumbnail tile for kinetic real-app screen walls & strips.
-/// Decoded at `cacheWidth: 260` with `FilterQuality.low` for cheap GPU composition.
+/// Decoded at `cacheWidth: 180` with `FilterQuality.low` for cheap GPU composition.
 class KineticScreenTile extends StatelessWidget {
   const KineticScreenTile({
     required this.assetPath,
@@ -11,15 +11,18 @@ class KineticScreenTile extends StatelessWidget {
     super.key,
     this.borderRadius = 18.0,
     this.borderOpacity = 0.10,
+    this.imageOpacity = 1.0,
   });
 
   final String assetPath;
   final double width;
   final double borderRadius;
   final double borderOpacity;
+  final double imageOpacity;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveOpacity = imageOpacity.clamp(0.0, 1.0);
     return SizedBox(
       width: width,
       child: AspectRatio(
@@ -28,7 +31,9 @@ class KineticScreenTile extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(borderRadius),
             border: Border.all(
-              color: Colors.white.withValues(alpha: borderOpacity),
+              color: Colors.white.withValues(
+                alpha: borderOpacity * effectiveOpacity,
+              ),
               width: 1.0,
             ),
           ),
@@ -36,10 +41,15 @@ class KineticScreenTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(borderRadius - 1.0),
             child: Image.asset(
               assetPath,
-              cacheWidth: 260,
+              cacheWidth: 180,
               filterQuality: FilterQuality.low,
               fit: BoxFit.cover,
               alignment: Alignment.topCenter,
+              color: effectiveOpacity < 1.0
+                  ? Colors.white.withValues(alpha: effectiveOpacity)
+                  : null,
+              colorBlendMode:
+                  effectiveOpacity < 1.0 ? BlendMode.modulate : null,
             ),
           ),
         ),
@@ -103,6 +113,7 @@ class KineticVerticalColumn extends StatelessWidget {
     required this.speedPxPerSec,
     required this.trackHeight,
     required this.elapsedSeconds,
+    this.imageOpacity = 1.0,
     super.key,
   });
 
@@ -112,6 +123,7 @@ class KineticVerticalColumn extends StatelessWidget {
   final double speedPxPerSec;
   final double trackHeight;
   final ValueNotifier<double> elapsedSeconds;
+  final double imageOpacity;
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +135,11 @@ class KineticVerticalColumn extends StatelessWidget {
       children: [
         for (var repeat = 0; repeat < 2; repeat++)
           for (final asset in assets) ...[
-            KineticScreenTile(assetPath: asset, width: tileWidth),
+            KineticScreenTile(
+              assetPath: asset,
+              width: tileWidth,
+              imageOpacity: imageOpacity,
+            ),
             SizedBox(height: tileGap),
           ],
       ],

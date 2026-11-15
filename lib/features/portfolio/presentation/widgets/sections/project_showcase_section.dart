@@ -1313,7 +1313,6 @@ class _ConsoleIndexButtonState extends State<_ConsoleIndexButton> {
           onTap: widget.onTap,
           child: Container(
             constraints: const BoxConstraints(minWidth: 44.0, minHeight: 44.0),
-            alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             decoration: BoxDecoration(
               color: widget.isSelected
@@ -1323,14 +1322,18 @@ class _ConsoleIndexButtonState extends State<_ConsoleIndexButton> {
                   ? Border.all(color: widget.accentColor, width: 2.0)
                   : null,
             ),
-            child: Text(
-              '[${widget.label}]',
-              style: AppTextStyles.labelSmall(
-                color: widget.isSelected
-                    ? widget.accentColor
-                    : AppColors.textSecondary,
-                fontWeight: FontWeight.w700,
-                tabular: true,
+            child: Center(
+              widthFactor: 1.0,
+              heightFactor: 1.0,
+              child: Text(
+                '[${widget.label}]',
+                style: AppTextStyles.labelSmall(
+                  color: widget.isSelected
+                      ? widget.accentColor
+                      : AppColors.textSecondary,
+                  fontWeight: FontWeight.w700,
+                  tabular: true,
+                ),
               ),
             ),
           ),
@@ -1385,7 +1388,6 @@ class _PauseMotionButtonState extends State<_PauseMotionButton> {
           child: Container(
             constraints: const BoxConstraints(minWidth: 44.0, minHeight: 44.0),
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            alignment: Alignment.center,
             decoration: BoxDecoration(
               color: widget.isPaused
                   ? widget.accentColor.withValues(alpha: 0.16)
@@ -1398,30 +1400,34 @@ class _PauseMotionButtonState extends State<_PauseMotionButton> {
                 width: _focused ? 2.0 : 1.0,
               ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  widget.isPaused
-                      ? Icons.play_arrow_rounded
-                      : Icons.pause_rounded,
-                  size: 16.0,
-                  color: widget.isPaused
-                      ? widget.accentColor
-                      : AppColors.textSecondary,
-                ),
-                if (widget.label != null) ...[
-                  const SizedBox(width: 6.0),
-                  Text(
-                    widget.label!,
-                    style: AppTextStyles.labelSmall(
-                      color: widget.isPaused
-                          ? widget.accentColor
-                          : AppColors.textSecondary,
-                    ),
+            child: Center(
+              widthFactor: 1.0,
+              heightFactor: 1.0,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    widget.isPaused
+                        ? Icons.play_arrow_rounded
+                        : Icons.pause_rounded,
+                    size: 16.0,
+                    color: widget.isPaused
+                        ? widget.accentColor
+                        : AppColors.textSecondary,
                   ),
+                  if (widget.label != null) ...[
+                    const SizedBox(width: 6.0),
+                    Text(
+                      widget.label!,
+                      style: AppTextStyles.labelSmall(
+                        color: widget.isPaused
+                            ? widget.accentColor
+                            : AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),

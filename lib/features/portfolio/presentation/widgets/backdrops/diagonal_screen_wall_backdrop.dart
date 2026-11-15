@@ -99,30 +99,28 @@ class _DiagonalScreenWallBackdropState extends State<DiagonalScreenWallBackdrop>
                     minHeight: canvasH,
                     child: Transform.rotate(
                       angle: -26.0 * math.pi / 180.0,
-                      child: Opacity(
-                        opacity: baseOpacity,
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              right: widget.isMobile ? 12.0 : 48.0,
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                for (var col = 0; col < columnCount; col++) ...[
-                                  if (col > 0) SizedBox(width: tileGap),
-                                  KineticVerticalColumn(
-                                    assets: _rotatedAssets(widget.imageAssets, col),
-                                    tileWidth: tileWidth,
-                                    tileGap: tileGap,
-                                    speedPxPerSec: columnSpeeds[col],
-                                    elapsedSeconds: elapsedSeconds,
-                                    trackHeight: canvasH,
-                                  ),
-                                ],
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            right: widget.isMobile ? 12.0 : 48.0,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              for (var col = 0; col < columnCount; col++) ...[
+                                if (col > 0) SizedBox(width: tileGap),
+                                KineticVerticalColumn(
+                                  assets: _rotatedAssets(widget.imageAssets, col),
+                                  tileWidth: tileWidth,
+                                  tileGap: tileGap,
+                                  speedPxPerSec: columnSpeeds[col],
+                                  elapsedSeconds: elapsedSeconds,
+                                  trackHeight: canvasH,
+                                  imageOpacity: baseOpacity,
+                                ),
                               ],
-                            ),
+                            ],
                           ),
                         ),
                       ),

@@ -210,6 +210,7 @@ class PortfolioPage extends StatelessWidget {
               );
 
               final Widget mainCanvasStack = Stack(
+                fit: StackFit.expand,
                 children: [
                   Positioned.fill(
                     child: RepaintBoundary(

@@ -385,21 +385,24 @@ class _TabletNavTextLinkState extends State<_TabletNavTextLink> {
           child: Container(
             constraints: const BoxConstraints(minHeight: 44.0, minWidth: 44.0),
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
               border: _focused
                   ? Border.all(color: widget.accentColor, width: 2.0)
                   : null,
             ),
-            child: Text(
-              widget.label,
-              style: AppTextStyles.labelSmall(
-                color: widget.isActive
-                    ? widget.accentColor
-                    : (_hovered ? AppColors.textPrimary : AppColors.textSecondary),
-                fontWeight:
-                    widget.isActive ? FontWeight.w700 : FontWeight.w500,
+            child: Center(
+              widthFactor: 1.0,
+              heightFactor: 1.0,
+              child: Text(
+                widget.label,
+                style: AppTextStyles.labelSmall(
+                  color: widget.isActive
+                      ? widget.accentColor
+                      : (_hovered ? AppColors.textPrimary : AppColors.textSecondary),
+                  fontWeight:
+                      widget.isActive ? FontWeight.w700 : FontWeight.w500,
+                ),
               ),
             ),
           ),

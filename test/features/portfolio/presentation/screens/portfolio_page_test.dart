@@ -130,14 +130,25 @@ void main() {
       await tester.pump(const Duration(milliseconds: 700));
       expect(controller.activeSection, PortfolioSectionId.contact);
 
-      // Accessible footer links >= 44x44
+      // Accessible footer links >= 44x44 and compact (not stretched 100% width)
       final footerLinks = find.byType(PortfolioFooterLink);
       expect(footerLinks, findsWidgets);
       for (var i = 0; i < footerLinks.evaluate().length; i++) {
         final sz = tester.getSize(footerLinks.at(i));
         expect(sz.width, greaterThanOrEqualTo(44.0));
+        expect(sz.width, lessThan(200.0));
         expect(sz.height, greaterThanOrEqualTo(44.0));
       }
+      final pauseButtons = find.bySemanticsLabel('Pause background motion');
+      expect(pauseButtons, findsWidgets);
+      for (var i = 0; i < pauseButtons.evaluate().length; i++) {
+        final sz = tester.getSize(pauseButtons.at(i));
+        expect(sz.width, greaterThanOrEqualTo(44.0));
+        expect(sz.width, lessThan(140.0));
+      }
+      final githubRect = tester.getRect(footerLinks.at(0));
+      final linkedInRect = tester.getRect(footerLinks.at(1));
+      expect(githubRect.center.dy, closeTo(linkedInRect.center.dy, 1.0));
 
       // Advance past email reset timer
       await tester.pump(const Duration(milliseconds: 2300));
@@ -210,6 +221,9 @@ void main() {
       expect(find.byType(MobileTopAppBar), findsOneWidget);
 
       final barRect = tester.getRect(find.byType(MobileTopAppBar));
+      final scrollRect = tester.getRect(find.byType(SingleChildScrollView).last);
+      expect(scrollRect.width, closeTo(768.0, 1.0));
+      expect(scrollRect.height, greaterThan(900.0));
       final identityRect =
           tester.getRect(find.text(PortfolioCatalog.profile.identityLine));
       expect(identityRect.top, greaterThanOrEqualTo(barRect.bottom));
@@ -236,8 +250,11 @@ void main() {
       expect(find.byType(FloatingPillSidebar), findsNothing);
       expect(find.byType(MobileTopAppBar), findsOneWidget);
 
-      // MobileTopAppBar is in Column strictly above Hero headline (zero overlap)
+      // MobileTopAppBar is in Column strictly above Hero headline & canvas expands cleanly
       final barRect = tester.getRect(find.byType(MobileTopAppBar));
+      final scrollRect = tester.getRect(find.byType(SingleChildScrollView).last);
+      expect(scrollRect.width, closeTo(390.0, 1.0));
+      expect(scrollRect.height, greaterThan(700.0));
       final heroHeadlineRect = tester.getRect(
         find.text(
           '${PortfolioCatalog.heroHeadlineFor(PortfolioConceptId.editorialWall).$1}\n'

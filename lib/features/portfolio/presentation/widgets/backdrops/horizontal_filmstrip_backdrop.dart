@@ -78,35 +78,32 @@ class _HorizontalFilmstripBackdropState
     return IgnorePointer(
       child: ClipRect(
         child: RepaintBoundary(
-          child: Opacity(
-            opacity: 0.15,
-            child: ColorFiltered(
-              colorFilter: _desaturate25Filter,
-              child: OverflowBox(
-                alignment: Alignment.center,
-                minHeight: 0.0,
-                maxHeight: double.infinity,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _HorizontalStripRow(
-                      assets: widget.imageAssets,
-                      tileWidth: tileWidth,
-                      tileGap: tileGap,
-                      speedPxPerSec: -12.0,
-                      elapsedSeconds: elapsedSeconds,
-                    ),
-                    const SizedBox(height: 16.0),
-                    _HorizontalStripRow(
-                      assets: widget.imageAssets.reversed.toList(),
-                      tileWidth: tileWidth,
-                      tileGap: tileGap,
-                      speedPxPerSec: 10.0,
-                      elapsedSeconds: elapsedSeconds,
-                    ),
-                  ],
-                ),
+          child: ColorFiltered(
+            colorFilter: _desaturate25Filter,
+            child: OverflowBox(
+              alignment: Alignment.center,
+              minHeight: 0.0,
+              maxHeight: double.infinity,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _HorizontalStripRow(
+                    assets: widget.imageAssets,
+                    tileWidth: tileWidth,
+                    tileGap: tileGap,
+                    speedPxPerSec: -12.0,
+                    elapsedSeconds: elapsedSeconds,
+                  ),
+                  const SizedBox(height: 16.0),
+                  _HorizontalStripRow(
+                    assets: widget.imageAssets.reversed.toList(),
+                    tileWidth: tileWidth,
+                    tileGap: tileGap,
+                    speedPxPerSec: 10.0,
+                    elapsedSeconds: elapsedSeconds,
+                  ),
+                ],
               ),
             ),
           ),
@@ -146,6 +143,7 @@ class _HorizontalStripRow extends StatelessWidget {
               width: tileWidth,
               borderRadius: 10.0,
               borderOpacity: 0.16,
+              imageOpacity: 0.15,
             ),
             SizedBox(width: tileGap),
           ],

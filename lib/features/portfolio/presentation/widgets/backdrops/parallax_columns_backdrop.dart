@@ -66,53 +66,52 @@ class _ParallaxColumnsBackdropState extends State<ParallaxColumnsBackdrop>
 
     return IgnorePointer(
       child: RepaintBoundary(
-        child: Opacity(
-          opacity: 0.18,
-          child: ShaderMask(
-            blendMode: BlendMode.dstIn,
-            shaderCallback: (bounds) => const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.0, 0.16, 0.84, 1.0],
-              colors: [
-                Colors.transparent,
-                Colors.white,
-                Colors.white,
-                Colors.transparent,
-              ],
-            ).createShader(bounds),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final trackH = constraints.maxHeight.isFinite
-                    ? constraints.maxHeight
-                    : 640.0;
+        child: ShaderMask(
+          blendMode: BlendMode.dstIn,
+          shaderCallback: (bounds) => const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0.0, 0.16, 0.84, 1.0],
+            colors: [
+              Colors.transparent,
+              Colors.white,
+              Colors.white,
+              Colors.transparent,
+            ],
+          ).createShader(bounds),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final trackH = constraints.maxHeight.isFinite
+                  ? constraints.maxHeight
+                  : 640.0;
 
-                return Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      KineticVerticalColumn(
-                        assets: widget.imageAssets,
-                        tileWidth: tileWidth,
-                        tileGap: tileGap,
-                        speedPxPerSec: -14.0,
-                        trackHeight: trackH,
-                        elapsedSeconds: elapsedSeconds,
-                      ),
-                      const SizedBox(width: 24.0),
-                      KineticVerticalColumn(
-                        assets: widget.imageAssets.reversed.toList(),
-                        tileWidth: tileWidth,
-                        tileGap: tileGap,
-                        speedPxPerSec: 14.0,
-                        trackHeight: trackH,
-                        elapsedSeconds: elapsedSeconds,
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+              return Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    KineticVerticalColumn(
+                      assets: widget.imageAssets,
+                      tileWidth: tileWidth,
+                      tileGap: tileGap,
+                      speedPxPerSec: -14.0,
+                      trackHeight: trackH,
+                      elapsedSeconds: elapsedSeconds,
+                      imageOpacity: 0.18,
+                    ),
+                    const SizedBox(width: 24.0),
+                    KineticVerticalColumn(
+                      assets: widget.imageAssets.reversed.toList(),
+                      tileWidth: tileWidth,
+                      tileGap: tileGap,
+                      speedPxPerSec: 14.0,
+                      trackHeight: trackH,
+                      elapsedSeconds: elapsedSeconds,
+                      imageOpacity: 0.18,
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),

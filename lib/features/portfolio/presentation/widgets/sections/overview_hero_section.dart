@@ -580,10 +580,14 @@ class _EmailCopyChipState extends State<_EmailCopyChip> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  widget.email,
-                  style: AppTextStyles.labelSmall(
-                    color: AppColors.textSecondary,
+                Flexible(
+                  child: Text(
+                    widget.email,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.labelSmall(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10.0),

@@ -2,7 +2,7 @@
 {{flutter_build_config}}
 
 (function () {
-  var buildVersion = 'r8';
+  var buildVersion = 'r9';
   if (
     window._flutter &&
     _flutter.buildConfig &&
