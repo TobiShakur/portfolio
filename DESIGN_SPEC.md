@@ -30,8 +30,8 @@ On Desktop (`>= 960px`), the page is structured as **4 distinct `100vh` (`MediaQ
 
 | Index | Section ID | Viewport Height | Purpose |
 |---|---|---|---|
-| `0` | `#overview` | `100vh` | **Hero — Freelance Pitch, Stack Logos & Production Snapshot** |
-| `1` | `#engineering` | `100vh` | **Capabilities & Cloud Stack — Deliverables + Ecosystem Logos** |
+| `0` | `#overview` | `100vh` | **Hero — Freelance Pitch, Stack Logos & How I Help Teams** |
+| `1` | `#engineering` | `100vh` | **Capabilities & Cloud Stack — Deliverables + Engagement Modes** |
 | `2` | `#nutrilens` | `100vh` | **NutriLens AI** — 3-Column Interactive Showcase + Live Demo Portal |
 | `3` | `#setpoint` | `100vh` | **SetPoint** — 3-Column Interactive Showcase + Live Demo Portal + Minimal Footer |
 
@@ -64,60 +64,59 @@ On Desktop (`>= 960px`), the page is structured as **4 distinct `100vh` (`MediaQ
 - **On Hover:** Item emits a subtle accent-tinted background + border glow, and reveals a floating label tooltip immediately to the right (`left: 100px`, e.g., `Overview`, `Engineering`, `NutriLens AI`, `SetPoint`).
 - **On Active Section:** Smoothly highlighted pill ring + accent indicator matching the active section's token.
 
-#### Section 1: Hero — Freelance Pitch, Stack Logos & Production Snapshot (`100vh`)
+#### Section 1: Hero — Freelance Pitch, Stack Logos & How I Help Teams (`100vh`)
 ```text
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
-|  .-------.  [ Left Column (~56%) ]              [ Right Column (~40%, >=1100px) ] |
-|  | (TG)  |  TOBÍAS GUTIÉRREZ                    +-------------------------------+ |
-|  | (--)  |  MOBILE SOFTWARE ENGINEER            | PRODUCTION SNAPSHOT           | |
+|  .-------.  [ Left Column (~58%) ]              [ Right Column (~38%, >=920px) ]  |
+|  | (TG)  |  TOBÍAS GUTIÉRREZ ·                  +-------------------------------+ |
+|  | (--)  |  MOBILE SOFTWARE ENGINEER · GMT-3    | HOW I HELP TEAMS              | |
 |  | [NL]  |                                      |                               | |
-|  | [SP]  |  Production mobile apps,             | Platforms                     | |
-|  '-------'  architected end to end.             | iOS (App Store) · Android ·   | |
-|  (floats at                                     | Flutter Web                   | |
-|  centerLeft) I build Flutter, iOS, and Android  |-------------------------------| |
-|             software backed by Firebase cloud   | Cloud & Backend               | |
-|             backends, serverless AI proxies,    | Firebase (Auth, Firestore,    | |
-|             and automated test suites.          | Functions, FCM) · Cloudflare  | |
+|  | [SP]  |  Flutter & native apps,              | End-to-End Delivery           | |
+|  '-------'  from Figma to the stores.           | iOS, Android & Flutter Web —  | |
+|  (floats at                                     | Figma to App/Play Store.      | |
+|  centerLeft) I help startups and product teams  |-------------------------------| |
+|             ship iOS, Android, and Web apps—    | Backend & AI Included         | |
+|             with Firebase, AI pipelines & QA.   | Firebase + Cloudflare AI      | |
+|                                                 | proxies (no extra backend).   | |
+|             [ Explore Projects ↓ ]              |-------------------------------| |
+|             [ GitHub ↗ ] [ LinkedIn ↗ ]         | Verified Quality              | |
+|             [ tobigutierrez26@gmail.com  Copy ] | Clean Arch & 177 Tests        | |
 |                                                 |-------------------------------| |
-|             [ Explore Projects ↓ ]              | Live Interactive Demos        | |
-|             [ GitHub ↗ ] [ LinkedIn ↗ ]         | NutriLens AI ↗  ·  SetPoint ↗ | |
-|             [ tobigutierrez26@gmail.com  Copy ] |-------------------------------| |
-|                                                 | Verified Quality              | |
-|             [Flutter] [Dart] [Firebase]         | 177 Automated Tests           | |
-|             [Cloudflare] [Gemini] [iOS/Android] | Clean Architecture            | |
+|             [Flutter] [Dart] [Firebase]         | Availability & Overlap        | |
+|             [Cloudflare] [Gemini] [iOS/Android] | GMT-3 (US East / EU) · EN/ES  | |
+|                                                 | Live Demos: [NL ↗] [SP ↗]     | |
 |                                                 +-------------------------------+ |
 +-----------------------------------------------------------------------------------+
 ```
-*Note on alignment & balance:* Asymmetric 2-column Hero (`56% / 40%`, gap `40px`) vertically centered inside `100vh` (`maxWidth: 1220px`, `paddingLeft >= 112px`). On compact desktop/tablet/mobile (`< 1100px`), the **Production Snapshot** stacks cleanly below the Stack Logo Strip so zero right-side void or horizontal overflow occurs. Every item inside the Snapshot is 100% real, verified production experience.
+*Note on alignment & balance:* Asymmetric 2-column Hero (`58% / 38%`, gap `36px`) vertically centered inside `100vh` (`maxWidth: 1220px`, `paddingLeft >= 112px`). Each H1 line uses `FittedBox(fit: BoxFit.scaleDown)` so it stays strictly **2 lines** across desktop and compact viewports without orphan words. On `< 920px`, **HOW I HELP TEAMS** stacks cleanly below the Stack Logo Strip.
 
 #### Section 2: Capabilities & Cloud Stack (`100vh`)
 ```text
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
-|              CAPABILITIES & CLOUD STACK                                           |
-|              From Figma prototypes to cloud-backed mobile apps in stores.         |
+|              Capabilities & Cloud Stack                                           |
+|              End-to-end mobile delivery from Figma to App Store & Play Store.     |
 |                                                                                   |
 |  .-------.   +------------------------------+  +------------------------------+   |
-|  | (TG)  |   | End-to-End Mobile Apps       |  | Firebase & Cloud Backends    |   |
-|  | (--)  |   | Pixel-accurate Flutter apps  |  | Production Auth, Firestore,  |   |
-|  | [NL]  |   | for iOS & Android from Figma.|  | Cloud Functions & Push FCM.  |   |
+|  | (TG)  |   | Figma-to-Production Apps     |  | Firebase Cloud & Real-Time   |   |
+|  | (--)  |   | Pixel-accurate iOS, Android  |  | Production Auth, Firestore,  |   |
+|  | [NL]  |   | & Web Flutter apps at 60fps. |  | Cloud Functions & Push FCM.  |   |
 |  | [SP]  |   | [Flutter][Dart][iOS][Figma]  |  | [Firebase][Firestore][FCM]   |   |
 |  '-------'   +------------------------------+  +------------------------------+   |
 |                                                                                   |
 |              +------------------------------+  +------------------------------+   |
-|              | Secure AI & Edge APIs        |  | Offline-First, Maps & QA     |   |
+|              | Secure AI & Edge Proxies     |  | Maps, Offline & QA           |   |
 |              | Serverless Cloudflare proxies|  | Clustered OpenStreetMap,     |   |
 |              | with CORS & rate limits.     |  | 177 tests & CI/CD delivery.  |   |
 |              | [Gemini][Cloudflare][REST]   |  | [OSM][GitHub Actions][Tests] |   |
 |              +------------------------------+  +------------------------------+   |
 |                                                                                   |
-|              CORE ECOSYSTEM                                                       |
-|              [Flutter] [Dart] [Firebase] [Cloudflare] [Gemini] [iOS] [Android]    |
-|              [Figma] [OpenStreetMap] [GitHub Actions]                             |
+|              ENGAGEMENT MODES                                                     |
+|              • 0→1 MVP Development | • AI & Cloud Integrations | • Remote Product |
 +-----------------------------------------------------------------------------------+
 ```
-*Design rule:* Clean 2x2 client-outcome matrix (`#101318`, `1px borderHairline`, concise 2-line pitch per card + embedded vector brand logo pills) anchored by a crisp horizontal **Core Ecosystem** logo strip below so clients/recruiters can visually scan Flutter, Firebase, Cloudflare, Gemini, iOS, Android, Figma, OpenStreetMap, and GitHub Actions in under 2 seconds.
+*Design rule:* Clean 2x2 client-outcome matrix (`#101318`, `1px borderHairline`, concise 2-line pitch per card + embedded vector brand logo pills) anchored by a crisp 3-column **Engagement Modes** bar below (*0→1 MVP Development*, *AI & Cloud Integrations*, *Remote Product Engineering*).
 
 #### Sections 3 & 4: App Showcases (`100vh` each — NutriLens AI & SetPoint)
 ```text
@@ -142,8 +141,8 @@ On Desktop (`>= 960px`), the page is structured as **4 distinct `100vh` (`MediaQ
 +-----------------------------------------------------------------------------------+
 ```
 - **Column 1 (Left):** Subtle 3D angled iPhone mockup (`perspective` + `rotateY(+14deg)` + `rotateX(-2deg)`) with **`32px` top safe-area inset below Dynamic Island** and full-frame `BoxFit.contain` / `Alignment.topCenter` rendering so **zero UI text or toggles are ever covered or cropped**.
-- **Column 2 (Center):** Project header with real `Icon-512.png`, crisp problem statement, 4 scannable technical bullet points, verified stack/test chips (with `TechBrandIcon` mini-logos where applicable), and primary `"View Source on GitHub ↗"` link (plus `"Open Live Demo ↗"` button for keyboard/non-hover accessibility).
-- **Column 3 (Right):** Upright front-facing iPhone mockup with `32px` top safe-area clearance under Dynamic Island, playing a continuous muted loop preview of the running app (zero horizontal cropping on SetPoint or NutriLens). **Hover / Focus triggers smooth backdrop blur + dark scrim + centered `"Try Live Interactive App ↗"` pill button**. Below the right iPhone on desktop, display a subtle `13px` caption (`Hover to launch live demo ↗`) so the interactive affordance is immediately discoverable.
+- **Column 2 (Center):** Project header with real `Icon-512.png`, crisp problem statement, 4 scannable technical bullet points, verified stack/test chips, compact **`Scope` + `Try in 10s` callout**, and `"View Source on GitHub ↗"` / `"Open Live Demo ↗"` buttons.
+- **Column 3 (Right):** Upright front-facing iPhone mockup with `30–32px` top safe-area clearance under Dynamic Island, cycling screens strictly disjoint from the tilted left screen (zero duplicate initial/loop screens). **Hover / Focus triggers smooth backdrop blur + dark scrim + centered `"Try Live Interactive App ↗"` pill button**. Below the right iPhone on desktop, display a subtle `13px` caption (`Hover to launch live demo ↗`).
 
 ### 1.4 Responsive Breakpoints & Mobile Adaptation
 | Breakpoint | Width | Navigation | Section Height | App Showcase Layout |

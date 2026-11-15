@@ -399,6 +399,43 @@ class _ProjectNarrativeColumn extends StatelessWidget {
             ),
           ],
         ),
+        SizedBox(height: compact ? 12.0 : 16.0),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(
+            horizontal: 12.0,
+            vertical: compact ? 9.0 : 11.0,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.bgSurface,
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(
+              color: project.accentColor.withValues(alpha: 0.25),
+              width: 1.0,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                project.scopeSummary,
+                style: AppTextStyles.labelSmall(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                ).copyWith(height: 1.35),
+              ),
+              const SizedBox(height: 4.0),
+              Text(
+                project.quickDemoHint,
+                style: AppTextStyles.labelSmall(
+                  color: project.accentColor,
+                  fontWeight: FontWeight.w500,
+                ).copyWith(height: 1.35),
+              ),
+            ],
+          ),
+        ),
         if (includeActionButtons) ...[
           SizedBox(height: compact ? 14.0 : 20.0),
           Wrap(

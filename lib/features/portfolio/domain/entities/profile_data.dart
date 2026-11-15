@@ -1,6 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:portfolio/features/portfolio/domain/entities/tech_brand.dart';
 
+/// Client-focused summary row displayed inside the Hero `HOW I HELP TEAMS` card.
+@immutable
+final class SnapshotHighlight {
+  const SnapshotHighlight({
+    required this.label,
+    required this.value,
+    this.tabular = false,
+  });
+
+  final String label;
+  final String value;
+  final bool tabular;
+}
+
 /// Immutable profile and hero presentation data.
 @immutable
 final class ProfileData {
@@ -15,6 +29,7 @@ final class ProfileData {
     required this.email,
     required this.verificationMetrics,
     required this.coreStackLogos,
+    required this.snapshotHighlights,
   });
 
   final String fullName;
@@ -27,7 +42,8 @@ final class ProfileData {
   final String email;
   final List<String> verificationMetrics;
   final List<TechBrandChipItem> coreStackLogos;
+  final List<SnapshotHighlight> snapshotHighlights;
 
-  String get identityLine => '$fullName — $roleTitle';
+  String get identityLine => '$fullName · $roleTitle';
   String get mailtoUrl => 'mailto:$email';
 }

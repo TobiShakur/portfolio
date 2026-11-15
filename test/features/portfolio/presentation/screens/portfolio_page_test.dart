@@ -60,10 +60,13 @@ void main() {
       expect(find.byType(FloatingPillSidebar), findsOneWidget);
       expect(find.byType(MobileBottomPillDock), findsNothing);
 
-      expect(find.text('TOBÍAS GUTIÉRREZ — MOBILE SOFTWARE ENGINEER'), findsOneWidget);
-      expect(find.text('PRODUCTION SNAPSHOT'), findsOneWidget);
+      expect(
+        find.text('TOBÍAS GUTIÉRREZ · MOBILE SOFTWARE ENGINEER · GMT-3'),
+        findsOneWidget,
+      );
+      expect(find.text('HOW I HELP TEAMS'), findsOneWidget);
       expect(find.text('Capabilities & Cloud Stack'), findsOneWidget);
-      expect(find.text('CORE ECOSYSTEM'), findsOneWidget);
+      expect(find.text('ENGAGEMENT MODES'), findsOneWidget);
       expect(find.text('Hover to launch live demo ↗'), findsNWidgets(2));
       expect(find.text('NutriLens AI'), findsWidgets);
       expect(find.text('SetPoint'), findsWidgets);
@@ -123,9 +126,9 @@ void main() {
 
       expect(tester.takeException(), isNull);
       expect(find.byType(FloatingPillSidebar), findsOneWidget);
-      expect(find.text('PRODUCTION SNAPSHOT'), findsOneWidget);
+      expect(find.text('HOW I HELP TEAMS'), findsOneWidget);
       expect(find.text('Capabilities & Cloud Stack'), findsOneWidget);
-      expect(find.text('CORE ECOSYSTEM'), findsOneWidget);
+      expect(find.text('ENGAGEMENT MODES'), findsOneWidget);
       expect(find.text('NutriLens AI'), findsWidgets);
       expect(find.text('SetPoint'), findsWidgets);
     });

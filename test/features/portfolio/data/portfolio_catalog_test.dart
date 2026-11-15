@@ -11,9 +11,16 @@ void main() {
       PortfolioCatalog.profile.supportingPitch,
       ...PortfolioCatalog.profile.verificationMetrics,
       for (final item in PortfolioCatalog.profile.coreStackLogos) item.label,
+      for (final row in PortfolioCatalog.profile.snapshotHighlights) ...[
+        row.label,
+        row.value,
+      ],
       PortfolioCatalog.engineeringSectionTitle,
       PortfolioCatalog.engineeringSectionSubtitle,
-      for (final item in PortfolioCatalog.coreEcosystem) item.label,
+      for (final mode in PortfolioCatalog.engagementModes) ...[
+        mode.title,
+        mode.summary,
+      ],
       for (final pillar in PortfolioCatalog.engineeringPillars) ...[
         pillar.title,
         pillar.description,
@@ -23,6 +30,8 @@ void main() {
         project.title,
         project.subtitle,
         project.problemStatement,
+        project.scopeSummary,
+        project.quickDemoHint,
         project.testLabel,
         ...project.techStack,
         for (final h in project.engineeringHighlights) ...[
@@ -86,6 +95,18 @@ void main() {
         PortfolioCatalog.setPoint.repoUrl,
         'https://github.com/TobiShakur/flutter-tennis-matchmaking',
       );
+    });
+
+    test('keeps right preview carousel distinct from left static screen', () {
+      for (final project in PortfolioCatalog.projects) {
+        expect(project.rightPreviewImages, isNotEmpty);
+        expect(
+          project.rightPreviewImages.contains(project.leftScreenshotAsset),
+          isFalse,
+          reason:
+              '${project.title} right carousel must not repeat leftScreenshotAsset',
+        );
+      }
     });
   });
 }

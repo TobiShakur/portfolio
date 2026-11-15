@@ -27,6 +27,8 @@ final class ProjectShowcase {
     required this.title,
     required this.subtitle,
     required this.problemStatement,
+    required this.scopeSummary,
+    required this.quickDemoHint,
     required this.engineeringHighlights,
     required this.techStack,
     required this.testCount,
@@ -46,6 +48,8 @@ final class ProjectShowcase {
   final String title;
   final String subtitle;
   final String problemStatement;
+  final String scopeSummary;
+  final String quickDemoHint;
   final List<EngineeringHighlight> engineeringHighlights;
   final List<String> techStack;
   final int testCount;

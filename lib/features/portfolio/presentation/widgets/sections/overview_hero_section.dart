@@ -55,9 +55,19 @@ class OverviewHeroSection extends StatelessWidget {
           ).copyWith(letterSpacing: 1.4),
         ),
         SizedBox(height: isMobile ? 16.0 : 20.0),
-        Text(
-          '${profile.headlineLine1}\n${profile.headlineLine2}',
-          style: AppTextStyles.heroDisplay(isMobile: isMobile),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _HeroHeadlineLine(
+              text: profile.headlineLine1,
+              isMobile: isMobile,
+            ),
+            _HeroHeadlineLine(
+              text: profile.headlineLine2,
+              isMobile: isMobile,
+            ),
+          ],
         ),
         SizedBox(height: isMobile ? 16.0 : 18.0),
         Text(
@@ -133,6 +143,7 @@ class OverviewHeroSection extends StatelessWidget {
     );
 
     final snapshotCard = _ProductionSnapshotCard(
+      profile: profile,
       onOpenUrl: onOpenUrl,
     );
 
@@ -153,12 +164,12 @@ class OverviewHeroSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      flex: 56,
+                      flex: 58,
                       child: leftColumn,
                     ),
-                    const SizedBox(width: 40.0),
+                    const SizedBox(width: 36.0),
                     Expanded(
-                      flex: 40,
+                      flex: 38,
                       child: snapshotCard,
                     ),
                   ],
@@ -198,11 +209,36 @@ class OverviewHeroSection extends StatelessWidget {
   }
 }
 
+class _HeroHeadlineLine extends StatelessWidget {
+  const _HeroHeadlineLine({
+    required this.text,
+    required this.isMobile,
+  });
+
+  final String text;
+  final bool isMobile;
+
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Text(
+        text,
+        maxLines: 1,
+        style: AppTextStyles.heroDisplay(isMobile: isMobile),
+      ),
+    );
+  }
+}
+
 class _ProductionSnapshotCard extends StatelessWidget {
   const _ProductionSnapshotCard({
+    required this.profile,
     required this.onOpenUrl,
   });
 
+  final ProfileData profile;
   final ValueChanged<String> onOpenUrl;
 
   @override
@@ -223,24 +259,21 @@ class _ProductionSnapshotCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'PRODUCTION SNAPSHOT',
+            'HOW I HELP TEAMS',
             style: AppTextStyles.labelSmall(
               color: AppColors.accentEngineering,
               fontWeight: FontWeight.w700,
             ).copyWith(letterSpacing: 1.2),
           ),
           const SizedBox(height: 16.0),
-          const _SnapshotRow(
-            label: 'Platforms',
-            value: 'iOS (App Store) · Android · Flutter Web',
-          ),
-          const _SnapshotDivider(),
-          const _SnapshotRow(
-            label: 'Cloud & Backend',
-            value:
-                'Firebase (Auth · Firestore · Functions · FCM) · Cloudflare Workers',
-          ),
-          const _SnapshotDivider(),
+          for (var i = 0; i < profile.snapshotHighlights.length; i++) ...[
+            _SnapshotRow(
+              label: profile.snapshotHighlights[i].label,
+              value: profile.snapshotHighlights[i].value,
+              tabular: profile.snapshotHighlights[i].tabular,
+            ),
+            const _SnapshotDivider(),
+          ],
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -269,12 +302,6 @@ class _ProductionSnapshotCard extends StatelessWidget {
                 ],
               ),
             ],
-          ),
-          const _SnapshotDivider(),
-          const _SnapshotRow(
-            label: 'Verified Quality',
-            value: '177 Automated Tests · Clean Architecture (BLoC / MVVM)',
-            tabular: true,
           ),
         ],
       ),

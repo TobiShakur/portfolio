@@ -103,3 +103,36 @@
 - `flutter test`: **21/21 passed** (including `perf_telemetry_models_test.dart` and `perf_debug_overlay_test.dart`).
 - `flutter build web --release --wasm`: **exit code 0** (`skwasm` active, `52 files in build/web`).
 - Live Edge CDP (`https://tobias-portfolio-web.web.app` & `?perf=1`): **0 console errors**, **0 uncaught exceptions**, `window.__portfolioPerf.snapshot()` populated, `PerfDebugOverlay` verified rendered with all timeline stages, memory/network buckets, and frame timings.
+
+---
+
+## 5. Round 5 — Deterministic `390×844 @2x` Media Pipeline & Live Visual Audit (`?v=r5`)
+
+### 5.1 Capture & WebP Optimization (`assets/images/`)
+Replaced NutriLens's synthetic canvas mockup (`NutriLensPreviewScreens`) and mismatched/cropped captures (`nutrilens_sample_meal.webp` `640×478`, `setpoint_map_zoom.webp` `504×833`) with **8 authentic `390×844 @2x` (`624×1350`, exact `9:19.5` bezel ratio)** WebP screenshots captured from the live deployed web apps via Headless Edge CDP (`--lang=en-US`, forcing NutriLens `en` locale via `localStorage['flutter.nutrilens_locale_v1']`):
+
+| App | Asset | Resolution | Raw PNG | Optimized WebP (`q87`) | Role |
+|---|---|---:|---:|---:|---|
+| **NutriLens AI (EN)** | `nutrilens_dashboard.webp` | `624×1350` | `170.3 KB` | **`51.2 KB`** | Left tilted iPhone + Storyboard Step 1 |
+| **NutriLens AI (EN)** | `nutrilens_scan.webp` | `624×1350` | `646.8 KB` | **`40.4 KB`** | Storyboard Step 2 (Vision scan sample) |
+| **NutriLens AI (EN)** | `nutrilens_analysis.webp` | `624×1350` | `151.1 KB` | **`42.9 KB`** | Storyboard Step 3 (Macros & 94/100 Health Score) |
+| **NutriLens AI (EN)** | `nutrilens_pantry.webp` | `624×1350` | `184.2 KB` | **`55.2 KB`** | Storyboard Step 4 (`My Pantry`) |
+| **SetPoint** | `setpoint_map.webp` | `624×1350` | `791.2 KB` | **`82.1 KB`** | Left tilted iPhone (OSM BA map + cluster `3` + pin) |
+| **SetPoint** | `setpoint_feed.webp` | `624×1350` | `454.5 KB` | **`60.3 KB`** | Storyboard Step 1 (Match feed, zero clipping) |
+| **SetPoint** | `setpoint_filters.webp` | `624×1350` | `164.7 KB` | **`39.8 KB`** | Storyboard Step 2 (Multi-criteria filters sheet) |
+| **SetPoint** | `setpoint_match_doubles.webp` | `624×1350` | `662.2 KB` | **`50.1 KB`** | Storyboard Step 3 (`Dobles Clásico en Recoleta`) |
+| **Total (8 assets)** | — | `9:19.5` | `3,225.0 KB` | **`422.0 KB`** | **-86.9%** vs raw captures |
+
+*(Note: WebM `MediaRecorder` probing showed Flutter Web encapsulates `<canvas>` in `flt-glass-pane` shadow DOM and video compression softens 9px mobile UI copy; static `624×1350` WebP storyboards deliver superior retina text sharpness at `422.0 KB` total across Safari & Chromium while keeping `assets/` precaching deferred post-`portfolio-ready`.)*
+
+### 5.2 Round 5 Live Telemetry (`Headless Edge CDP @ 1440×900`, `?v=r5`)
+| Target / Mode | `htmlFirstPaintMs` | `engineLoadMs` | `dartBootMs` | `assetsAndFontsMs` | `totalReadyMs` | Transfer / Decoded | `JS Heap` |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| **Firebase Hosting (Cold)** | `328 ms` | `1,505.0 ms` | `10.0 ms` | `628.9 ms` | **`2,652.2 ms`** | `941.8 KB` / `2,354.8 KB` *(Hero+initial)* | `7.64 / 13.83 MB` |
+| **GitHub Pages (Cold)** | `440 ms` | `997.3 ms` | `8.2 ms` | `639.3 ms` | **`2,217.1 ms`** | `1,104.4 KB` / `2,354.8 KB` | `8.91 / 14.45 MB` |
+| **Firebase Hosting (Warm `?perf=1`)** | `228 ms` | `1,477.0 ms` | `1.0 ms` | `292.0 ms` | **`2,176.0 ms`** | `519.3 KB` / `2,353.9 KB` (`15` cached) | `8.1 / 22.3 MB` |
+
+- **Post-Deploy Verification (`r5`):**
+  - `flutter analyze`: **0 issues** (`No issues found!`).
+  - `flutter test`: **22/22 passed**.
+  - Live visual audit at `1440×900` (`https://tobias-portfolio-web.web.app` & `https://tobishakur.github.io/portfolio/`): **0 console errors**, **0 uncaught exceptions**; all 4 iPhone mockups across Sections 3 (`NutriLens AI`) and 4 (`SetPoint`) confirmed sharp, centered, and unclipped, with `PerfDebugOverlay` (`?perf=1`) active at `Idle (60.0) FPS / 0/0 jank`.
