@@ -2,7 +2,7 @@
 {{flutter_build_config}}
 
 (function () {
-  var buildVersion = 'r4';
+  var buildVersion = 'r5';
   if (
     window._flutter &&
     _flutter.buildConfig &&

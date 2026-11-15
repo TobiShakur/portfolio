@@ -40,8 +40,9 @@ class _PortfolioAppState extends State<PortfolioApp> {
   ];
 
   static const List<String> _deferredProjectImageAssets = [
-    'assets/images/nutrilens_sample_meal.webp',
-    'assets/images/setpoint_map_zoom.webp',
+    'assets/images/nutrilens_dashboard.webp',
+    'assets/images/nutrilens_scan.webp',
+    'assets/images/setpoint_map.webp',
     'assets/images/setpoint_feed.webp',
   ];
 

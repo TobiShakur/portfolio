@@ -188,7 +188,7 @@ class _InteractiveRightPhoneMockupState
         mainAxisSize: MainAxisSize.min,
         children: [
           phone,
-          const SizedBox(height: 10.0),
+          const SizedBox(height: 6.0),
           Text(
             'Hover to launch live demo ↗',
             style: AppTextStyles.labelSmall(

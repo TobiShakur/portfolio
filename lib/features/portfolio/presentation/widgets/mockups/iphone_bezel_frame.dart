@@ -24,71 +24,84 @@ class IphoneBezelFrame extends StatelessWidget {
     final islandWidth = (width * 0.285).clamp(54.0, 78.0);
     final islandHeight = (width * 0.077).clamp(15.0, 21.0);
     final islandTop = (width * 0.042).clamp(8.0, 13.0);
+    final topSafeArea = (width * 0.12).clamp(26.0, 32.0);
 
     return SizedBox(
       width: width,
-      child: AspectRatio(
-        aspectRatio: AppSpacing.phoneAspectRatio,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.bezelFrame,
+          borderRadius: BorderRadius.circular(outerRadius),
+          border: Border.all(
+            color: AppColors.sidebarBorder,
+            width: 2.5,
+          ),
+          boxShadow: [
+            const BoxShadow(
+              color: Color(0xAA000000),
+              blurRadius: 36.0,
+              offset: Offset(0, 18),
+            ),
+            if (showAmbientGlow && ambientGlowColor != null)
+              BoxShadow(
+                color: ambientGlowColor!.withValues(alpha: 0.11),
+                blurRadius: 56.0,
+                spreadRadius: 2.0,
+              ),
+          ],
+        ),
+        padding: const EdgeInsets.all(6.0),
         child: Container(
           decoration: BoxDecoration(
-            color: AppColors.bezelFrame,
-            borderRadius: BorderRadius.circular(outerRadius),
+            color: AppColors.bgCanvas,
+            borderRadius: BorderRadius.circular(innerRadius),
             border: Border.all(
-              color: AppColors.sidebarBorder,
-              width: 2.5,
+              color: AppColors.bezelSpecular,
+              width: 1.0,
             ),
-            boxShadow: [
-              const BoxShadow(
-                color: Color(0xAA000000),
-                blurRadius: 36.0,
-                offset: Offset(0, 18),
-              ),
-              if (showAmbientGlow && ambientGlowColor != null)
-                BoxShadow(
-                  color: ambientGlowColor!.withValues(alpha: 0.11),
-                  blurRadius: 56.0,
-                  spreadRadius: 2.0,
-                ),
-            ],
           ),
-          padding: const EdgeInsets.all(6.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.bgCanvas,
-              borderRadius: BorderRadius.circular(innerRadius),
-              border: Border.all(
-                color: AppColors.bezelSpecular,
-                width: 1.0,
-              ),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(innerRadius - 1.0),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  child,
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: islandTop),
-                      child: IgnorePointer(
-                        child: Container(
-                          width: islandWidth,
-                          height: islandHeight,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF040507),
-                            borderRadius: BorderRadius.circular(999.0),
-                            border: Border.all(
-                              color: AppColors.borderHairline,
-                              width: 0.75,
-                            ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(innerRadius - 1.0),
+            child: Stack(
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ColoredBox(
+                      color: AppColors.bgCanvas,
+                      child: SizedBox(
+                        height: topSafeArea,
+                        width: double.infinity,
+                      ),
+                    ),
+                    AspectRatio(
+                      aspectRatio: AppSpacing.phoneAspectRatio,
+                      child: child,
+                    ),
+                  ],
+                ),
+                Positioned(
+                  top: islandTop,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: IgnorePointer(
+                      child: Container(
+                        width: islandWidth,
+                        height: islandHeight,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF040507),
+                          borderRadius: BorderRadius.circular(999.0),
+                          border: Border.all(
+                            color: AppColors.borderHairline,
+                            width: 0.75,
                           ),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

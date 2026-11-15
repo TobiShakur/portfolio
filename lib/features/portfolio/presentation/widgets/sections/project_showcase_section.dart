@@ -57,7 +57,8 @@ class ProjectShowcaseSection extends StatelessWidget {
 
     final maxPhoneHeight =
         effectiveHeight * (footerProfile != null ? 0.59 : 0.63);
-    final maxPhoneWidthByHeight = maxPhoneHeight * AppSpacing.phoneAspectRatio;
+    final maxPhoneWidthByHeight =
+        math.max(200.0, maxPhoneHeight - 46.0) * AppSpacing.phoneAspectRatio;
     final leftPhoneWidth =
         math.min(isWideDesktop ? 245.0 : 205.0, maxPhoneWidthByHeight * 0.94);
     final rightPhoneWidth =

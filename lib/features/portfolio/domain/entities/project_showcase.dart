@@ -14,10 +14,9 @@ final class EngineeringHighlight {
   final String detail;
 }
 
-/// Identifies rich Flutter-rendered preview screens when static PNGs are not used.
+/// Identifies how app preview screens are rendered inside the right phone mockup.
 enum ProjectPreviewMode {
   assetImages,
-  nutriLensInteractiveScreens,
 }
 
 /// Immutable model representing a featured mobile product in the portfolio.

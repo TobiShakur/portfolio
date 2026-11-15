@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:portfolio/features/portfolio/domain/entities/project_showcase.dart';
-import 'package:portfolio/features/portfolio/presentation/widgets/mockups/nutrilens_preview_screens.dart';
 
 /// Pure-Flutter automated crossfade storyboard preview for iPhone mockups.
 class StoryboardPreviewPlayer extends StatefulWidget {
@@ -25,10 +24,6 @@ class _StoryboardPreviewPlayerState extends State<StoryboardPreviewPlayer> {
   int _activeIndex = 0;
 
   int get _slideCount {
-    if (widget.project.previewMode ==
-        ProjectPreviewMode.nutriLensInteractiveScreens) {
-      return 3;
-    }
     return widget.project.rightPreviewImages.isEmpty
         ? 1
         : widget.project.rightPreviewImages.length;
@@ -91,30 +86,15 @@ class _StoryboardPreviewPlayerState extends State<StoryboardPreviewPlayer> {
   }
 
   Widget _buildSlide(int index) {
-    if (widget.project.previewMode ==
-        ProjectPreviewMode.nutriLensInteractiveScreens) {
-      return switch (index) {
-        0 => const NutriLensMealScanScreen(),
-        1 => const NutriLensHomeRingScreen(),
-        _ => const NutriLensPantryScanScreen(),
-      };
-    }
-
     final images = widget.project.rightPreviewImages;
     final asset =
         images.isEmpty ? widget.project.leftScreenshotAsset : images[index];
-    return ColoredBox(
-      color: const Color(0xFF0E1311),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(4.0, 34.0, 4.0, 8.0),
-        child: Image.asset(
-          asset,
-          fit: BoxFit.contain,
-          alignment: Alignment.topCenter,
-          width: double.infinity,
-          height: double.infinity,
-        ),
-      ),
+    return Image.asset(
+      asset,
+      fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
+      width: double.infinity,
+      height: double.infinity,
     );
   }
 }

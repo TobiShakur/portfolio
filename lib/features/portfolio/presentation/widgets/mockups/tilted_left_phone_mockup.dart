@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/features/portfolio/domain/entities/project_showcase.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/mockups/iphone_bezel_frame.dart';
-import 'package:portfolio/features/portfolio/presentation/widgets/mockups/nutrilens_preview_screens.dart';
 
 /// Left-column 3D angled iPhone mockup showing a static core app screen.
 class TiltedLeftPhoneMockup extends StatefulWidget {
@@ -59,22 +58,12 @@ class _TiltedLeftPhoneMockupState extends State<TiltedLeftPhoneMockup> {
   }
 
   Widget _buildScreen() {
-    if (widget.project.previewMode ==
-        ProjectPreviewMode.nutriLensInteractiveScreens) {
-      return const NutriLensHomeRingScreen();
-    }
-    return ColoredBox(
-      color: const Color(0xFF0E1311),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(4.0, 34.0, 4.0, 8.0),
-        child: Image.asset(
-          widget.project.leftScreenshotAsset,
-          fit: BoxFit.contain,
-          alignment: Alignment.topCenter,
-          width: double.infinity,
-          height: double.infinity,
-        ),
-      ),
+    return Image.asset(
+      widget.project.leftScreenshotAsset,
+      fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
+      width: double.infinity,
+      height: double.infinity,
     );
   }
 }
