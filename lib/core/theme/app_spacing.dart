@@ -12,9 +12,9 @@ abstract final class AppSpacing {
   static const double lg = 24.0;
   static const double xl = 32.0;
   static const double xxl = 48.0;
-  static const double sectionVerticalMobile = 64.0;
+  static const double sectionVerticalMobile = 48.0;
 
-  // Sidebar geometry & safe zones
+  // Sidebar geometry & unified desktop anchor rail (Pass 4)
   static const double sidebarWidth = 64.0;
   static const double sidebarHeight = 272.0;
   static const double sidebarItemSize = 44.0;
@@ -25,17 +25,22 @@ abstract final class AppSpacing {
   static const double sidebarInsetWide = 24.0;
   static const double sidebarInsetCompact = 16.0;
 
-  static const double desktopLeftSafePadding = 116.0;
+  static const double desktopLeftAnchorWide = 120.0;
+  static const double desktopLeftAnchorCompact = 100.0;
   static const double desktopRightPaddingWide = 64.0;
   static const double desktopRightPaddingCompact = 32.0;
-  static const double showcaseLeftSafePadding = 112.0;
-  static const double showcaseRightPaddingWide = 40.0;
+  static const double mobileHorizontalPadding = 20.0;
+  static const double mobileTopBarHeight = 56.0;
+
+  // Legacy aliases mapped to the unified anchor rail
+  static const double desktopLeftSafePadding = desktopLeftAnchorWide;
+  static const double showcaseLeftSafePadding = desktopLeftAnchorCompact;
+  static const double showcaseRightPaddingWide = desktopRightPaddingWide;
 
   // Touch & layout constraints
   static const double minTouchTarget = 44.0;
   static const double minMobileTouchTarget = 48.0;
-  static const double maxContentWidth = 1280.0;
-  static const double maxShowcaseContentWidth = 1360.0;
+  static const double maxContentWidth = 1240.0;
   static const double minDesktopSectionHeight = 680.0;
   static const double phoneAspectRatio = 9.0 / 19.5;
 }

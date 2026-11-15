@@ -1,28 +1,41 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:portfolio/features/portfolio/data/portfolio_catalog.dart';
+import 'package:portfolio/features/portfolio/domain/entities/portfolio_concept_id.dart';
 
 void main() {
   group('PortfolioCatalog integrity', () {
     final allText = <String>[
       PortfolioCatalog.profile.fullName,
       PortfolioCatalog.profile.roleTitle,
+      PortfolioCatalog.profile.identityLine,
       PortfolioCatalog.profile.headlineLine1,
       PortfolioCatalog.profile.headlineLine2,
       PortfolioCatalog.profile.supportingPitch,
+      for (final concept in PortfolioConceptId.values) ...[
+        PortfolioCatalog.heroHeadlineFor(concept).$1,
+        PortfolioCatalog.heroHeadlineFor(concept).$2,
+      ],
       ...PortfolioCatalog.profile.verificationMetrics,
       for (final item in PortfolioCatalog.profile.coreStackLogos) item.label,
       for (final row in PortfolioCatalog.profile.snapshotHighlights) ...[
         row.label,
         row.value,
       ],
-      PortfolioCatalog.howIHelpSectionTitle,
-      PortfolioCatalog.howIHelpSectionSubtitle,
-      PortfolioCatalog.engineeringSectionTitle,
-      PortfolioCatalog.engineeringSectionSubtitle,
-      for (final pillar in PortfolioCatalog.engineeringPillars) ...[
-        pillar.title,
-        pillar.description,
-        for (final badge in pillar.badges) badge.label,
+      PortfolioCatalog.capabilitiesSectionTitle,
+      PortfolioCatalog.capabilitiesSectionSubtitle,
+      PortfolioCatalog.closingHeading,
+      PortfolioCatalog.closingSubcopy,
+      PortfolioCatalog.matchUpProof.badgeLabel,
+      PortfolioCatalog.matchUpProof.title,
+      PortfolioCatalog.matchUpProof.summary,
+      PortfolioCatalog.matchUpProof.platformsLine,
+      PortfolioCatalog.matchUpProof.stackLine,
+      ...PortfolioCatalog.matchUpProof.highlights,
+      for (final row in PortfolioCatalog.capabilityRows) ...[
+        row.indexLabel,
+        row.title,
+        row.description,
+        row.techSpecs,
       ],
       for (final project in PortfolioCatalog.projects) ...[
         project.title,
@@ -30,6 +43,8 @@ void main() {
         project.problemStatement,
         project.scopeSummary,
         project.quickDemoHint,
+        project.categoryTag,
+        project.architectureTag,
         project.testLabel,
         ...project.techStack,
         for (final h in project.engineeringHighlights) ...[
@@ -63,7 +78,7 @@ void main() {
       }
     });
 
-    test('matches official URLs and verified test counts', () {
+    test('matches official URLs and verified test & App Store metrics', () {
       expect(
         PortfolioCatalog.profile.githubUrl,
         'https://github.com/TobiShakur',
@@ -93,6 +108,10 @@ void main() {
         PortfolioCatalog.setPoint.repoUrl,
         'https://github.com/TobiShakur/flutter-tennis-matchmaking',
       );
+
+      expect(PortfolioCatalog.matchUpProof.ratingLabel, '5.0★');
+      expect(PortfolioCatalog.matchUpProof.storeLabel, 'Apple App Store');
+      expect(PortfolioCatalog.capabilityRows.length, 4);
     });
 
     test('keeps right preview carousel distinct from left static screen', () {
@@ -104,6 +123,7 @@ void main() {
           reason:
               '${project.title} right carousel must not repeat leftScreenshotAsset',
         );
+        expect(project.allScreenAssets.length, 4);
       }
     });
   });

@@ -1,21 +1,11 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:portfolio/core/theme/app_colors.dart';
 
-/// Ordered sections of the single-page portfolio.
+/// Ordered 5 scroll stops spanning the 4 acts of the portfolio experience.
 enum PortfolioSectionId {
   overview(
     anchor: 'overview',
     navLabel: 'Overview',
-    accentColor: AppColors.accentEngineering,
-  ),
-  howIHelp(
-    anchor: 'how-i-help',
-    navLabel: 'How I Help',
-    accentColor: AppColors.accentEngineering,
-  ),
-  engineering(
-    anchor: 'stack',
-    navLabel: 'Core Stack',
     accentColor: AppColors.accentEngineering,
   ),
   nutrilens(
@@ -27,6 +17,16 @@ enum PortfolioSectionId {
     anchor: 'setpoint',
     navLabel: 'SetPoint',
     accentColor: AppColors.accentSetPoint,
+  ),
+  capabilities(
+    anchor: 'capabilities',
+    navLabel: 'Capabilities',
+    accentColor: AppColors.accentEngineering,
+  ),
+  contact(
+    anchor: 'contact',
+    navLabel: 'Contact',
+    accentColor: AppColors.accentEngineering,
   );
 
   const PortfolioSectionId({

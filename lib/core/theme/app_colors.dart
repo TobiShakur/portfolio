@@ -15,6 +15,8 @@ abstract final class AppColors {
 
   static const Color borderHairline = Color(0x14FFFFFF);
   static const Color borderFocus = Color(0x38FFFFFF);
+  static const Color swissGridBorder = Color(0xFF262D38);
+  static const Color swissCellBorder = Color(0xFF1E242E);
 
   static const Color textPrimary = Color(0xFFF4F6F8);
   static const Color textSecondary = Color(0xFF9AA4B2);

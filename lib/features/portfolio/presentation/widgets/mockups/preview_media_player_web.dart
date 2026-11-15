@@ -15,11 +15,19 @@ class PreviewMediaPlayer extends StatefulWidget {
     required this.isBlurred,
     required this.reduceMotion,
     super.key,
+    this.previewAssetsOverride,
+    this.controlledIndex,
+    this.isPaused = false,
+    this.onScreenChanged,
   });
 
   final ProjectShowcase project;
   final bool isBlurred;
   final bool reduceMotion;
+  final List<String>? previewAssetsOverride;
+  final int? controlledIndex;
+  final bool isPaused;
+  final ValueChanged<int>? onScreenChanged;
 
   @override
   State<PreviewMediaPlayer> createState() => _PreviewMediaPlayerState();
@@ -133,6 +141,10 @@ class _PreviewMediaPlayerState extends State<PreviewMediaPlayer> {
     final storyboard = StoryboardPreviewPlayer(
       project: widget.project,
       reduceMotion: widget.reduceMotion,
+      previewAssetsOverride: widget.previewAssetsOverride,
+      controlledIndex: widget.controlledIndex,
+      isPaused: widget.isPaused,
+      onScreenChanged: widget.onScreenChanged,
     );
 
     if (!_videoAvailable || _videoErrored) {

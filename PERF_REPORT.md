@@ -150,3 +150,21 @@ Replaced NutriLens's synthetic canvas mockup (`NutriLensPreviewScreens`) and mis
   - **Firebase Hosting (Warm `?perf=1`):** `htmlFirstPaintMs: 300 ms`, `engineLoadMs: 1,228.7 ms`, `dartBootMs: 1.2 ms`, `assetsAndFontsMs: 825.7 ms`, `totalReadyMs: 2,472.5 ms`, `15` cached resources (`images: 0 / 245.5 KB`, `fonts: 0.45 / 321.5 KB`), `520.2 KB` transfer.
   - **GitHub Pages (Cold):** `htmlFirstPaintMs: 452 ms`, `engineLoadMs: 1,794.3 ms`, `dartBootMs: 7.1 ms`, `assetsAndFontsMs: 683.5 ms`, `totalReadyMs: 3,185.7 ms`, `1,106.1 KB` transfer (`2,359.7 KB` decoded), `JS Heap 8.29 / 14.18 MB`, `0` console errors / `0` exceptions.
 - **Local Verification (`?v=r6`):** `flutter analyze` (`0 issues`), `flutter test` (`23/23 passed`).
+
+---
+
+## 7. Round `r7` — Recaptura `nutrilens_scan.webp` + Redesign 5 Secciones & Verificación Dual Viewport (`?v=r7`)
+
+- **Optimización de asset (`nutrilens_scan.webp`):**
+  - Se reemplazó la captura con spinner de carga (`"Analyzing nutrients..."`) por la vista limpia de entrada (`"Scan Meal"` / `"Sample"` / `"Try sample meal"`), escalada a `624×1350` (`9:19.5`) en WebP.
+  - Peso de `nutrilens_scan.webp`: **`30.2 KB`** (`-10.2 KB` / `-25.2%` respecto a `40.4 KB` en `r6`). Total de los 8 mockups WebP: **`411.8 KB`**.
+- **Cambios estructurales medidos (`r7`):**
+  - Consolidación de 6 a 5 secciones (`overview`, `howIHelp` stepper vertical `1→4`, `engineering` `Core Stack & Deliverables`, `nutrilens`, `setpoint`), columna central ampliada (`flex: 21/56/23`) y compactación de copy en proyectos para eliminar recortes en `1280×720`.
+- **Verificación Live Dual Viewport (`?v=r7`, Edge Headless `skwasm`, 0 errores de consola / 0 excepciones):**
+  - **Firebase Hosting Cold (`1280×720`):** `htmlFirstPaintMs: 340 ms`, `engineLoadMs: 1,854.2 ms`, `dartBootMs: 9.9 ms`, `assetsAndFontsMs: 841.1 ms`, `totalReadyMs: 3,325.5 ms`, `931.6 KB` transfer (`2,346.2 KB` decoded; `images: 236.5 KB`), `JS Heap 7.50 / 13.27 MB`.
+  - **Firebase Hosting Warm (`1440×900`, `?perf=1`):** `htmlFirstPaintMs: 244 ms`, `engineLoadMs: 1,211.0 ms`, `dartBootMs: 1.4 ms`, `assetsAndFontsMs: 262.9 ms`, `totalReadyMs: 1,905.7 ms`, `519.9 KB` transfer (`2,345.3 KB` decoded; `15` recursos cacheados: `images: 0 / 235.3 KB`, `fonts: 0.45 / 321.5 KB`), `JS Heap 8.31 / 38.94 MB`.
+  - **GitHub Pages Cold (`1440×900`):** `htmlFirstPaintMs: 416 ms`, `engineLoadMs: 1,352.3 ms`, `dartBootMs: 9.8 ms`, `assetsAndFontsMs: 719.8 ms`, `totalReadyMs: 2,743.9 ms`, `1,095.0 KB` transfer (`2,346.2 KB` decoded), `JS Heap 8.75 / 12.53 MB`.
+- **Inspección Visual (`1280×720` y `1440×900`):**
+  - Las 5 secciones (`overview`, `howIHelp`, `engineering`, `nutrilens`, `setpoint`) renderizan centradas sin superposición ni recortes.
+  - Confirmado en **`1280×720`** y **`1440×900`** que los botones inferiores de **SetPoint** (`View Source on GitHub` / `Open Live Demo`) quedan completamente visibles por encima del footer.
+- **Local Verification (`?v=r7`):** `flutter analyze` (`0 issues`), `flutter test` (`24/24 passed`).

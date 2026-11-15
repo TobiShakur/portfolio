@@ -8,7 +8,6 @@ import 'package:portfolio/features/portfolio/presentation/widgets/navigation/flo
 import 'package:portfolio/features/portfolio/presentation/widgets/navigation/sidebar_nav_item.dart';
 
 void main() {
-
   group('FloatingPillSidebar', () {
     testWidgets('uses intrinsic MainAxisSize.min height and 44x44 hit targets',
         (tester) async {
@@ -43,10 +42,12 @@ void main() {
       expect(column.mainAxisSize, MainAxisSize.min);
 
       final pillBox = tester.getSize(
-        find.descendant(
-          of: find.byType(FloatingPillSidebar),
-          matching: find.byType(Container),
-        ).first,
+        find
+            .descendant(
+              of: find.byType(FloatingPillSidebar),
+              matching: find.byType(Container),
+            )
+            .first,
       );
       expect(pillBox.height, lessThanOrEqualTo(280.0));
       expect(pillBox.width, AppSpacing.sidebarWidth);
@@ -62,18 +63,21 @@ void main() {
       // Real Image.asset icons for NutriLens AI and SetPoint
       expect(find.byType(Image), findsNWidgets(2));
 
-      // Tap items
       await tester.tap(navItems.at(1));
-      await tester.pump();
-      expect(selected, PortfolioSectionId.howIHelp);
-
-      await tester.tap(navItems.at(3));
       await tester.pump();
       expect(selected, PortfolioSectionId.nutrilens);
 
-      await tester.tap(navItems.at(4));
+      await tester.tap(navItems.at(2));
       await tester.pump();
       expect(selected, PortfolioSectionId.setpoint);
+
+      await tester.tap(navItems.at(3));
+      await tester.pump();
+      expect(selected, PortfolioSectionId.capabilities);
+
+      await tester.tap(navItems.at(4));
+      await tester.pump();
+      expect(selected, PortfolioSectionId.contact);
     });
 
     testWidgets('hover reveals floating label tooltip', (tester) async {
@@ -97,7 +101,7 @@ void main() {
         ),
       );
 
-      final nutrilensItem = find.byType(SidebarNavItem).at(3);
+      final nutrilensItem = find.byType(SidebarNavItem).at(1);
       final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
       await gesture.addPointer(location: Offset.zero);
       addTearDown(gesture.removePointer);

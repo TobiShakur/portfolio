@@ -5,7 +5,7 @@ import 'package:portfolio/features/portfolio/data/portfolio_catalog.dart';
 import 'package:portfolio/features/portfolio/domain/entities/portfolio_section_id.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/navigation/sidebar_nav_item.dart';
 
-/// Compact vertically-centered floating pill sidebar for desktop viewports.
+/// Compact vertically-centered floating pill sidebar for desktop viewports (`>= 960px`).
 class FloatingPillSidebar extends StatelessWidget {
   const FloatingPillSidebar({
     required this.activeSection,
@@ -60,22 +60,6 @@ class FloatingPillSidebar extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.sidebarGap),
               SidebarNavItem(
-                section: PortfolioSectionId.howIHelp,
-                isActive: activeSection == PortfolioSectionId.howIHelp,
-                onTap: () => onSelectSection(PortfolioSectionId.howIHelp),
-                onHoverChanged: (hovered) => onHoverSection
-                    ?.call(hovered ? PortfolioSectionId.howIHelp : null),
-              ),
-              const SizedBox(height: AppSpacing.sidebarGap),
-              SidebarNavItem(
-                section: PortfolioSectionId.engineering,
-                isActive: activeSection == PortfolioSectionId.engineering,
-                onTap: () => onSelectSection(PortfolioSectionId.engineering),
-                onHoverChanged: (hovered) => onHoverSection
-                    ?.call(hovered ? PortfolioSectionId.engineering : null),
-              ),
-              const SizedBox(height: AppSpacing.sidebarGap),
-              SidebarNavItem(
                 section: PortfolioSectionId.nutrilens,
                 isActive: activeSection == PortfolioSectionId.nutrilens,
                 iconAssetPath: PortfolioCatalog.nutriLens.logoAsset,
@@ -91,6 +75,22 @@ class FloatingPillSidebar extends StatelessWidget {
                 onTap: () => onSelectSection(PortfolioSectionId.setpoint),
                 onHoverChanged: (hovered) => onHoverSection
                     ?.call(hovered ? PortfolioSectionId.setpoint : null),
+              ),
+              const SizedBox(height: AppSpacing.sidebarGap),
+              SidebarNavItem(
+                section: PortfolioSectionId.capabilities,
+                isActive: activeSection == PortfolioSectionId.capabilities,
+                onTap: () => onSelectSection(PortfolioSectionId.capabilities),
+                onHoverChanged: (hovered) => onHoverSection
+                    ?.call(hovered ? PortfolioSectionId.capabilities : null),
+              ),
+              const SizedBox(height: AppSpacing.sidebarGap),
+              SidebarNavItem(
+                section: PortfolioSectionId.contact,
+                isActive: activeSection == PortfolioSectionId.contact,
+                onTap: () => onSelectSection(PortfolioSectionId.contact),
+                onHoverChanged: (hovered) => onHoverSection
+                    ?.call(hovered ? PortfolioSectionId.contact : null),
               ),
             ],
           ),

@@ -24,6 +24,9 @@ enum ProjectPreviewMode {
 final class ProjectShowcase {
   const ProjectShowcase({
     required this.id,
+    required this.projectIndexLabel,
+    required this.categoryTag,
+    required this.architectureTag,
     required this.title,
     required this.subtitle,
     required this.problemStatement,
@@ -45,6 +48,9 @@ final class ProjectShowcase {
   });
 
   final PortfolioSectionId id;
+  final String projectIndexLabel;
+  final String categoryTag;
+  final String architectureTag;
   final String title;
   final String subtitle;
   final String problemStatement;
@@ -63,4 +69,10 @@ final class ProjectShowcase {
   final Color accentColor;
   final Color deepAccentColor;
   final String? videoAsset;
+
+  /// All distinct real screens for kinetic backdrop strips & walls.
+  List<String> get allScreenAssets => <String>[
+        leftScreenshotAsset,
+        ...rightPreviewImages,
+      ];
 }

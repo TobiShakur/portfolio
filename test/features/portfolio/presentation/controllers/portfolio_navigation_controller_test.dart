@@ -58,26 +58,82 @@ void main() {
 
       scrollController.jumpTo(1 * vh);
       await tester.pump();
-      expect(controller.activeSection, PortfolioSectionId.howIHelp);
+      expect(controller.activeSection, PortfolioSectionId.nutrilens);
 
       scrollController.jumpTo(2 * vh);
       await tester.pump();
-      expect(controller.activeSection, PortfolioSectionId.engineering);
+      expect(controller.activeSection, PortfolioSectionId.setpoint);
 
       scrollController.jumpTo(3 * vh);
       await tester.pump();
-      expect(controller.activeSection, PortfolioSectionId.nutrilens);
+      expect(controller.activeSection, PortfolioSectionId.capabilities);
 
       scrollController.jumpTo(4 * vh);
       await tester.pump();
-      expect(controller.activeSection, PortfolioSectionId.setpoint);
+      expect(controller.activeSection, PortfolioSectionId.contact);
 
       await controller.scrollToSection(
         PortfolioSectionId.nutrilens,
         reduceMotion: true,
       );
       await tester.pump();
-      expect(scrollController.offset, 3 * vh);
+      expect(scrollController.offset, 1 * vh);
+      expect(controller.activeSection, PortfolioSectionId.nutrilens);
+
+      await controller.stepSection(1, reduceMotion: true);
+      await tester.pump();
+      expect(controller.activeSection, PortfolioSectionId.setpoint);
+    });
+
+    testWidgets(
+        'handleDesktopWheelScroll snaps bounded section and yields inside tall section',
+        (tester) async {
+      const vh = 700.0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: SizedBox(
+            height: vh,
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                children: [
+                  SizedBox(
+                    key: controller.sectionKeys[PortfolioSectionId.overview],
+                    height: 1100.0,
+                  ),
+                  SizedBox(
+                    key: controller.sectionKeys[PortfolioSectionId.nutrilens],
+                    height: vh,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      controller.updateViewportMetrics(viewportHeight: vh, isDesktop: true);
+
+      // Inside tall Overview section (bottom at 1100 > vh=700): must NOT hijack scroll.
+      expect(
+        controller.handleDesktopWheelScroll(deltaY: 40.0, reduceMotion: false),
+        isFalse,
+      );
+
+      // Tiny trackpad jitter < 18px: ignored.
+      expect(
+        controller.handleDesktopWheelScroll(deltaY: 10.0, reduceMotion: false),
+        isFalse,
+      );
+
+      // Jump to bottom edge of Overview so bottom fits viewport -> snaps cleanly!
+      scrollController.jumpTo(450.0);
+      await tester.pump();
+      expect(
+        controller.handleDesktopWheelScroll(deltaY: 48.0, reduceMotion: false),
+        isTrue,
+      );
+      await tester.pump(const Duration(milliseconds: 700));
       expect(controller.activeSection, PortfolioSectionId.nutrilens);
     });
 

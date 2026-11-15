@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:portfolio/core/services/clipboard_service.dart';
 import 'package:portfolio/core/services/external_link_launcher.dart';
 import 'package:portfolio/core/services/url_validator.dart';
@@ -55,15 +56,18 @@ final class PortfolioNavigationController extends ChangeNotifier {
   double _viewportHeight = 900.0;
   bool _isDesktop = true;
   bool _isProgrammaticScroll = false;
+  bool _isSnapAnimating = false;
   bool _disposed = false;
 
   Timer? _copyResetTimer;
   Timer? _toastTimer;
+  Timer? _snapCooldownTimer;
 
   PortfolioSectionId get activeSection => _activeSection;
   PortfolioSectionId? get hoveredSidebarSection => _hoveredSidebarSection;
   CopyEmailState get copyEmailState => _copyEmailState;
   String? get toastMessage => _toastMessage;
+  bool get isSnapAnimating => _isSnapAnimating;
 
   static double effectiveSectionHeight(double viewportHeight) {
     return viewportHeight >= AppSpacing.minDesktopSectionHeight
@@ -84,12 +88,61 @@ final class PortfolioNavigationController extends ChangeNotifier {
     _hoveredSidebarSection = section;
   }
 
+  /// Resolves the scroll offset of [section] via its mounted RenderObject,
+  /// falling back to logical section spacing when detached (e.g. unit tests).
+  double? resolveSectionOffset(PortfolioSectionId section) {
+    if (!scrollController.hasClients) {
+      return null;
+    }
+    final ctx = sectionKeys[section]?.currentContext;
+    if (ctx != null) {
+      final renderObject = ctx.findRenderObject();
+      if (renderObject is RenderBox && renderObject.hasSize) {
+        final viewport = RenderAbstractViewport.maybeOf(renderObject);
+        if (viewport != null) {
+          final revealed = viewport.getOffsetToReveal(renderObject, 0.0).offset;
+          return revealed.clamp(0.0, scrollController.position.maxScrollExtent);
+        }
+      }
+    }
+    return (section.index * _sectionHeight)
+        .clamp(0.0, scrollController.position.maxScrollExtent);
+  }
+
+  /// True when [section] sits within ±1.2 viewport heights of the current scroll.
+  bool isSectionNearViewport(PortfolioSectionId section) {
+    if (!scrollController.hasClients) {
+      return (section.index - _activeSection.index).abs() <= 1;
+    }
+    final ctx = sectionKeys[section]?.currentContext;
+    final currentOffset = scrollController.offset;
+    final rangeMin = currentOffset - (_viewportHeight * 1.2);
+    final rangeMax = currentOffset + (_viewportHeight * 1.2);
+
+    if (ctx != null) {
+      final renderObject = ctx.findRenderObject();
+      if (renderObject is RenderBox && renderObject.hasSize) {
+        final viewport = RenderAbstractViewport.maybeOf(renderObject);
+        if (viewport != null) {
+          final top = viewport.getOffsetToReveal(renderObject, 0.0).offset;
+          final bottom = top + renderObject.size.height;
+          return bottom >= rangeMin && top <= rangeMax;
+        }
+      }
+    }
+    return (section.index - _activeSection.index).abs() <= 1;
+  }
+
   void _onScroll() {
     if (_isProgrammaticScroll || !scrollController.hasClients) {
       return;
     }
 
-    if (_isDesktop) {
+    final hasMountedSections = sectionKeys.values.any(
+      (key) => key.currentContext?.findRenderObject() is RenderBox,
+    );
+
+    if (!hasMountedSections) {
       final offset = scrollController.offset;
       final index = ((offset + _sectionHeight * 0.45) / _sectionHeight)
           .floor()
@@ -102,7 +155,18 @@ final class PortfolioNavigationController extends ChangeNotifier {
       return;
     }
 
-    // Tablet / Mobile: determine active section from mounted section render boxes.
+    // Activate final stop when scrolled to the bottom of the page.
+    if (scrollController.position.maxScrollExtent > 0 &&
+        scrollController.offset >=
+            scrollController.position.maxScrollExtent - 24.0) {
+      const last = PortfolioSectionId.contact;
+      if (_activeSection != last) {
+        _activeSection = last;
+        notifyListeners();
+      }
+      return;
+    }
+
     final threshold = _viewportHeight * 0.35;
     var candidate = PortfolioSectionId.overview;
     for (final section in PortfolioSectionId.values) {
@@ -125,9 +189,74 @@ final class PortfolioNavigationController extends ChangeNotifier {
     }
   }
 
+  /// Snaps one section forward/backward on desktop wheel without hijacking tall sections.
+  bool handleDesktopWheelScroll({
+    required double deltaY,
+    required bool reduceMotion,
+  }) {
+    if (!_isDesktop ||
+        reduceMotion ||
+        _isSnapAnimating ||
+        !scrollController.hasClients) {
+      return false;
+    }
+    if (deltaY.abs() < 18.0) {
+      return false;
+    }
+
+    final activeKey = sectionKeys[_activeSection];
+    final renderObject = activeKey?.currentContext?.findRenderObject();
+    if (renderObject is RenderBox && renderObject.hasSize) {
+      final top = renderObject.localToGlobal(Offset.zero).dy;
+      final bottom = top + renderObject.size.height;
+      // Allow native scrolling inside sections taller than the current viewport.
+      if (deltaY > 0 && bottom > _viewportHeight + 16.0) {
+        return false;
+      }
+      if (deltaY < 0 && top < -16.0) {
+        return false;
+      }
+    }
+
+    final direction = deltaY > 0 ? 1 : -1;
+    final nextIndex = _activeSection.index + direction;
+    if (nextIndex < 0 || nextIndex >= PortfolioSectionId.values.length) {
+      return false;
+    }
+
+    _isSnapAnimating = true;
+    _snapCooldownTimer?.cancel();
+    _snapCooldownTimer = Timer(const Duration(milliseconds: 520), () {
+      _isSnapAnimating = false;
+    });
+
+    unawaited(
+      scrollToSection(
+        PortfolioSectionId.values[nextIndex],
+        reduceMotion: false,
+        durationOverride: const Duration(milliseconds: 560),
+      ),
+    );
+    return true;
+  }
+
+  /// Steps relative to the current active section (used by PageUp/PageDown keys).
+  Future<void> stepSection(
+    int delta, {
+    required bool reduceMotion,
+  }) async {
+    final targetIndex =
+        (_activeSection.index + delta).clamp(0, PortfolioSectionId.values.length - 1);
+    await scrollToSection(
+      PortfolioSectionId.values[targetIndex],
+      reduceMotion: reduceMotion,
+    );
+  }
+
   Future<void> scrollToSection(
     PortfolioSectionId section, {
     required bool reduceMotion,
+    Duration? durationOverride,
   }) async {
     if (_activeSection != section) {
       _activeSection = section;
@@ -140,29 +269,19 @@ final class PortfolioNavigationController extends ChangeNotifier {
 
     _isProgrammaticScroll = true;
     try {
-      final duration =
-          reduceMotion ? Duration.zero : const Duration(milliseconds: 650);
+      final duration = reduceMotion
+          ? Duration.zero
+          : (durationOverride ?? const Duration(milliseconds: 620));
 
-      if (_isDesktop) {
-        final targetOffset = (section.index * _sectionHeight)
-            .clamp(0.0, scrollController.position.maxScrollExtent);
+      final targetOffset = resolveSectionOffset(section);
+      if (targetOffset != null) {
         if (reduceMotion) {
           scrollController.jumpTo(targetOffset);
         } else {
           await scrollController.animateTo(
             targetOffset,
             duration: duration,
-            curve: Curves.easeInOutCubic,
-          );
-        }
-      } else {
-        final targetContext = sectionKeys[section]?.currentContext;
-        if (targetContext != null) {
-          await Scrollable.ensureVisible(
-            targetContext,
-            duration: duration,
-            curve: Curves.easeInOutCubic,
-            alignment: 0.0,
+            curve: Curves.easeOutCubic,
           );
         }
       }
@@ -253,6 +372,7 @@ final class PortfolioNavigationController extends ChangeNotifier {
     _disposed = true;
     _copyResetTimer?.cancel();
     _toastTimer?.cancel();
+    _snapCooldownTimer?.cancel();
     scrollController.removeListener(_onScroll);
     if (_ownsScrollController) {
       scrollController.dispose();

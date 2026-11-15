@@ -9,10 +9,18 @@ class StoryboardPreviewPlayer extends StatefulWidget {
     required this.project,
     required this.reduceMotion,
     super.key,
+    this.previewAssetsOverride,
+    this.controlledIndex,
+    this.isPaused = false,
+    this.onScreenChanged,
   });
 
   final ProjectShowcase project;
   final bool reduceMotion;
+  final List<String>? previewAssetsOverride;
+  final int? controlledIndex;
+  final bool isPaused;
+  final ValueChanged<int>? onScreenChanged;
 
   @override
   State<StoryboardPreviewPlayer> createState() =>
@@ -21,12 +29,25 @@ class StoryboardPreviewPlayer extends StatefulWidget {
 
 class _StoryboardPreviewPlayerState extends State<StoryboardPreviewPlayer> {
   Timer? _timer;
-  int _activeIndex = 0;
+  int _internalIndex = 0;
 
-  int get _slideCount {
-    return widget.project.rightPreviewImages.isEmpty
-        ? 1
-        : widget.project.rightPreviewImages.length;
+  List<String> get _slides {
+    final override = widget.previewAssetsOverride;
+    if (override != null && override.isNotEmpty) {
+      return override;
+    }
+    if (widget.project.rightPreviewImages.isNotEmpty) {
+      return widget.project.rightPreviewImages;
+    }
+    return [widget.project.leftScreenshotAsset];
+  }
+
+  int get _activeIndex {
+    final controlled = widget.controlledIndex;
+    if (controlled != null) {
+      return controlled.clamp(0, _slides.length - 1);
+    }
+    return _internalIndex.clamp(0, _slides.length - 1);
   }
 
   @override
@@ -38,25 +59,35 @@ class _StoryboardPreviewPlayerState extends State<StoryboardPreviewPlayer> {
   @override
   void didUpdateWidget(covariant StoryboardPreviewPlayer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.reduceMotion != widget.reduceMotion ||
-        oldWidget.project.id != widget.project.id) {
-      _activeIndex = 0;
+    final projectChanged = oldWidget.project.id != widget.project.id;
+    if (projectChanged) {
+      _internalIndex = 0;
+    }
+    if (projectChanged ||
+        oldWidget.reduceMotion != widget.reduceMotion ||
+        oldWidget.isPaused != widget.isPaused ||
+        oldWidget.previewAssetsOverride?.length !=
+            widget.previewAssetsOverride?.length) {
       _syncTimer();
     }
   }
 
   void _syncTimer() {
     _timer?.cancel();
-    if (widget.reduceMotion || _slideCount <= 1) {
+    if (widget.reduceMotion || widget.isPaused || _slides.length <= 1) {
       return;
     }
     _timer = Timer.periodic(const Duration(seconds: 4), (_) {
       if (!mounted) {
         return;
       }
-      setState(() {
-        _activeIndex = (_activeIndex + 1) % _slideCount;
-      });
+      final nextIndex = (_activeIndex + 1) % _slides.length;
+      if (widget.controlledIndex == null) {
+        setState(() {
+          _internalIndex = nextIndex;
+        });
+      }
+      widget.onScreenChanged?.call(nextIndex);
     });
   }
 
@@ -68,27 +99,25 @@ class _StoryboardPreviewPlayerState extends State<StoryboardPreviewPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    final slide = _buildSlide(_activeIndex);
+    final index = _activeIndex;
+    final slide = _buildSlide(_slides[index]);
 
     return RepaintBoundary(
       child: AnimatedSwitcher(
         duration: widget.reduceMotion
             ? Duration.zero
-            : const Duration(milliseconds: 1400),
+            : const Duration(milliseconds: 900),
         switchInCurve: Curves.easeInOut,
         switchOutCurve: Curves.easeInOut,
         child: KeyedSubtree(
-          key: ValueKey<String>('${widget.project.id.name}_$_activeIndex'),
+          key: ValueKey<String>('${widget.project.id.name}_${_slides[index]}'),
           child: slide,
         ),
       ),
     );
   }
 
-  Widget _buildSlide(int index) {
-    final images = widget.project.rightPreviewImages;
-    final asset =
-        images.isEmpty ? widget.project.leftScreenshotAsset : images[index];
+  Widget _buildSlide(String asset) {
     return Image.asset(
       asset,
       fit: BoxFit.cover,

@@ -5,7 +5,7 @@ import 'package:portfolio/core/theme/app_spacing.dart';
 import 'package:portfolio/core/theme/app_text_styles.dart';
 import 'package:portfolio/features/portfolio/domain/entities/portfolio_section_id.dart';
 
-/// Individual 44x44px navigation item inside the floating pill sidebar or dock.
+/// Individual 44x44px navigation item inside the floating pill sidebar.
 class SidebarNavItem extends StatefulWidget {
   const SidebarNavItem({
     required this.section,
@@ -101,19 +101,26 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(14.0),
                     border: Border.all(
-                      color: highlighted
-                          ? accent.withValues(alpha: 0.65)
-                          : Colors.transparent,
-                      width: 1.5,
+                      color: _isFocused
+                          ? accent
+                          : (highlighted
+                              ? accent.withValues(alpha: 0.65)
+                              : Colors.transparent),
+                      width: _isFocused ? 2.0 : 1.5,
                     ),
-                    boxShadow: highlighted
-                        ? [
-                            BoxShadow(
-                              color: accent.withValues(alpha: 0.25),
-                              blurRadius: 14.0,
-                            ),
-                          ]
-                        : null,
+                    boxShadow: [
+                      if (_isFocused)
+                        BoxShadow(
+                          color: accent.withValues(alpha: 0.45),
+                          blurRadius: 0.0,
+                          spreadRadius: 2.0,
+                        )
+                      else if (highlighted)
+                        BoxShadow(
+                          color: accent.withValues(alpha: 0.25),
+                          blurRadius: 14.0,
+                        ),
+                    ],
                   ),
                   child: _buildIconContent(
                     highlighted: highlighted,
@@ -128,30 +135,30 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
               left: AppSpacing.sidebarItemSize + 18.0,
               child: IgnorePointer(
                 child: AnimatedSlide(
-                  duration: tooltipDuration,
-                  curve: Curves.easeOutCubic,
                   offset: (_isHovered || _isFocused)
                       ? Offset.zero
-                      : const Offset(-0.12, 0.0),
+                      : const Offset(-0.15, 0),
+                  duration: tooltipDuration,
+                  curve: Curves.easeOutCubic,
                   child: AnimatedOpacity(
-                    duration: tooltipDuration,
                     opacity: (_isHovered || _isFocused) ? 1.0 : 0.0,
+                    duration: tooltipDuration,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12.0,
-                        vertical: 7.0,
+                        vertical: 8.0,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.sidebarBg,
-                        borderRadius: BorderRadius.circular(999.0),
+                        color: AppColors.bgSurfaceElevated,
+                        borderRadius: BorderRadius.circular(10.0),
                         border: Border.all(
                           color: AppColors.sidebarBorder,
-                          width: 1.25,
+                          width: 1.0,
                         ),
                         boxShadow: const [
                           BoxShadow(
                             color: AppColors.sidebarShadow,
-                            blurRadius: 16.0,
+                            blurRadius: 14.0,
                             offset: Offset(0, 6),
                           ),
                         ],
@@ -212,15 +219,15 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
             fontWeight: FontWeight.w700,
           ).copyWith(letterSpacing: -0.4),
         ),
-      PortfolioSectionId.howIHelp => CustomPaint(
+      PortfolioSectionId.capabilities => CustomPaint(
           size: const Size.square(20.0),
-          painter: _TimelineStepsPainter(
+          painter: _ArchitectureLayersPainter(
             color: highlighted ? accent : AppColors.textSecondary,
           ),
         ),
-      PortfolioSectionId.engineering => CustomPaint(
+      PortfolioSectionId.contact => CustomPaint(
           size: const Size.square(20.0),
-          painter: _ArchitectureLayersPainter(
+          painter: _ContactMailPainter(
             color: highlighted ? accent : AppColors.textSecondary,
           ),
         ),
@@ -275,48 +282,38 @@ class _ArchitectureLayersPainter extends CustomPainter {
   }
 }
 
-class _TimelineStepsPainter extends CustomPainter {
-  const _TimelineStepsPainter({required this.color});
+class _ContactMailPainter extends CustomPainter {
+  const _ContactMailPainter({required this.color});
 
   final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final strokePaint = Paint()
+    final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5
-      ..strokeCap = StrokeCap.round;
-
-    final fillPaint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
 
     final w = size.width;
     final h = size.height;
-    final x = w * 0.28;
 
-    // Vertical connector spine
-    canvas.drawLine(
-      Offset(x, h * 0.24),
-      Offset(x, h * 0.76),
-      strokePaint,
+    final rect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(w * 0.12, h * 0.22, w * 0.76, h * 0.56),
+      const Radius.circular(3.0),
     );
+    canvas.drawRRect(rect, paint);
 
-    // Three timeline nodes + short horizontal step labels
-    for (final yFactor in [0.22, 0.50, 0.78]) {
-      final y = h * yFactor;
-      canvas.drawCircle(Offset(x, y), 2.1, fillPaint);
-      canvas.drawLine(
-        Offset(w * 0.48, y),
-        Offset(w * 0.84, y),
-        strokePaint,
-      );
-    }
+    final flap = Path()
+      ..moveTo(w * 0.14, h * 0.28)
+      ..lineTo(w * 0.50, h * 0.55)
+      ..lineTo(w * 0.86, h * 0.28);
+    canvas.drawPath(flap, paint);
   }
 
   @override
-  bool shouldRepaint(covariant _TimelineStepsPainter oldDelegate) {
+  bool shouldRepaint(covariant _ContactMailPainter oldDelegate) {
     return oldDelegate.color != color;
   }
 }

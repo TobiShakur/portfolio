@@ -8,7 +8,7 @@ enum PortfolioButtonVariant {
   accentPill,
 }
 
-/// Interactive button with 46px+ touch target, hover state, and keyboard focus.
+/// Interactive button with 46px+ touch target, hover state, and 2px focus ring.
 class PortfolioActionButton extends StatefulWidget {
   const PortfolioActionButton({
     required this.label,
@@ -19,6 +19,8 @@ class PortfolioActionButton extends StatefulWidget {
     this.accentColor,
     this.height = 46.0,
     this.horizontalPadding = 18.0,
+    this.borderRadiusOverride,
+    this.focusNode,
   });
 
   final String label;
@@ -28,6 +30,8 @@ class PortfolioActionButton extends StatefulWidget {
   final Color? accentColor;
   final double height;
   final double horizontalPadding;
+  final double? borderRadiusOverride;
+  final FocusNode? focusNode;
 
   @override
   State<PortfolioActionButton> createState() => _PortfolioActionButtonState();
@@ -48,31 +52,34 @@ class _PortfolioActionButtonState extends State<PortfolioActionButton> {
     final Color borderColor;
     final Color foregroundColor;
     final double radius;
+    final Color focusRingColor =
+        widget.accentColor ?? AppColors.accentEngineering;
 
     switch (widget.variant) {
       case PortfolioButtonVariant.primary:
         background = active ? const Color(0xFFFFFFFF) : AppColors.textPrimary;
         borderColor = active ? const Color(0xFFFFFFFF) : AppColors.textPrimary;
         foregroundColor = AppColors.ctaInkOnAccent;
-        radius = 10.0;
+        radius = widget.borderRadiusOverride ?? 10.0;
       case PortfolioButtonVariant.secondary:
         background =
             active ? AppColors.bgSurfaceElevated : AppColors.bgSurface;
         borderColor = active ? AppColors.borderFocus : AppColors.borderHairline;
         foregroundColor = AppColors.textPrimary;
-        radius = 10.0;
+        radius = widget.borderRadiusOverride ?? 10.0;
       case PortfolioButtonVariant.accentPill:
         final accent = widget.accentColor ?? AppColors.accentEngineering;
         background = active ? Color.lerp(accent, Colors.white, 0.12)! : accent;
         borderColor = accent;
         foregroundColor = AppColors.ctaInkOnAccent;
-        radius = 999.0;
+        radius = widget.borderRadiusOverride ?? 999.0;
     }
 
     return Semantics(
       button: true,
       label: widget.label,
       child: FocusableActionDetector(
+        focusNode: widget.focusNode,
         mouseCursor: SystemMouseCursors.click,
         onShowHoverHighlight: (hovered) => setState(() => _isHovered = hovered),
         onShowFocusHighlight: (focused) => setState(() => _isFocused = focused),
@@ -100,7 +107,19 @@ class _PortfolioActionButtonState extends State<PortfolioActionButton> {
             decoration: BoxDecoration(
               color: background,
               borderRadius: BorderRadius.circular(radius),
-              border: Border.all(color: borderColor, width: 1.0),
+              border: Border.all(
+                color: _isFocused ? focusRingColor : borderColor,
+                width: _isFocused ? 2.0 : 1.0,
+              ),
+              boxShadow: _isFocused
+                  ? [
+                      BoxShadow(
+                        color: focusRingColor.withValues(alpha: 0.45),
+                        blurRadius: 0.0,
+                        spreadRadius: 2.0,
+                      ),
+                    ]
+                  : null,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,

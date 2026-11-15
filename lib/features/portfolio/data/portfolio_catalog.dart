@@ -1,180 +1,174 @@
 import 'package:portfolio/core/theme/app_colors.dart';
-import 'package:portfolio/features/portfolio/domain/entities/engineering_pillar.dart';
+import 'package:portfolio/features/portfolio/domain/entities/capability_row.dart';
+import 'package:portfolio/features/portfolio/domain/entities/portfolio_concept_id.dart';
 import 'package:portfolio/features/portfolio/domain/entities/portfolio_section_id.dart';
 import 'package:portfolio/features/portfolio/domain/entities/profile_data.dart';
 import 'package:portfolio/features/portfolio/domain/entities/project_showcase.dart';
 import 'package:portfolio/features/portfolio/domain/entities/tech_brand.dart';
 
-/// Verified English copy deck and project catalog for the portfolio.
+/// Immutable verified catalog powering all 3 portfolio design concepts.
 abstract final class PortfolioCatalog {
+  static const String capabilitiesSectionTitle = 'Capabilities & Stack';
+  static const String capabilitiesSectionSubtitle =
+      'Full product ownership from architecture to store release—no separate backend hire required.';
+
+  static const String closingHeading =
+      'Need a mobile engineer who owns the whole stack?';
+  static const String closingSubcopy =
+      'Available for Upwork MVPs, Figma-to-Flutter builds, and remote product teams (GMT-3 · EN/ES).';
+
   static const ProfileData profile = ProfileData(
     fullName: 'Tobías Gutiérrez',
-    roleTitle: 'Mobile Software Engineer · GMT-3',
-    headlineLine1: 'Flutter & native apps,',
-    headlineLine2: 'from Figma to the stores.',
+    roleTitle: 'Mobile Software Engineer',
+    identityLine: 'Tobías Gutiérrez — Mobile Software Engineer · GMT-3',
+    headlineLine1: 'Production Flutter apps,',
+    headlineLine2: 'with backend & AI built in.',
     supportingPitch:
-        'I build production iOS, Android, and Web apps with Firebase backends, '
-        'secure AI pipelines, and automated tests.',
+        'I build iOS, Android, and Web products solo—combining 60fps Flutter UI, Firebase backends, serverless AI proxies, and automated test suites.',
     githubUrl: 'https://github.com/TobiShakur',
     linkedInUrl: 'https://linkedin.com/in/tobias-gutierrez',
     email: 'tobigutierrez26@gmail.com',
     verificationMetrics: [
-      'Flutter & Dart 3',
-      'Firebase & Cloud',
-      'Cloudflare Workers',
-      '177 Automated Tests Shipped',
+      'App Store Shipped (5.0★)',
+      '177 Automated Tests',
+      'US East & EU Overlap',
     ],
     coreStackLogos: [
       TechBrandChipItem(label: 'Flutter', brand: TechBrand.flutter),
       TechBrandChipItem(label: 'Dart 3', brand: TechBrand.dart),
-      TechBrandChipItem(label: 'BLoC / Riverpod'),
       TechBrandChipItem(label: 'Firebase', brand: TechBrand.firebase),
-      TechBrandChipItem(label: 'REST & AI APIs', brand: TechBrand.gemini),
-      TechBrandChipItem(label: 'iOS & Android', brand: TechBrand.android),
-      TechBrandChipItem(label: 'Figma', brand: TechBrand.figma),
-      TechBrandChipItem(
-        label: 'GitHub Actions',
-        brand: TechBrand.githubActions,
-      ),
+      TechBrandChipItem(label: 'Cloudflare', brand: TechBrand.cloudflare),
+      TechBrandChipItem(label: 'Gemini AI', brand: TechBrand.gemini),
+      TechBrandChipItem(label: 'iOS', brand: TechBrand.appleIos),
+      TechBrandChipItem(label: 'Android', brand: TechBrand.android),
+      TechBrandChipItem(label: 'GitHub Actions', brand: TechBrand.githubActions),
     ],
     snapshotHighlights: [
       SnapshotHighlight(
-        label: 'End-to-End Mobile Delivery',
-        value:
-            'Full iOS, Android & Flutter Web apps from Figma specs to App Store & Play Store release.',
+        label: 'PLATFORMS',
+        value: 'iOS · Android · Web',
       ),
       SnapshotHighlight(
-        label: 'Backend & AI Included for MVPs',
-        value:
-            'No separate backend hire needed: Firebase (Auth, Firestore, Functions, Push) and Cloudflare AI proxies.',
+        label: 'CLOUD',
+        value: 'Firebase · Workers',
       ),
       SnapshotHighlight(
-        label: 'Clean Architecture & Automated QA',
-        value:
-            'BLoC, Provider & Riverpod state machines, testable web builds every sprint, and 177 automated tests.',
-        tabular: true,
+        label: 'QA',
+        value: '177 Tests',
       ),
       SnapshotHighlight(
-        label: 'Direct Overlap & Bilingual Communication',
-        value:
-            'Available for freelance builds and remote roles in GMT-3 (full US East & EU overlap), English & Spanish.',
+        label: 'OVERLAP',
+        value: 'GMT-3 · EN / ES',
       ),
     ],
   );
 
-  static const String howIHelpSectionTitle = 'How I Help Teams';
-  static const String howIHelpSectionSubtitle =
-      'Clear scope, direct communication, and full ownership from architecture '
-      'to store release.';
+  /// Returns concept-tailored Hero H1 line pair per DESIGN_CONCEPTS.md §5.
+  static (String, String) heroHeadlineFor(PortfolioConceptId concept) {
+    return switch (concept) {
+      PortfolioConceptId.editorialWall => (
+          'Production Flutter apps,',
+          'with backend & AI built in.',
+        ),
+      PortfolioConceptId.swissGrid => (
+          'Flutter systems',
+          'shipped end to end.',
+        ),
+      PortfolioConceptId.kineticStage => (
+          'Flutter & cloud apps,',
+          'shipped to real users.',
+        ),
+    };
+  }
 
-  static const String engineeringSectionTitle = 'Core Stack & Deliverables';
-  static const String engineeringSectionSubtitle =
-      'Production-proven technologies behind every mobile app, backend, and '
-      'automated release.';
+  /// Verified commercial production proof (MatchUp on Apple App Store 5.0★).
+  static const ClientAppProof matchUpProof = ClientAppProof(
+    badgeLabel: 'CLIENT PRODUCTION DELIVERY · APPLE APP STORE (5.0★)',
+    title: 'MatchUp — Cross-Platform Social Sports App (iOS & Android)',
+    summary:
+        'Built solo from Figma specs: Google & Phone OTP Auth, real-time Firestore chat, Google Maps custom markers, FCM & APNs push notifications, Cloud Functions, deep linking, and AdMob monetization.',
+    platformsLine: 'Platforms: iOS (App Store 5.0★) · Android',
+    stackLine: 'Stack: Flutter · Provider · Firebase · Google Maps · AdMob',
+    shortName: 'MatchUp',
+    ratingLabel: '5.0★',
+    storeLabel: 'Apple App Store',
+    highlights: [
+      'Figma-to-Flutter UI + custom animations',
+      'Google & Phone OTP Auth + Firestore RT Chat',
+      'Google Maps custom markers + FCM / APNs push',
+    ],
+  );
 
-  static const List<EngineeringPillar> engineeringPillars = [
-    EngineeringPillar(
-      id: 'mobile-delivery',
+  /// Consolidated 4 indexed rows replacing repetitive How I Help + Core Stack cards.
+  static const List<CapabilityRowItem> capabilityRows = [
+    CapabilityRowItem(
+      indexLabel: '01',
       title: 'Cross-Platform UI & Native',
       description:
-          'Pixel-accurate Flutter apps for iOS, Android, and Web built from '
-          'Figma specs at 60fps.',
-      iconKind: EngineeringIconKind.architecture,
-      badges: [
-        TechBrandChipItem(label: 'Flutter', brand: TechBrand.flutter),
-        TechBrandChipItem(label: 'Dart 3', brand: TechBrand.dart),
-        TechBrandChipItem(label: 'iOS', brand: TechBrand.appleIos),
-        TechBrandChipItem(label: 'Android', brand: TechBrand.android),
-        TechBrandChipItem(label: 'Figma', brand: TechBrand.figma),
-      ],
+          'Pixel-accurate Flutter apps for iOS, Android, and Web built from Figma specs at 60fps.',
+      techSpecs: 'Flutter · Dart 3 · Swift/Kotlin · Figma',
     ),
-    EngineeringPillar(
-      id: 'firebase-cloud',
+    CapabilityRowItem(
+      indexLabel: '02',
       title: 'Firebase & Cloud Backends',
       description:
-          'Production auth, real-time Firestore streams, Cloud Functions, and '
-          'FCM / APNs push delivery.',
-      iconKind: EngineeringIconKind.security,
-      badges: [
-        TechBrandChipItem(label: 'Firebase', brand: TechBrand.firebase),
-        TechBrandChipItem(label: 'Firestore', brand: TechBrand.firebase),
-        TechBrandChipItem(label: 'Cloud Functions'),
-        TechBrandChipItem(label: 'FCM / APNs'),
-      ],
+          'Production auth, real-time Firestore streams, Cloud Functions, Storage rules, and FCM / APNs push delivery.',
+      techSpecs: 'Firebase · Firestore · Functions · FCM/APNs',
     ),
-    EngineeringPillar(
-      id: 'ai-edge',
+    CapabilityRowItem(
+      indexLabel: '03',
       title: 'AI & Serverless Edge APIs',
       description:
-          'Cloudflare Worker proxies keeping LLM API keys off client bundles '
-          'with CORS and rate limits.',
-      iconKind: EngineeringIconKind.geospatial,
-      badges: [
-        TechBrandChipItem(label: 'Gemini AI', brand: TechBrand.gemini),
-        TechBrandChipItem(label: 'Cloudflare', brand: TechBrand.cloudflare),
-        TechBrandChipItem(label: 'REST APIs'),
-      ],
+          'Cloudflare Worker proxies keeping LLM API keys off client bundles with Origin CORS, allowlists, and rate limits.',
+      techSpecs: 'Gemini Vision · Cloudflare Workers · REST',
     ),
-    EngineeringPillar(
-      id: 'maps-qa',
-      title: 'Maps, State & Automated QA',
+    CapabilityRowItem(
+      indexLabel: '04',
+      title: 'Architecture, QA & Overlap',
       description:
-          'Clustered OpenStreetMap viewports, local persistence fallbacks, '
-          'CI/CD, and automated tests.',
-      iconKind: EngineeringIconKind.verification,
-      badges: [
-        TechBrandChipItem(
-          label: 'OpenStreetMap',
-          brand: TechBrand.openStreetMap,
-        ),
-        TechBrandChipItem(
-          label: 'GitHub Actions',
-          brand: TechBrand.githubActions,
-        ),
-        TechBrandChipItem(label: '177 Tests'),
-      ],
+          'Clean Architecture (BLoC / Riverpod / MVVM), CI/CD pipelines, 177 automated tests, and direct GMT-3 overlap (EN/ES).',
+      techSpecs: 'BLoC / Riverpod · GitHub Actions · 177 Tests',
     ),
   ];
 
   static const ProjectShowcase nutriLens = ProjectShowcase(
     id: PortfolioSectionId.nutrilens,
+    projectIndexLabel: '01',
+    categoryTag: 'MOBILE VISION & SERVERLESS EDGE',
+    architectureTag: 'MVVM + PROVIDER',
     title: 'NutriLens AI',
     subtitle: 'Pantry-First Meal & Macro Tracker',
     problemStatement:
-        'Calorie trackers fail on home-cooked meals—forcing manual weighing '
-        'instead of using the actual ingredients in your kitchen.',
-    scopeSummary: 'Solo End-to-End · 153 Tests',
-    quickDemoHint:
-        'Try in 10s: Open Live Demo → Camera → tap "Sample" to run AI Vision',
+        'Calorie trackers fail on home-cooked meals—forcing manual weighing instead of matching the actual brands in your kitchen.',
+    scopeSummary: 'Solo End-to-End · MVVM + Provider · 153 Automated Tests',
+    quickDemoHint: 'Launch Live Demo ↗',
     engineeringHighlights: [
       EngineeringHighlight(
-        title: '3-Mode Pantry Scanning:',
+        title: '3-Mode Pantry Scanning',
         detail:
-            'Register ingredients via barcode (Open Food Facts v2 + Gemini '
-            'fallback), package photo, or nutrition label OCR.',
+            'Barcode lookup (Open Food Facts v2 + Gemini), package photo recognition, and nutrition-label OCR.',
       ),
       EngineeringHighlight(
-        title: 'Home-Cooked Match & AI Health Score:',
+        title: 'Pantry-Matched Vision & Score',
         detail:
-            'Gemini Vision matches plated dishes to your pantry and scores '
-            '0–100 macro balance with written rationale.',
+            'Gemini Vision cross-references your saved pantry brands and scores every meal 0–100 with transparent feedback.',
       ),
       EngineeringHighlight(
-        title: 'Edge Security Proxy:',
+        title: 'Zero-Key Edge Proxy',
         detail:
-            'Cloudflare Worker keeps Gemini keys off clients with Origin CORS, '
-            'model allowlists, 16 MB caps, and 30 req/min rate limits.',
+            'Cloudflare Worker backend with strict Origin CORS, host allowlists, 16 MB caps, and 30 req/min rate limits.',
       ),
     ],
     techStack: [
-      'Dart & Flutter',
-      'Clean Architecture',
-      'MVVM + Provider',
-      'Gemini Vision',
-      'Cloudflare Workers',
+      'Flutter',
+      'Dart 3',
+      'Cloudflare Worker',
+      'Gemini 2.5',
+      'Open Food Facts',
+      'Provider',
     ],
     testCount: 153,
-    testLabel: '153 Unit & Widget Tests',
+    testLabel: '153 Automated Tests',
     liveDemoUrl: 'https://tobishakur.github.io/nutrilens-ai-tracker/',
     repoUrl: 'https://github.com/TobiShakur/nutrilens-ai-tracker',
     logoAsset: 'assets/icons/nutrilens_icon.webp',
@@ -185,49 +179,48 @@ abstract final class PortfolioCatalog {
       'assets/images/nutrilens_pantry.webp',
     ],
     previewMode: ProjectPreviewMode.assetImages,
-    videoAsset: 'assets/videos/nutrilens_demo.mp4',
     accentColor: AppColors.accentNutriLens,
     deepAccentColor: AppColors.accentNutriLensDeep,
   );
 
   static const ProjectShowcase setPoint = ProjectShowcase(
     id: PortfolioSectionId.setpoint,
+    projectIndexLabel: '02',
+    categoryTag: 'REALTIME GEOLOCATION & CLEAN ARCH',
+    architectureTag: 'CLEAN ARCH + BLoC',
     title: 'SetPoint',
-    subtitle: 'Mobile Tennis Matchmaking Platform',
+    subtitle: 'Amateur Racket-Sports Matchmaking App',
     problemStatement:
-        'Group chats break down for tennis—mismatched skill levels, unclear '
-        'court surfaces, and manual headcounts waste hours.',
-    scopeSummary: 'Solo End-to-End · 24 Tests',
-    quickDemoHint:
-        'Try in 10s: Open Live Demo → switch List / Map & filter by surface or radius',
+        'Organizing local matches breaks down across chaotic group chats without real skill balancing, radius discovery, or open slot tracking.',
+    scopeSummary: 'Solo End-to-End · Clean Architecture + BLoC · 24 Automated Tests',
+    quickDemoHint: 'Launch Live Demo ↗',
     engineeringHighlights: [
       EngineeringHighlight(
-        title: 'Dual Feed & OpenStreetMap Clustering:',
+        title: 'Clean Architecture + BLoC',
         detail:
-            'Switch between match feed and interactive OpenStreetMap pins with '
-            '5–20 km radius filtering.',
+            'Domain use cases and reactive BLoC state decoupled behind explicit typed Failure boundaries.',
       ),
       EngineeringHighlight(
-        title: 'Live Filtering & Court Tactics:',
+        title: 'Geospatial Match Radar',
         detail:
-            'Filter matches by format (Singles / Doubles), court surface, and '
-            '5-tier skill with 1v1 / 2v2 court views.',
+            'Haversine court distance filtering across Tennis and Padel with live surface, category, and radius queries.',
       ),
       EngineeringHighlight(
-        title: 'UGC Moderation & Offline BLoC:',
+        title: 'Real-Time Slot Integrity',
         detail:
-            'Participant chat with App Store report/block moderation, Clean '
-            'Architecture + BLoC 8.1, and sealed errors.',
+            'Double-booking prevention and synchronized roster counts via hydrated local state streams.',
       ),
     ],
     techStack: [
-      'Dart 3 & Flutter',
+      'Flutter',
+      'Dart 3',
+      'BLoC',
       'Clean Architecture',
-      'BLoC 8.1',
-      'OpenStreetMap',
+      'Geospatial',
+      'Web',
     ],
     testCount: 24,
-    testLabel: '24 Unit & BLoC Tests',
+    testLabel: '24 Automated Tests',
     liveDemoUrl: 'https://tobishakur.github.io/flutter-tennis-matchmaking/',
     repoUrl: 'https://github.com/TobiShakur/flutter-tennis-matchmaking',
     logoAsset: 'assets/icons/setpoint_icon.webp',
@@ -238,10 +231,21 @@ abstract final class PortfolioCatalog {
       'assets/images/setpoint_match_doubles.webp',
     ],
     previewMode: ProjectPreviewMode.assetImages,
-    videoAsset: 'assets/videos/setpoint_demo.mp4',
     accentColor: AppColors.accentSetPoint,
     deepAccentColor: AppColors.accentSetPointDeep,
   );
 
   static const List<ProjectShowcase> projects = [nutriLens, setPoint];
+
+  /// All 8 bundled mobile screenshots curated for kinetic screen walls.
+  static const List<String> allGalleryScreenshots = [
+    'assets/images/nutrilens_dashboard.webp',
+    'assets/images/setpoint_map.webp',
+    'assets/images/nutrilens_scan.webp',
+    'assets/images/setpoint_feed.webp',
+    'assets/images/nutrilens_analysis.webp',
+    'assets/images/setpoint_filters.webp',
+    'assets/images/nutrilens_pantry.webp',
+    'assets/images/setpoint_match_doubles.webp',
+  ];
 }

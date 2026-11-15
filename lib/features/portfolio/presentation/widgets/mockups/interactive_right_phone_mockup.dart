@@ -10,7 +10,7 @@ import 'package:portfolio/features/portfolio/presentation/widgets/mockups/iphone
 import 'package:portfolio/features/portfolio/presentation/widgets/mockups/preview_media_player.dart';
 
 /// Front-facing interactive iPhone mockup with looping preview, hover/focus
-/// backdrop blur, and live demo CTA.
+/// backdrop blur, 1-line hover CTA pill, and live demo callback.
 class InteractiveRightPhoneMockup extends StatefulWidget {
   const InteractiveRightPhoneMockup({
     required this.project,
@@ -19,15 +19,23 @@ class InteractiveRightPhoneMockup extends StatefulWidget {
     super.key,
     this.showPersistentMobileCta = false,
     this.focusNode,
+    this.previewAssetsOverride,
+    this.controlledIndex,
+    this.isPaused = false,
+    this.onScreenChanged,
   });
 
-  static const String ctaLabel = 'Try Live Interactive App ↗';
+  static const String ctaLabel = 'Launch Live Demo ↗';
 
   final ProjectShowcase project;
   final double width;
   final VoidCallback onOpenLiveDemo;
   final bool showPersistentMobileCta;
   final FocusNode? focusNode;
+  final List<String>? previewAssetsOverride;
+  final int? controlledIndex;
+  final bool isPaused;
+  final ValueChanged<int>? onScreenChanged;
 
   @override
   State<InteractiveRightPhoneMockup> createState() =>
@@ -61,6 +69,10 @@ class _InteractiveRightPhoneMockupState
       project: widget.project,
       isBlurred: _showOverlay,
       reduceMotion: reduceMotion,
+      previewAssetsOverride: widget.previewAssetsOverride,
+      controlledIndex: widget.controlledIndex,
+      isPaused: widget.isPaused,
+      onScreenChanged: widget.onScreenChanged,
     );
 
     final phone = RepaintBoundary(
@@ -136,34 +148,38 @@ class _InteractiveRightPhoneMockupState
                                 scale: 0.94 + (0.06 * progress),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 14.0,
+                                    horizontal: 10.0,
                                   ),
-                                  child: Container(
-                                    constraints: const BoxConstraints(
-                                      minHeight: 48.0,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0,
-                                      vertical: 12.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: widget.project.accentColor,
-                                      borderRadius:
-                                          BorderRadius.circular(999.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: widget.project.accentColor
-                                              .withValues(alpha: 0.28),
-                                          blurRadius: 20.0,
-                                          offset: const Offset(0, 6),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 14.0,
+                                        vertical: 10.0,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: widget.project.accentColor,
+                                        borderRadius: BorderRadius.circular(999.0),
+                                        border: _isFocused
+                                            ? Border.all(
+                                                color: AppColors.textPrimary,
+                                                width: 2.0,
+                                              )
+                                            : null,
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Color(0x66000000),
+                                            blurRadius: 18.0,
+                                            offset: Offset(0, 6),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        InteractiveRightPhoneMockup.ctaLabel,
+                                        maxLines: 1,
+                                        style: AppTextStyles.buttonLabel(
+                                          color: AppColors.ctaInkOnAccent,
                                         ),
-                                      ],
-                                    ),
-                                    child: Text(
-                                      InteractiveRightPhoneMockup.ctaLabel,
-                                      textAlign: TextAlign.center,
-                                      style: AppTextStyles.buttonLabel(
-                                        color: AppColors.ctaInkOnAccent,
                                       ),
                                     ),
                                   ),
@@ -184,19 +200,7 @@ class _InteractiveRightPhoneMockupState
     );
 
     if (!widget.showPersistentMobileCta) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          phone,
-          const SizedBox(height: 6.0),
-          Text(
-            'Hover to launch live demo ↗',
-            style: AppTextStyles.labelSmall(
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      );
+      return phone;
     }
 
     return Column(
@@ -208,8 +212,6 @@ class _InteractiveRightPhoneMockupState
           label: InteractiveRightPhoneMockup.ctaLabel,
           variant: PortfolioButtonVariant.accentPill,
           accentColor: widget.project.accentColor,
-          height: 48.0,
-          horizontalPadding: 22.0,
           onPressed: widget.onOpenLiveDemo,
         ),
       ],
