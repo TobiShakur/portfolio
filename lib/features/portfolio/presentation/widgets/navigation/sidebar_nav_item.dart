@@ -41,13 +41,11 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
 
   @override
   Widget build(BuildContext context) {
-    final accent = widget.section.accentColor;
     final highlighted = widget.isActive || _isHovered || _isFocused;
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
-    final duration =
-        reduceMotion ? Duration.zero : const Duration(milliseconds: 200);
+    final duration = reduceMotion ? Duration.zero : AppMotion.interactive;
     final tooltipDuration =
-        reduceMotion ? Duration.zero : const Duration(milliseconds: 150);
+        reduceMotion ? Duration.zero : AppMotion.interactive;
 
     return Semantics(
       button: true,
@@ -91,55 +89,39 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
                 onTap: widget.onTap,
                 child: AnimatedContainer(
                   duration: duration,
-                  curve: Curves.easeOutCubic,
+                  curve: AppMotion.standardCurve,
                   width: AppSpacing.sidebarItemSize,
                   height: AppSpacing.sidebarItemSize,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: highlighted
-                        ? accent.withValues(alpha: 0.16)
+                        ? AppColors.bgSurfaceElevated
                         : Colors.transparent,
-                    borderRadius: BorderRadius.circular(14.0),
+                    borderRadius: BorderRadius.circular(12.0),
                     border: Border.all(
                       color: _isFocused
-                          ? accent
+                          ? AppColors.accentEngineering
                           : (highlighted
-                              ? accent.withValues(alpha: 0.65)
+                              ? AppColors.borderFocus
                               : Colors.transparent),
-                      width: _isFocused ? 2.0 : 1.5,
+                      width: _isFocused ? 2.0 : 1.0,
                     ),
-                    boxShadow: [
-                      if (_isFocused)
-                        BoxShadow(
-                          color: accent.withValues(alpha: 0.45),
-                          blurRadius: 0.0,
-                          spreadRadius: 2.0,
-                        )
-                      else if (highlighted)
-                        BoxShadow(
-                          color: accent.withValues(alpha: 0.25),
-                          blurRadius: 14.0,
-                        ),
-                    ],
                   ),
-                  child: _buildIconContent(
-                    highlighted: highlighted,
-                    accent: accent,
-                  ),
+                  child: _buildIconContent(highlighted: highlighted),
                 ),
               ),
             ),
           ),
           if (widget.showTooltipOnHover)
             Positioned(
-              left: AppSpacing.sidebarItemSize + 18.0,
+              left: AppSpacing.sidebarItemSize + 16.0,
               child: IgnorePointer(
                 child: AnimatedSlide(
                   offset: (_isHovered || _isFocused)
                       ? Offset.zero
                       : const Offset(-0.15, 0),
                   duration: tooltipDuration,
-                  curve: Curves.easeOutCubic,
+                  curve: AppMotion.standardCurve,
                   child: AnimatedOpacity(
                     opacity: (_isHovered || _isFocused) ? 1.0 : 0.0,
                     duration: tooltipDuration,
@@ -150,7 +132,7 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.bgSurfaceElevated,
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(8.0),
                         border: Border.all(
                           color: AppColors.sidebarBorder,
                           width: 1.0,
@@ -158,31 +140,17 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
                         boxShadow: const [
                           BoxShadow(
                             color: AppColors.sidebarShadow,
-                            blurRadius: 14.0,
-                            offset: Offset(0, 6),
+                            blurRadius: 16.0,
+                            offset: Offset(0, 8),
                           ),
                         ],
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 6.0,
-                            height: 6.0,
-                            decoration: BoxDecoration(
-                              color: accent,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 8.0),
-                          Text(
-                            widget.section.navLabel,
-                            style: AppTextStyles.labelSmall(
-                              color: AppColors.textPrimary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
+                      child: Text(
+                        widget.section.navLabel,
+                        style: AppTextStyles.labelSmall(
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
@@ -194,14 +162,11 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
     );
   }
 
-  Widget _buildIconContent({
-    required bool highlighted,
-    required Color accent,
-  }) {
+  Widget _buildIconContent({required bool highlighted}) {
     final assetPath = widget.iconAssetPath;
     if (assetPath != null) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(8.0),
         child: Image.asset(
           assetPath,
           width: AppSpacing.sidebarItemIconSize,
@@ -215,20 +180,20 @@ class _SidebarNavItemState extends State<SidebarNavItem> {
       PortfolioSectionId.overview => Text(
           'TG',
           style: AppTextStyles.labelSmall(
-            color: highlighted ? accent : AppColors.textPrimary,
-            fontWeight: FontWeight.w700,
-          ).copyWith(letterSpacing: -0.4),
+            color: highlighted ? AppColors.textPrimary : AppColors.textSecondary,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       PortfolioSectionId.capabilities => CustomPaint(
           size: const Size.square(20.0),
           painter: _ArchitectureLayersPainter(
-            color: highlighted ? accent : AppColors.textSecondary,
+            color: highlighted ? AppColors.textPrimary : AppColors.textSecondary,
           ),
         ),
       PortfolioSectionId.contact => CustomPaint(
           size: const Size.square(20.0),
           painter: _ContactMailPainter(
-            color: highlighted ? accent : AppColors.textSecondary,
+            color: highlighted ? AppColors.textPrimary : AppColors.textSecondary,
           ),
         ),
       PortfolioSectionId.nutrilens ||

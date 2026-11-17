@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:portfolio/features/portfolio/data/portfolio_catalog.dart';
-import 'package:portfolio/features/portfolio/domain/entities/portfolio_concept_id.dart';
 
 void main() {
   group('PortfolioCatalog integrity', () {
@@ -11,16 +10,8 @@ void main() {
       PortfolioCatalog.profile.headlineLine1,
       PortfolioCatalog.profile.headlineLine2,
       PortfolioCatalog.profile.supportingPitch,
-      for (final concept in PortfolioConceptId.values) ...[
-        PortfolioCatalog.heroHeadlineFor(concept).$1,
-        PortfolioCatalog.heroHeadlineFor(concept).$2,
-      ],
       ...PortfolioCatalog.profile.verificationMetrics,
       for (final item in PortfolioCatalog.profile.coreStackLogos) item.label,
-      for (final row in PortfolioCatalog.profile.snapshotHighlights) ...[
-        row.label,
-        row.value,
-      ],
       PortfolioCatalog.capabilitiesSectionTitle,
       PortfolioCatalog.capabilitiesSectionSubtitle,
       PortfolioCatalog.closingHeading,
@@ -67,6 +58,7 @@ void main() {
         'effortless',
         'cutting-edge',
         'passionate developer',
+        '60fps',
       ];
 
       for (final term in forbidden) {
@@ -109,9 +101,10 @@ void main() {
         'https://github.com/TobiShakur/flutter-tennis-matchmaking',
       );
 
-      expect(PortfolioCatalog.matchUpProof.ratingLabel, '5.0★');
+      expect(PortfolioCatalog.matchUpProof.ratingLabel, '5.0');
       expect(PortfolioCatalog.matchUpProof.storeLabel, 'Apple App Store');
       expect(PortfolioCatalog.capabilityRows.length, 4);
+      expect(PortfolioCatalog.profile.coreStackLogos.length, 10);
     });
 
     test('keeps right preview carousel distinct from left static screen', () {

@@ -6,11 +6,9 @@ import 'package:portfolio/core/theme/app_colors.dart';
 import 'package:portfolio/core/theme/app_spacing.dart';
 import 'package:portfolio/features/portfolio/data/portfolio_catalog.dart';
 import 'package:portfolio/features/portfolio/domain/entities/portfolio_section_id.dart';
-import 'package:portfolio/features/portfolio/presentation/controllers/portfolio_concept_controller.dart';
 import 'package:portfolio/features/portfolio/presentation/controllers/portfolio_navigation_controller.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/common/feedback_toast.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/debug/perf_debug_overlay.dart';
-import 'package:portfolio/features/portfolio/presentation/widgets/navigation/concept_switcher_menu.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/navigation/floating_pill_sidebar.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/navigation/mobile_top_app_bar.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/sections/capabilities_section.dart';
@@ -24,18 +22,16 @@ class _StepSectionIntent extends Intent {
   final int delta;
 }
 
-/// Top-level single-page 4-act / 5-stop portfolio scaffold with live concept switcher,
-/// anti-hijack section snapping on desktop, and opaque top nav bar below 960px.
+/// Top-level single-page 4-act / 5-stop portfolio scaffold with anti-hijack
+/// section snapping on desktop and opaque top nav bar below 960px.
 class PortfolioPage extends StatelessWidget {
   const PortfolioPage({
     required this.controller,
-    required this.conceptController,
     super.key,
     this.perfTelemetryService,
   });
 
   final PortfolioNavigationController controller;
-  final PortfolioConceptController conceptController;
   final PerfTelemetryService? perfTelemetryService;
 
   @override
@@ -86,15 +82,11 @@ class PortfolioPage extends StatelessWidget {
               );
 
               final scrollContent = ListenableBuilder(
-                listenable: Listenable.merge([controller, conceptController]),
+                listenable: controller,
                 builder: (context, _) {
-                  final heroConcept = conceptController.heroConcept;
-                  final workConcept = conceptController.workConcept;
-                  final isMotionPaused =
-                      conceptController.isBackgroundMotionPaused;
+                  final isMotionPaused = controller.isBackgroundMotionPaused;
                   final activeIndex = controller.activeSection.index;
 
-                  final isOverviewNear = activeIndex <= 1;
                   final isNutriLensNear = activeIndex <= 2;
                   final isSetPointNear = activeIndex >= 1 && activeIndex <= 3;
 
@@ -106,13 +98,10 @@ class PortfolioPage extends StatelessWidget {
                         KeyedSubtree(
                           key: controller.sectionKeys[PortfolioSectionId.overview],
                           child: OverviewHeroSection(
-                            concept: heroConcept,
                             controller: controller,
                             isDesktop: isDesktop,
                             isWideDesktop: isWideDesktop,
                             sectionHeight: sectionHeight,
-                            isSectionVisible: isOverviewNear,
-                            isMotionPaused: isMotionPaused,
                             onChevronNext: () => controller.scrollToSection(
                               PortfolioSectionId.nutrilens,
                               reduceMotion: reduceMotion,
@@ -125,14 +114,13 @@ class PortfolioPage extends StatelessWidget {
                           child: ProjectShowcaseSection(
                             project: PortfolioCatalog.nutriLens,
                             projectIndex: 0,
-                            concept: workConcept,
                             isDesktop: isDesktop,
                             isWideDesktop: isWideDesktop,
                             sectionHeight: sectionHeight,
                             isSectionVisible: isNutriLensNear,
                             isMotionPaused: isMotionPaused,
                             onToggleMotionPaused:
-                                conceptController.toggleBackgroundMotionPaused,
+                                controller.toggleBackgroundMotionPaused,
                             onOpenUrl: controller.openExternalUrl,
                             onChevronNext: () => controller.scrollToSection(
                               PortfolioSectionId.setpoint,
@@ -145,14 +133,13 @@ class PortfolioPage extends StatelessWidget {
                           child: ProjectShowcaseSection(
                             project: PortfolioCatalog.setPoint,
                             projectIndex: 1,
-                            concept: workConcept,
                             isDesktop: isDesktop,
                             isWideDesktop: isWideDesktop,
                             sectionHeight: sectionHeight,
                             isSectionVisible: isSetPointNear,
                             isMotionPaused: isMotionPaused,
                             onToggleMotionPaused:
-                                conceptController.toggleBackgroundMotionPaused,
+                                controller.toggleBackgroundMotionPaused,
                             onOpenUrl: controller.openExternalUrl,
                             onChevronNext: () => controller.scrollToSection(
                               PortfolioSectionId.capabilities,
@@ -164,20 +151,14 @@ class PortfolioPage extends StatelessWidget {
                           key: controller
                               .sectionKeys[PortfolioSectionId.capabilities],
                           child: CapabilitiesSection(
-                            concept: workConcept,
                             isDesktop: isDesktop,
                             isWideDesktop: isWideDesktop,
                             sectionHeight: sectionHeight,
-                            onChevronNext: () => controller.scrollToSection(
-                              PortfolioSectionId.contact,
-                              reduceMotion: reduceMotion,
-                            ),
                           ),
                         ),
                         KeyedSubtree(
                           key: controller.sectionKeys[PortfolioSectionId.contact],
                           child: ClosingContactSection(
-                            concept: workConcept,
                             controller: controller,
                             isDesktop: isDesktop,
                             isWideDesktop: isWideDesktop,
@@ -212,18 +193,8 @@ class PortfolioPage extends StatelessWidget {
               final Widget mainCanvasStack = Stack(
                 fit: StackFit.expand,
                 children: [
-                  Positioned.fill(
-                    child: RepaintBoundary(
-                      child: ListenableBuilder(
-                        listenable: controller,
-                        builder: (context, _) => _AmbientCanvasGlow(
-                          activeSection: controller.activeSection,
-                        ),
-                      ),
-                    ),
-                  ),
                   Positioned.fill(child: scrollContent),
-                  if (isDesktop) ...[
+                  if (isDesktop)
                     RepaintBoundary(
                       child: ListenableBuilder(
                         listenable: controller,
@@ -239,11 +210,6 @@ class PortfolioPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ConceptSwitcherMenu(
-                      controller: conceptController,
-                      viewportWidth: width,
-                    ),
-                  ],
                   ListenableBuilder(
                     listenable: controller,
                     builder: (context, _) {
@@ -286,7 +252,6 @@ class PortfolioPage extends StatelessWidget {
                           section,
                           reduceMotion: reduceMotion,
                         ),
-                        conceptController: conceptController,
                         isTablet: isTablet,
                       ),
                     ),
@@ -296,39 +261,6 @@ class PortfolioPage extends StatelessWidget {
               );
             },
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _AmbientCanvasGlow extends StatelessWidget {
-  const _AmbientCanvasGlow({required this.activeSection});
-
-  final PortfolioSectionId activeSection;
-
-  @override
-  Widget build(BuildContext context) {
-    final tint = switch (activeSection) {
-      PortfolioSectionId.overview ||
-      PortfolioSectionId.capabilities ||
-      PortfolioSectionId.contact =>
-        AppColors.accentEngineering,
-      PortfolioSectionId.nutrilens => AppColors.accentNutriLensDeep,
-      PortfolioSectionId.setpoint => AppColors.accentSetPointDeep,
-    };
-
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeOutCubic,
-      decoration: BoxDecoration(
-        gradient: RadialGradient(
-          center: const Alignment(0.72, -0.55),
-          radius: 1.35,
-          colors: [
-            tint.withValues(alpha: 0.08),
-            AppColors.bgCanvas,
-          ],
         ),
       ),
     );

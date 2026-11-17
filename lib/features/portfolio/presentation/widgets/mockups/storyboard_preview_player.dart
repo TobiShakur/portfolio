@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:portfolio/core/theme/app_spacing.dart';
 import 'package:portfolio/features/portfolio/domain/entities/project_showcase.dart';
 
 /// Pure-Flutter automated crossfade storyboard preview for iPhone mockups.
@@ -77,7 +78,7 @@ class _StoryboardPreviewPlayerState extends State<StoryboardPreviewPlayer> {
     if (widget.reduceMotion || widget.isPaused || _slides.length <= 1) {
       return;
     }
-    _timer = Timer.periodic(const Duration(seconds: 4), (_) {
+    _timer = Timer.periodic(const Duration(milliseconds: 2200), (_) {
       if (!mounted) {
         return;
       }
@@ -104,11 +105,9 @@ class _StoryboardPreviewPlayerState extends State<StoryboardPreviewPlayer> {
 
     return RepaintBoundary(
       child: AnimatedSwitcher(
-        duration: widget.reduceMotion
-            ? Duration.zero
-            : const Duration(milliseconds: 900),
-        switchInCurve: Curves.easeInOut,
-        switchOutCurve: Curves.easeInOut,
+        duration: widget.reduceMotion ? Duration.zero : AppMotion.slideFade,
+        switchInCurve: AppMotion.standardCurve,
+        switchOutCurve: AppMotion.standardCurve,
         child: KeyedSubtree(
           key: ValueKey<String>('${widget.project.id.name}_${_slides[index]}'),
           child: slide,

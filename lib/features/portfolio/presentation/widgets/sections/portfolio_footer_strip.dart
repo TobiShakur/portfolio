@@ -78,7 +78,8 @@ class PortfolioFooterStrip extends StatelessWidget {
           ),
           if (onBackToTop != null)
             PortfolioFooterLink(
-              label: 'Back to top ↑',
+              label: 'Back to top',
+              trailingIcon: Icons.arrow_upward_rounded,
               semanticLabel: 'Back to top',
               isButton: true,
               onTap: onBackToTop!,
@@ -95,12 +96,14 @@ class PortfolioFooterLink extends StatefulWidget {
     required this.label,
     required this.onTap,
     super.key,
+    this.trailingIcon,
     this.semanticLabel,
     this.isButton = false,
   });
 
   final String label;
   final VoidCallback onTap;
+  final IconData? trailingIcon;
   final String? semanticLabel;
   final bool isButton;
 
@@ -115,6 +118,7 @@ class _PortfolioFooterLinkState extends State<PortfolioFooterLink> {
   @override
   Widget build(BuildContext context) {
     final active = _hovered || _focused;
+    final fg = active ? AppColors.textPrimary : AppColors.textSecondary;
 
     return Semantics(
       link: !widget.isButton,
@@ -140,7 +144,7 @@ class _PortfolioFooterLinkState extends State<PortfolioFooterLink> {
               minWidth: AppSpacing.minTouchTarget,
               minHeight: AppSpacing.minTouchTarget,
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
               border: _focused
@@ -150,12 +154,21 @@ class _PortfolioFooterLinkState extends State<PortfolioFooterLink> {
             child: Center(
               widthFactor: 1.0,
               heightFactor: 1.0,
-              child: Text(
-                widget.label,
-                style: AppTextStyles.labelSmall(
-                  color: active ? AppColors.textPrimary : AppColors.textSecondary,
-                  fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    widget.label,
+                    style: AppTextStyles.labelSmall(
+                      color: fg,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  if (widget.trailingIcon != null) ...[
+                    const SizedBox(width: 4.0),
+                    Icon(widget.trailingIcon, size: 14.0, color: fg),
+                  ],
+                ],
               ),
             ),
           ),

@@ -1,4 +1,6 @@
-/// Centralized 4pt/8pt spacing scale, responsive breakpoints, and safe zones.
+import 'package:flutter/material.dart';
+
+/// Centralized 4px spacing scale, responsive breakpoints, and safe zones.
 abstract final class AppSpacing {
   // Breakpoints
   static const double wideDesktop = 1200.0;
@@ -21,7 +23,7 @@ abstract final class AppSpacing {
   static const double sidebarItemIconSize = 40.0;
   static const double sidebarPadding = 8.0;
   static const double sidebarGap = 8.0;
-  static const double sidebarBorderWidth = 1.75;
+  static const double sidebarBorderWidth = 1.0;
   static const double sidebarInsetWide = 24.0;
   static const double sidebarInsetCompact = 16.0;
 
@@ -43,4 +45,12 @@ abstract final class AppSpacing {
   static const double maxContentWidth = 1240.0;
   static const double minDesktopSectionHeight = 680.0;
   static const double phoneAspectRatio = 9.0 / 19.5;
+}
+
+/// Disciplined motion tokens sharing one deceleration curve.
+abstract final class AppMotion {
+  static const Curve standardCurve = Cubic(0.22, 1.0, 0.36, 1.0);
+  static const Duration interactive = Duration(milliseconds: 150);
+  static const Duration hoverBlur = Duration(milliseconds: 180);
+  static const Duration slideFade = Duration(milliseconds: 440);
 }

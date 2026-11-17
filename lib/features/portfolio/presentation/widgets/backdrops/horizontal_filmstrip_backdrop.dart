@@ -3,19 +3,33 @@ import 'package:portfolio/core/theme/app_colors.dart';
 import 'package:portfolio/core/theme/app_spacing.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/backdrops/kinetic_screen_tile.dart';
 
-/// Concept B orthogonal desaturated contact-sheet filmstrip confined inside
-/// the showcase stage cell (`-12 px/s` top row, `+10 px/s` bottom row).
+/// Horizontal bi-directional app-screen filmstrip used behind both Concept A
+/// full-width project stages (colored, subtle) and Concept B Swiss cells (desaturated).
 class HorizontalFilmstripBackdrop extends StatefulWidget {
   const HorizontalFilmstripBackdrop({
     required this.imageAssets,
     required this.isSectionVisible,
     required this.isPaused,
+    this.desaturate = true,
+    this.tileWidth = 124.0,
+    this.tileGap = 14.0,
+    this.imageOpacity = 0.15,
+    this.topSpeedPxPerSec = -12.0,
+    this.bottomSpeedPxPerSec = 10.0,
+    this.showHorizontalEdgeFade = true,
     super.key,
   });
 
   final List<String> imageAssets;
   final bool isSectionVisible;
   final bool isPaused;
+  final bool desaturate;
+  final double tileWidth;
+  final double tileGap;
+  final double imageOpacity;
+  final double topSpeedPxPerSec;
+  final double bottomSpeedPxPerSec;
+  final bool showHorizontalEdgeFade;
 
   @override
   State<HorizontalFilmstripBackdrop> createState() =>
@@ -72,41 +86,46 @@ class _HorizontalFilmstripBackdropState
       return const SizedBox.shrink();
     }
 
-    const tileWidth = 124.0;
-    const tileGap = 14.0;
+    final stripRows = OverflowBox(
+      alignment: Alignment.center,
+      minHeight: 0.0,
+      maxHeight: double.infinity,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _HorizontalStripRow(
+            assets: widget.imageAssets,
+            tileWidth: widget.tileWidth,
+            tileGap: widget.tileGap,
+            imageOpacity: widget.imageOpacity,
+            speedPxPerSec: widget.topSpeedPxPerSec,
+            showHorizontalEdgeFade: widget.showHorizontalEdgeFade,
+            elapsedSeconds: elapsedSeconds,
+          ),
+          SizedBox(height: widget.tileGap),
+          _HorizontalStripRow(
+            assets: widget.imageAssets.reversed.toList(),
+            tileWidth: widget.tileWidth,
+            tileGap: widget.tileGap,
+            imageOpacity: widget.imageOpacity,
+            speedPxPerSec: widget.bottomSpeedPxPerSec,
+            showHorizontalEdgeFade: widget.showHorizontalEdgeFade,
+            elapsedSeconds: elapsedSeconds,
+          ),
+        ],
+      ),
+    );
 
     return IgnorePointer(
       child: ClipRect(
         child: RepaintBoundary(
-          child: ColorFiltered(
-            colorFilter: _desaturate25Filter,
-            child: OverflowBox(
-              alignment: Alignment.center,
-              minHeight: 0.0,
-              maxHeight: double.infinity,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _HorizontalStripRow(
-                    assets: widget.imageAssets,
-                    tileWidth: tileWidth,
-                    tileGap: tileGap,
-                    speedPxPerSec: -12.0,
-                    elapsedSeconds: elapsedSeconds,
-                  ),
-                  const SizedBox(height: 16.0),
-                  _HorizontalStripRow(
-                    assets: widget.imageAssets.reversed.toList(),
-                    tileWidth: tileWidth,
-                    tileGap: tileGap,
-                    speedPxPerSec: 10.0,
-                    elapsedSeconds: elapsedSeconds,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          child: widget.desaturate
+              ? ColorFiltered(
+                  colorFilter: _desaturate25Filter,
+                  child: stripRows,
+                )
+              : stripRows,
         ),
       ),
     );
@@ -118,14 +137,18 @@ class _HorizontalStripRow extends StatelessWidget {
     required this.assets,
     required this.tileWidth,
     required this.tileGap,
+    required this.imageOpacity,
     required this.speedPxPerSec,
+    required this.showHorizontalEdgeFade,
     required this.elapsedSeconds,
   });
 
   final List<String> assets;
   final double tileWidth;
   final double tileGap;
+  final double imageOpacity;
   final double speedPxPerSec;
+  final bool showHorizontalEdgeFade;
   final ValueNotifier<double> elapsedSeconds;
 
   @override
@@ -143,7 +166,7 @@ class _HorizontalStripRow extends StatelessWidget {
               width: tileWidth,
               borderRadius: 10.0,
               borderOpacity: 0.16,
-              imageOpacity: 0.15,
+              imageOpacity: imageOpacity,
             ),
             SizedBox(width: tileGap),
           ],
@@ -177,22 +200,22 @@ class _HorizontalStripRow extends StatelessWidget {
               ),
             ),
           ),
-          // Soft horizontal edge fade inside the Swiss Grid stage cell
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                stops: [0.0, 0.12, 0.88, 1.0],
-                colors: [
-                  AppColors.bgCanvas,
-                  Color(0x00080A0C),
-                  Color(0x00080A0C),
-                  AppColors.bgCanvas,
-                ],
+          if (showHorizontalEdgeFade)
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  stops: [0.0, 0.12, 0.88, 1.0],
+                  colors: [
+                    AppColors.bgCanvas,
+                    AppColors.canvasTransparent,
+                    AppColors.canvasTransparent,
+                    AppColors.bgCanvas,
+                  ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

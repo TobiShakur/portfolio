@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:portfolio/core/services/clipboard_service.dart';
-import 'package:portfolio/core/services/concept_url_sync_service.dart';
 import 'package:portfolio/core/services/external_link_launcher.dart';
 import 'package:portfolio/core/services/perf_telemetry_service.dart';
 import 'package:portfolio/core/services/portfolio_ready_notifier.dart';
 import 'package:portfolio/core/theme/app_theme.dart';
-import 'package:portfolio/features/portfolio/presentation/controllers/portfolio_concept_controller.dart';
 import 'package:portfolio/features/portfolio/presentation/controllers/portfolio_navigation_controller.dart';
 import 'package:portfolio/features/portfolio/presentation/screens/portfolio_page.dart';
 
@@ -18,16 +16,12 @@ class PortfolioApp extends StatefulWidget {
     this.linkLauncher = const UrlLauncherExternalLinkLauncher(),
     this.clipboardService = const FlutterClipboardService(),
     this.controller,
-    this.conceptController,
-    this.conceptUrlSyncService,
     this.perfTelemetryService,
   });
 
   final ExternalLinkLauncher linkLauncher;
   final ClipboardService clipboardService;
   final PortfolioNavigationController? controller;
-  final PortfolioConceptController? conceptController;
-  final ConceptUrlSyncService? conceptUrlSyncService;
   final PerfTelemetryService? perfTelemetryService;
 
   @override
@@ -36,9 +30,7 @@ class PortfolioApp extends StatefulWidget {
 
 class _PortfolioAppState extends State<PortfolioApp> {
   late final PortfolioNavigationController _controller;
-  late final PortfolioConceptController _conceptController;
   late final bool _ownsController;
-  late final bool _ownsConceptController;
   bool _warmupStarted = false;
   Timer? _warmupTimeoutTimer;
 
@@ -66,12 +58,6 @@ class _PortfolioAppState extends State<PortfolioApp> {
         PortfolioNavigationController(
           linkLauncher: widget.linkLauncher,
           clipboardService: widget.clipboardService,
-        );
-
-    _ownsConceptController = widget.conceptController == null;
-    _conceptController = widget.conceptController ??
-        PortfolioConceptController(
-          urlSyncService: widget.conceptUrlSyncService,
         );
   }
 
@@ -139,9 +125,6 @@ class _PortfolioAppState extends State<PortfolioApp> {
     if (_ownsController) {
       _controller.dispose();
     }
-    if (_ownsConceptController) {
-      _conceptController.dispose();
-    }
     super.dispose();
   }
 
@@ -153,7 +136,6 @@ class _PortfolioAppState extends State<PortfolioApp> {
       theme: AppTheme.dark(),
       home: PortfolioPage(
         controller: _controller,
-        conceptController: _conceptController,
         perfTelemetryService: widget.perfTelemetryService,
       ),
     );

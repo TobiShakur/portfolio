@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:portfolio/core/theme/app_colors.dart';
 import 'package:portfolio/core/theme/app_spacing.dart';
 import 'package:portfolio/core/theme/app_text_styles.dart';
-import 'package:portfolio/features/portfolio/domain/entities/portfolio_concept_id.dart';
 import 'package:portfolio/features/portfolio/domain/entities/portfolio_section_id.dart';
-import 'package:portfolio/features/portfolio/presentation/controllers/portfolio_concept_controller.dart';
-import 'package:portfolio/features/portfolio/presentation/widgets/navigation/concept_switcher_menu.dart';
 
 /// Fixed opaque 56px top navigation bar for Tablet & Mobile (`< 960px`).
 /// Placed in a layout Column above scrolling content so it never collides with text.
@@ -13,14 +10,12 @@ class MobileTopAppBar extends StatelessWidget {
   const MobileTopAppBar({
     required this.activeSection,
     required this.onSelectSection,
-    required this.conceptController,
     required this.isTablet,
     super.key,
   });
 
   final PortfolioSectionId activeSection;
   final ValueChanged<PortfolioSectionId> onSelectSection;
-  final PortfolioConceptController conceptController;
   final bool isTablet;
 
   @override
@@ -67,19 +62,13 @@ class MobileTopAppBar extends StatelessWidget {
           else
             Expanded(
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.centerRight,
                 child: _MobileSectionMenuTrigger(
                   activeSection: activeSection,
                   onPressed: () => _openMobileNavSheet(context),
                 ),
               ),
             ),
-          const SizedBox(width: 8.0),
-          InlineCompactConceptTabs(
-            controller: conceptController,
-            showMixButton: isTablet,
-            onMixPressed: isTablet ? () => _openMobileNavSheet(context) : null,
-          ),
         ],
       ),
     );
@@ -90,93 +79,61 @@ class MobileTopAppBar extends StatelessWidget {
       context: context,
       backgroundColor: AppColors.bgSurface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18.0)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
         side: BorderSide(color: AppColors.borderFocus, width: 1.0),
       ),
       builder: (sheetContext) {
-        return ListenableBuilder(
-          listenable: conceptController,
-          builder: (context, _) {
-            return SafeArea(
-              top: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 24.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Jump to Section',
-                      style: AppTextStyles.cardTitle(isMobile: true),
-                    ),
-                    const SizedBox(height: 10.0),
-                    for (final section in PortfolioSectionId.values)
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(sheetContext).pop();
-                          onSelectSection(section);
-                        },
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: Container(
-                          constraints: const BoxConstraints(minHeight: 48.0),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0,
-                            vertical: 10.0,
-                          ),
-                          decoration: BoxDecoration(
-                            color: activeSection == section
-                                ? section.accentColor.withValues(alpha: 0.14)
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 8.0,
-                                height: 8.0,
-                                decoration: BoxDecoration(
-                                  color: section.accentColor,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 12.0),
-                              Text(
-                                section.navLabel,
-                                style: AppTextStyles.bodyDefault(
-                                  color: activeSection == section
-                                      ? AppColors.textPrimary
-                                      : AppColors.textSecondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    const Divider(color: AppColors.borderHairline, height: 24.0),
-                    Text(
-                      'Mix Hero & Project Concept',
-                      style: AppTextStyles.labelSmall(
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    _MobileMixSelectorRow(
-                      label: 'Hero',
-                      selected: conceptController.heroConcept,
-                      onSelect: conceptController.setHeroConcept,
-                    ),
-                    const SizedBox(height: 8.0),
-                    _MobileMixSelectorRow(
-                      label: 'Work',
-                      selected: conceptController.workConcept,
-                      onSelect: conceptController.setWorkConcept,
-                    ),
-                  ],
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Jump to Section',
+                  style: AppTextStyles.cardTitle(isMobile: true),
                 ),
-              ),
-            );
-          },
+                const SizedBox(height: 12.0),
+                for (final section in PortfolioSectionId.values)
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(sheetContext).pop();
+                      onSelectSection(section);
+                    },
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Container(
+                      constraints: const BoxConstraints(minHeight: 48.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: 8.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: activeSection == section
+                            ? AppColors.bgSurfaceElevated
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              section.navLabel,
+                              style: AppTextStyles.bodyDefault(
+                                color: activeSection == section
+                                    ? AppColors.textPrimary
+                                    : AppColors.textSecondary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -224,13 +181,15 @@ class _BrandHomePillState extends State<_BrandHomePill> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: widget.isActive
-                  ? AppColors.accentEngineering.withValues(alpha: 0.16)
+                  ? AppColors.bgSurfaceElevated
                   : AppColors.bgSurface,
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(8.0),
               border: Border.all(
-                color: _focused || widget.isActive
+                color: _focused
                     ? AppColors.accentEngineering
-                    : AppColors.borderHairline,
+                    : (widget.isActive
+                        ? AppColors.borderFocus
+                        : AppColors.borderHairline),
                 width: _focused ? 2.0 : 1.0,
               ),
             ),
@@ -238,9 +197,9 @@ class _BrandHomePillState extends State<_BrandHomePill> {
               'TG',
               style: AppTextStyles.labelSmall(
                 color: widget.isActive
-                    ? AppColors.accentEngineering
-                    : AppColors.textPrimary,
-                fontWeight: FontWeight.w700,
+                    ? AppColors.textPrimary
+                    : AppColors.textSecondary,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -290,10 +249,10 @@ class _MobileSectionMenuTriggerState extends State<_MobileSectionMenuTrigger> {
             constraints: const BoxConstraints(minWidth: 108.0, minHeight: 44.0),
             child: Container(
               height: 40.0,
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
               decoration: BoxDecoration(
                 color: AppColors.bgSurface,
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(8.0),
                 border: Border.all(
                   color: _focused
                       ? AppColors.accentEngineering
@@ -304,15 +263,6 @@ class _MobileSectionMenuTriggerState extends State<_MobileSectionMenuTrigger> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: 6.0,
-                    height: 6.0,
-                    decoration: BoxDecoration(
-                      color: widget.activeSection.accentColor,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: 6.0),
                   Flexible(
                     child: Text(
                       widget.activeSection.navLabel,
@@ -320,7 +270,7 @@ class _MobileSectionMenuTriggerState extends State<_MobileSectionMenuTrigger> {
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.labelSmall(
                         color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
@@ -398,69 +348,15 @@ class _TabletNavTextLinkState extends State<_TabletNavTextLink> {
                 widget.label,
                 style: AppTextStyles.labelSmall(
                   color: widget.isActive
-                      ? widget.accentColor
+                      ? AppColors.textPrimary
                       : (_hovered ? AppColors.textPrimary : AppColors.textSecondary),
-                  fontWeight:
-                      widget.isActive ? FontWeight.w700 : FontWeight.w500,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class _MobileMixSelectorRow extends StatelessWidget {
-  const _MobileMixSelectorRow({
-    required this.label,
-    required this.selected,
-    required this.onSelect,
-  });
-
-  final String label;
-  final PortfolioConceptId selected;
-  final ValueChanged<PortfolioConceptId> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 48.0,
-          child: Text(
-            label,
-            style: AppTextStyles.labelSmall(color: AppColors.textSecondary),
-          ),
-        ),
-        for (final concept in PortfolioConceptId.values) ...[
-          const SizedBox(width: 6.0),
-          Expanded(
-            child: OutlinedButton(
-              onPressed: () => onSelect(concept),
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(44.0, 44.0),
-                backgroundColor: selected == concept
-                    ? AppColors.accentEngineering
-                    : AppColors.bgSurfaceElevated,
-                foregroundColor: selected == concept
-                    ? AppColors.ctaInkOnAccent
-                    : AppColors.textPrimary,
-                side: BorderSide(
-                  color: selected == concept
-                      ? AppColors.accentEngineering
-                      : AppColors.borderHairline,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              child: Text(concept.menuLabel),
-            ),
-          ),
-        ],
-      ],
     );
   }
 }

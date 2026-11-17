@@ -1,37 +1,36 @@
 import 'package:portfolio/core/theme/app_colors.dart';
 import 'package:portfolio/features/portfolio/domain/entities/capability_row.dart';
-import 'package:portfolio/features/portfolio/domain/entities/portfolio_concept_id.dart';
 import 'package:portfolio/features/portfolio/domain/entities/portfolio_section_id.dart';
 import 'package:portfolio/features/portfolio/domain/entities/profile_data.dart';
 import 'package:portfolio/features/portfolio/domain/entities/project_showcase.dart';
 import 'package:portfolio/features/portfolio/domain/entities/tech_brand.dart';
 
-/// Immutable verified catalog powering all 3 portfolio design concepts.
+/// Immutable verified catalog powering the portfolio.
 abstract final class PortfolioCatalog {
   static const String capabilitiesSectionTitle = 'Capabilities & Stack';
   static const String capabilitiesSectionSubtitle =
-      'Full product ownership from architecture to store release—no separate backend hire required.';
+      'Full product ownership from architecture to store release';
 
   static const String closingHeading =
       'Need a mobile engineer who owns the whole stack?';
   static const String closingSubcopy =
-      'Available for Upwork MVPs, Figma-to-Flutter builds, and remote product teams (GMT-3 · EN/ES).';
+      'Available for Upwork MVPs, Figma-to-Flutter builds, and remote teams (GMT-3, EN / ES)';
 
   static const ProfileData profile = ProfileData(
     fullName: 'Tobías Gutiérrez',
     roleTitle: 'Mobile Software Engineer',
     identityLine: 'Tobías Gutiérrez — Mobile Software Engineer · GMT-3',
     headlineLine1: 'Production Flutter apps,',
-    headlineLine2: 'with backend & AI built in.',
+    headlineLine2: 'with backend & AI built in',
     supportingPitch:
-        'I build iOS, Android, and Web products solo—combining 60fps Flutter UI, Firebase backends, serverless AI proxies, and automated test suites.',
+        'I build iOS, Android, and Web products solo—combining fast, native-feel Flutter apps, Firebase backends, serverless AI proxies, and automated test suites.',
     githubUrl: 'https://github.com/TobiShakur',
     linkedInUrl: 'https://linkedin.com/in/tobias-gutierrez',
     email: 'tobigutierrez26@gmail.com',
     verificationMetrics: [
-      'App Store Shipped (5.0★)',
-      '177 Automated Tests',
-      'US East & EU Overlap',
+      'App Store 5.0',
+      '177 automated tests',
+      'US East & EU overlap',
     ],
     coreStackLogos: [
       TechBrandChipItem(label: 'Flutter', brand: TechBrand.flutter),
@@ -41,56 +40,22 @@ abstract final class PortfolioCatalog {
       TechBrandChipItem(label: 'Gemini AI', brand: TechBrand.gemini),
       TechBrandChipItem(label: 'iOS', brand: TechBrand.appleIos),
       TechBrandChipItem(label: 'Android', brand: TechBrand.android),
+      TechBrandChipItem(label: 'Figma', brand: TechBrand.figma),
+      TechBrandChipItem(label: 'OpenStreetMap', brand: TechBrand.openStreetMap),
       TechBrandChipItem(label: 'GitHub Actions', brand: TechBrand.githubActions),
-    ],
-    snapshotHighlights: [
-      SnapshotHighlight(
-        label: 'PLATFORMS',
-        value: 'iOS · Android · Web',
-      ),
-      SnapshotHighlight(
-        label: 'CLOUD',
-        value: 'Firebase · Workers',
-      ),
-      SnapshotHighlight(
-        label: 'QA',
-        value: '177 Tests',
-      ),
-      SnapshotHighlight(
-        label: 'OVERLAP',
-        value: 'GMT-3 · EN / ES',
-      ),
     ],
   );
 
-  /// Returns concept-tailored Hero H1 line pair per DESIGN_CONCEPTS.md §5.
-  static (String, String) heroHeadlineFor(PortfolioConceptId concept) {
-    return switch (concept) {
-      PortfolioConceptId.editorialWall => (
-          'Production Flutter apps,',
-          'with backend & AI built in.',
-        ),
-      PortfolioConceptId.swissGrid => (
-          'Flutter systems',
-          'shipped end to end.',
-        ),
-      PortfolioConceptId.kineticStage => (
-          'Flutter & cloud apps,',
-          'shipped to real users.',
-        ),
-    };
-  }
-
-  /// Verified commercial production proof (MatchUp on Apple App Store 5.0★).
+  /// Verified commercial production proof (MatchUp on Apple App Store 5.0).
   static const ClientAppProof matchUpProof = ClientAppProof(
-    badgeLabel: 'CLIENT PRODUCTION DELIVERY · APPLE APP STORE (5.0★)',
-    title: 'MatchUp — Cross-Platform Social Sports App (iOS & Android)',
+    badgeLabel: 'Client production · Apple App Store',
+    title: 'MatchUp — Cross-Platform Social Sports App',
     summary:
-        'Built solo from Figma specs: Google & Phone OTP Auth, real-time Firestore chat, Google Maps custom markers, FCM & APNs push notifications, Cloud Functions, deep linking, and AdMob monetization.',
-    platformsLine: 'Platforms: iOS (App Store 5.0★) · Android',
-    stackLine: 'Stack: Flutter · Provider · Firebase · Google Maps · AdMob',
+        'Solo end-to-end build from Figma specs: Google & Phone OTP auth, real-time Firestore chat, Google Maps custom pins, FCM/APNs push, Cloud Functions, deep linking, and AdMob.',
+    platformsLine: 'iOS (5.0 rated) · Android',
+    stackLine: 'Flutter · Provider · Firebase · Google Maps · AdMob',
     shortName: 'MatchUp',
-    ratingLabel: '5.0★',
+    ratingLabel: '5.0',
     storeLabel: 'Apple App Store',
     highlights: [
       'Figma-to-Flutter UI + custom animations',
@@ -105,7 +70,7 @@ abstract final class PortfolioCatalog {
       indexLabel: '01',
       title: 'Cross-Platform UI & Native',
       description:
-          'Pixel-accurate Flutter apps for iOS, Android, and Web built from Figma specs at 60fps.',
+          'Pixel-accurate Flutter apps for iOS, Android, and Web built from Figma specs with responsive native performance.',
       techSpecs: 'Flutter · Dart 3 · Swift/Kotlin · Figma',
     ),
     CapabilityRowItem(
@@ -134,29 +99,29 @@ abstract final class PortfolioCatalog {
   static const ProjectShowcase nutriLens = ProjectShowcase(
     id: PortfolioSectionId.nutrilens,
     projectIndexLabel: '01',
-    categoryTag: 'MOBILE VISION & SERVERLESS EDGE',
-    architectureTag: 'MVVM + PROVIDER',
+    categoryTag: 'Mobile vision & serverless edge',
+    architectureTag: 'MVVM + Provider',
     title: 'NutriLens AI',
     subtitle: 'Pantry-First Meal & Macro Tracker',
     problemStatement:
-        'Calorie trackers fail on home-cooked meals—forcing manual weighing instead of matching the actual brands in your kitchen.',
-    scopeSummary: 'Solo End-to-End · MVVM + Provider · 153 Automated Tests',
-    quickDemoHint: 'Launch Live Demo ↗',
+        'Calorie trackers fail on home-cooked meals—forcing manual weighing instead of matching actual pantry brands.',
+    scopeSummary: 'Solo end-to-end · MVVM + Provider · 153 automated tests',
+    quickDemoHint: 'Open live demo',
     engineeringHighlights: [
       EngineeringHighlight(
         title: '3-Mode Pantry Scanning',
         detail:
-            'Barcode lookup (Open Food Facts v2 + Gemini), package photo recognition, and nutrition-label OCR.',
+            'Barcode lookup (Open Food Facts v2 + Gemini), package recognition, and nutrition-label OCR.',
       ),
       EngineeringHighlight(
         title: 'Pantry-Matched Vision & Score',
         detail:
-            'Gemini Vision cross-references your saved pantry brands and scores every meal 0–100 with transparent feedback.',
+            'Gemini Vision cross-checks saved pantry brands and scores each meal 0–100 with clear feedback.',
       ),
       EngineeringHighlight(
         title: 'Zero-Key Edge Proxy',
         detail:
-            'Cloudflare Worker backend with strict Origin CORS, host allowlists, 16 MB caps, and 30 req/min rate limits.',
+            'Cloudflare Worker proxy with strict Origin CORS, host allowlists, 16 MB caps, and 30 req/min limits.',
       ),
     ],
     techStack: [
@@ -186,29 +151,29 @@ abstract final class PortfolioCatalog {
   static const ProjectShowcase setPoint = ProjectShowcase(
     id: PortfolioSectionId.setpoint,
     projectIndexLabel: '02',
-    categoryTag: 'REALTIME GEOLOCATION & CLEAN ARCH',
-    architectureTag: 'CLEAN ARCH + BLoC',
+    categoryTag: 'Geolocation & BLoC architecture',
+    architectureTag: 'Clean Architecture + BLoC',
     title: 'SetPoint',
     subtitle: 'Amateur Racket-Sports Matchmaking App',
     problemStatement:
-        'Organizing local matches breaks down across chaotic group chats without real skill balancing, radius discovery, or open slot tracking.',
-    scopeSummary: 'Solo End-to-End · Clean Architecture + BLoC · 24 Automated Tests',
-    quickDemoHint: 'Launch Live Demo ↗',
+        'Local matches fall apart in group chats without skill balancing, radius discovery, or open slot tracking.',
+    scopeSummary: 'Solo end-to-end · Clean Architecture + BLoC · 24 automated tests',
+    quickDemoHint: 'Open live demo',
     engineeringHighlights: [
       EngineeringHighlight(
         title: 'Clean Architecture + BLoC',
         detail:
-            'Domain use cases and reactive BLoC state decoupled behind explicit typed Failure boundaries.',
+            'Domain use cases and reactive BLoC state isolated behind explicit typed Failure boundaries.',
       ),
       EngineeringHighlight(
         title: 'Geospatial Match Radar',
         detail:
-            'Haversine court distance filtering across Tennis and Padel with live surface, category, and radius queries.',
+            'Haversine distance filtering across Tennis and Padel by court surface, category, and radius.',
       ),
       EngineeringHighlight(
         title: 'Real-Time Slot Integrity',
         detail:
-            'Double-booking prevention and synchronized roster counts via hydrated local state streams.',
+            'Double-booking guards and live roster counts synced through hydrated local streams.',
       ),
     ],
     techStack: [
@@ -236,16 +201,4 @@ abstract final class PortfolioCatalog {
   );
 
   static const List<ProjectShowcase> projects = [nutriLens, setPoint];
-
-  /// All 8 bundled mobile screenshots curated for kinetic screen walls.
-  static const List<String> allGalleryScreenshots = [
-    'assets/images/nutrilens_dashboard.webp',
-    'assets/images/setpoint_map.webp',
-    'assets/images/nutrilens_scan.webp',
-    'assets/images/setpoint_feed.webp',
-    'assets/images/nutrilens_analysis.webp',
-    'assets/images/setpoint_filters.webp',
-    'assets/images/nutrilens_pantry.webp',
-    'assets/images/setpoint_match_doubles.webp',
-  ];
 }

@@ -4,26 +4,22 @@ import 'package:portfolio/core/theme/app_spacing.dart';
 import 'package:portfolio/core/theme/app_text_styles.dart';
 import 'package:portfolio/features/portfolio/data/portfolio_catalog.dart';
 import 'package:portfolio/features/portfolio/domain/entities/capability_row.dart';
-import 'package:portfolio/features/portfolio/domain/entities/portfolio_concept_id.dart';
-import 'package:portfolio/features/portfolio/presentation/widgets/common/wide_section_chevron.dart';
+import 'package:portfolio/features/portfolio/domain/entities/tech_brand.dart';
+import 'package:portfolio/features/portfolio/presentation/widgets/common/tech_brand_icon.dart';
 
-/// Act 2 (`#capabilities`): verified MatchUp Apple App Store 5.0★ client proof
-/// paired with 4 clean indexed capability rows (<= 580px content height on desktop).
+/// Act 2 (`#capabilities`): verified MatchUp Apple App Store 5.0 client proof,
+/// 4 streamlined 2-column capability rows, and minimal outlined platform badges.
 class CapabilitiesSection extends StatelessWidget {
   const CapabilitiesSection({
-    required this.concept,
     required this.isDesktop,
     required this.isWideDesktop,
     required this.sectionHeight,
-    required this.onChevronNext,
     super.key,
   });
 
-  final PortfolioConceptId concept;
   final bool isDesktop;
   final bool isWideDesktop;
   final double sectionHeight;
-  final VoidCallback onChevronNext;
 
   @override
   Widget build(BuildContext context) {
@@ -42,22 +38,15 @@ class CapabilitiesSection extends StatelessWidget {
             : AppSpacing.desktopRightPaddingCompact)
         : AppSpacing.mobileHorizontalPadding;
 
-    final proofRadius = switch (concept) {
-      PortfolioConceptId.editorialWall => 10.0,
-      PortfolioConceptId.swissGrid => 6.0,
-      PortfolioConceptId.kineticStage => 16.0,
-    };
-
-    final borderColor = concept == PortfolioConceptId.swissGrid
-        ? AppColors.swissGridBorder
-        : AppColors.borderHairline;
+    const proofRadius = 10.0;
+    const borderColor = AppColors.borderHairline;
 
     final content = Padding(
       padding: EdgeInsets.only(
         left: leftPadding,
         right: rightPadding,
-        top: isDesktop ? (isCompactDesktop ? 16.0 : 28.0) : 32.0,
-        bottom: isDesktop ? 8.0 : 24.0,
+        top: isDesktop ? (isCompactDesktop ? 16.0 : 24.0) : 32.0,
+        bottom: isDesktop ? (isCompactDesktop ? 16.0 : 24.0) : 32.0,
       ),
       child: Center(
         child: ConstrainedBox(
@@ -68,31 +57,30 @@ class CapabilitiesSection extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Upper Band: MatchUp Apple App Store 5.0★ Client Proof Strip
+              // Upper Band: MatchUp Apple App Store 5.0 Client Proof Strip
               _MatchUpProofBanner(
                 proof: PortfolioCatalog.matchUpProof,
                 isMobile: isMobile,
                 isCompactDesktop: isCompactDesktop,
                 borderRadius: proofRadius,
-                borderColor: borderColor,
               ),
-              SizedBox(height: isCompactDesktop ? 22.0 : 32.0),
+              SizedBox(height: isCompactDesktop ? 16.0 : 24.0),
               Semantics(
                 header: true,
                 child: Text(
                   PortfolioCatalog.capabilitiesSectionTitle,
                   style: AppTextStyles.sectionHeading(isMobile: isMobile)
-                      .copyWith(fontSize: isCompactDesktop ? 30.0 : null),
+                      .copyWith(fontSize: isCompactDesktop ? 28.0 : null),
                 ),
               ),
-              const SizedBox(height: 6.0),
+              const SizedBox(height: 8.0),
               Text(
                 PortfolioCatalog.capabilitiesSectionSubtitle,
                 style: AppTextStyles.bodyLead(isMobile: isMobile).copyWith(
-                  fontSize: isCompactDesktop ? 15.5 : null,
+                  fontSize: isCompactDesktop ? 15.0 : null,
                 ),
               ),
-              SizedBox(height: isCompactDesktop ? 16.0 : 22.0),
+              SizedBox(height: isCompactDesktop ? 12.0 : 16.0),
               Container(height: 1.0, color: borderColor),
               for (final row in PortfolioCatalog.capabilityRows)
                 _CapabilityLedgerRow(
@@ -101,6 +89,23 @@ class CapabilitiesSection extends StatelessWidget {
                   isCompactDesktop: isCompactDesktop,
                   borderColor: borderColor,
                 ),
+              SizedBox(height: isCompactDesktop ? 16.0 : 24.0),
+              Text(
+                'Core platforms & tooling',
+                style: AppTextStyles.labelSmall(
+                  color: AppColors.textMuted,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 12.0),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: [
+                  for (final item in PortfolioCatalog.profile.coreStackLogos)
+                    _OutlinedPlatformButton(item: item),
+                ],
+              ),
             ],
           ),
         ),
@@ -110,42 +115,11 @@ class CapabilitiesSection extends StatelessWidget {
     if (isDesktop) {
       return ConstrainedBox(
         constraints: BoxConstraints(minHeight: sectionHeight),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox.shrink(),
-            content,
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: Center(
-                child: WideSectionChevron(
-                  semanticLabel: 'Scroll to Contact & Resume options',
-                  onPressed: onChevronNext,
-                ),
-              ),
-            ),
-          ],
-        ),
+        child: Center(child: content),
       );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        content,
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: Center(
-            child: WideSectionChevron(
-              semanticLabel: 'Scroll to Contact section',
-              onPressed: onChevronNext,
-            ),
-          ),
-        ),
-      ],
-    );
+    return content;
   }
 }
 
@@ -155,14 +129,12 @@ class _MatchUpProofBanner extends StatelessWidget {
     required this.isMobile,
     required this.isCompactDesktop,
     required this.borderRadius,
-    required this.borderColor,
   });
 
   final ClientAppProof proof;
   final bool isMobile;
   final bool isCompactDesktop;
   final double borderRadius;
-  final Color borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -174,19 +146,19 @@ class _MatchUpProofBanner extends StatelessWidget {
           proof.badgeLabel,
           style: AppTextStyles.labelSmall(
             color: AppColors.accentEngineering,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w500,
             tabular: true,
           ),
         ),
-        const SizedBox(height: 6.0),
+        const SizedBox(height: 8.0),
         Text(
           proof.title,
           style: AppTextStyles.cardTitle(isMobile: isMobile).copyWith(
-            fontSize: isMobile ? 18.0 : (isCompactDesktop ? 18.5 : 20.0),
-            fontWeight: FontWeight.w700,
+            fontSize: isMobile ? 18.0 : (isCompactDesktop ? 18.0 : 20.0),
+            fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 6.0),
+        const SizedBox(height: 8.0),
         Text(
           proof.summary,
           style: AppTextStyles.bodyDefault(color: AppColors.textSecondary)
@@ -204,11 +176,11 @@ class _MatchUpProofBanner extends StatelessWidget {
           proof.platformsLine,
           style: AppTextStyles.labelSmall(
             color: AppColors.textPrimary,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
             tabular: true,
           ),
         ),
-        const SizedBox(height: 6.0),
+        const SizedBox(height: 8.0),
         Text(
           proof.stackLine,
           textAlign: isMobile ? TextAlign.start : TextAlign.end,
@@ -224,12 +196,12 @@ class _MatchUpProofBanner extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(
         horizontal: isMobile ? 16.0 : 24.0,
-        vertical: isCompactDesktop ? 14.0 : 18.0,
+        vertical: 16.0,
       ),
       decoration: BoxDecoration(
         color: AppColors.bgSurface,
         borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(color: borderColor, width: 1.0),
+        border: Border.all(color: AppColors.borderHairline, width: 1.0),
       ),
       child: isMobile
           ? Column(
@@ -280,13 +252,12 @@ class _CapabilityLedgerRowState extends State<_CapabilityLedgerRow> {
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 140),
+        duration: AppMotion.interactive,
+        curve: AppMotion.standardCurve,
         width: double.infinity,
         padding: EdgeInsets.symmetric(
           horizontal: widget.isMobile ? 4.0 : 12.0,
-          vertical: widget.isMobile
-              ? 14.0
-              : (widget.isCompactDesktop ? 11.0 : 14.0),
+          vertical: 12.0,
         ),
         decoration: BoxDecoration(
           color: _hovered ? AppColors.bgSurface : Colors.transparent,
@@ -300,15 +271,17 @@ class _CapabilityLedgerRowState extends State<_CapabilityLedgerRow> {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        row.indexLabel,
-                        style: AppTextStyles.labelSmall(
-                          color: AppColors.accentEngineering,
-                          fontWeight: FontWeight.w700,
-                          tabular: true,
+                      SizedBox(
+                        width: 28.0,
+                        child: Text(
+                          row.indexLabel,
+                          style: AppTextStyles.labelSmall(
+                            color: AppColors.accentEngineering,
+                            fontWeight: FontWeight.w500,
+                            tabular: true,
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 10.0),
                       Expanded(
                         child: Text(
                           row.title,
@@ -325,47 +298,41 @@ class _CapabilityLedgerRowState extends State<_CapabilityLedgerRow> {
                       color: AppColors.textSecondary,
                     ).copyWith(fontSize: 14.0),
                   ),
-                  const SizedBox(height: 6.0),
-                  Text(
-                    row.techSpecs,
-                    style: AppTextStyles.labelSmall(
-                      color: AppColors.textMuted,
-                      tabular: true,
-                    ),
-                  ),
                 ],
               )
             : Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
-                    flex: 28,
+                    flex: 32,
                     child: Row(
                       children: [
-                        Text(
-                          row.indexLabel,
-                          style: AppTextStyles.labelSmall(
-                            color: AppColors.accentEngineering,
-                            fontWeight: FontWeight.w700,
-                            tabular: true,
+                        SizedBox(
+                          width: 28.0,
+                          child: Text(
+                            row.indexLabel,
+                            style: AppTextStyles.labelSmall(
+                              color: AppColors.accentEngineering,
+                              fontWeight: FontWeight.w500,
+                              tabular: true,
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 12.0),
                         Expanded(
                           child: Text(
                             row.title,
                             style: AppTextStyles.cardTitle(isMobile: false)
                                 .copyWith(
-                              fontSize: widget.isCompactDesktop ? 15.5 : 17.0,
+                              fontSize: widget.isCompactDesktop ? 15.0 : 16.0,
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 16.0),
+                  const SizedBox(width: 20.0),
                   Expanded(
-                    flex: 44,
+                    flex: 68,
                     child: Text(
                       row.description,
                       style: AppTextStyles.bodyDefault(
@@ -373,20 +340,63 @@ class _CapabilityLedgerRowState extends State<_CapabilityLedgerRow> {
                       ).copyWith(fontSize: 14.0),
                     ),
                   ),
-                  const SizedBox(width: 16.0),
-                  Expanded(
-                    flex: 28,
-                    child: Text(
-                      row.techSpecs,
-                      textAlign: TextAlign.end,
-                      style: AppTextStyles.labelSmall(
-                        color: AppColors.textMuted,
-                        tabular: true,
-                      ),
-                    ),
-                  ),
                 ],
               ),
+      ),
+    );
+  }
+}
+
+class _OutlinedPlatformButton extends StatefulWidget {
+  const _OutlinedPlatformButton({required this.item});
+
+  final TechBrandChipItem item;
+
+  @override
+  State<_OutlinedPlatformButton> createState() =>
+      _OutlinedPlatformButtonState();
+}
+
+class _OutlinedPlatformButtonState extends State<_OutlinedPlatformButton> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final borderColor =
+        _hovered ? AppColors.borderChipHover : AppColors.borderChip;
+    final iconColor = _hovered ? AppColors.textPrimary : AppColors.textSecondary;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedContainer(
+        duration: AppMotion.interactive,
+        curve: AppMotion.standardCurve,
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(8.0),
+          border: Border.all(color: borderColor, width: 1.0),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (widget.item.brand != null) ...[
+              ColorFiltered(
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                child: TechBrandIcon(brand: widget.item.brand!, size: 16.0),
+              ),
+              const SizedBox(width: 8.0),
+            ],
+            Text(
+              widget.item.label,
+              style: AppTextStyles.labelSmall(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

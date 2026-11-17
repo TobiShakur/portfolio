@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/core/theme/app_colors.dart';
+import 'package:portfolio/core/theme/app_spacing.dart';
 
 /// Direction of [WideSectionChevron].
 enum WideSectionChevronDirection { down, up }
@@ -35,7 +36,7 @@ class _WideSectionChevronState extends State<WideSectionChevron> {
     final active = _hovered || _focused;
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
     final dyShift = active && !reduceMotion
-        ? (widget.direction == WideSectionChevronDirection.down ? 3.0 : -3.0)
+        ? (widget.direction == WideSectionChevronDirection.down ? 4.0 : -4.0)
         : 0.0;
     final strokeColor = active ? AppColors.textPrimary : AppColors.textMuted;
 
@@ -72,10 +73,9 @@ class _WideSectionChevronState extends State<WideSectionChevron> {
                     : null,
               ),
               child: AnimatedContainer(
-                duration: reduceMotion
-                    ? Duration.zero
-                    : const Duration(milliseconds: 180),
-                curve: Curves.easeOutCubic,
+                duration:
+                    reduceMotion ? Duration.zero : AppMotion.interactive,
+                curve: AppMotion.standardCurve,
                 transform: Matrix4.translationValues(0.0, dyShift, 0.0),
                 child: CustomPaint(
                   size: const Size(56.0, 12.0),

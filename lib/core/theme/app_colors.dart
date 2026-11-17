@@ -1,35 +1,38 @@
 import 'package:flutter/material.dart';
 
-/// Centralized color tokens for the Dark Engineering design system.
+/// Centralized Ink color ramp & surgical role accents for the portfolio system.
 abstract final class AppColors {
-  static const Color bgCanvas = Color(0xFF080A0C);
-  static const Color bgSurface = Color(0xFF101318);
-  static const Color bgSurfaceElevated = Color(0xFF171C23);
+  static const Color sidebarBg = Color(0xFF07080D);
+  static const Color bgCanvas = Color(0xFF0B0D14);
+  static const Color canvasTransparent = Color(0x000B0D14);
+  static const Color bgSurface = Color(0xFF11141C);
+  static const Color bgSurfaceElevated = Color(0xFF1A1E28);
 
-  static const Color sidebarBg = Color(0xFF050608);
-  static const Color sidebarBorder = Color(0xFF303642);
+  static const Color sidebarBorder = Color(0x24EEF0F5);
   static const Color sidebarShadow = Color(0xA6000000);
 
-  static const Color bezelFrame = Color(0xFF14181F);
-  static const Color bezelSpecular = Color(0x24FFFFFF);
+  static const Color bezelFrame = Color(0xFF141822);
+  static const Color bezelSpecular = Color(0x24EEF0F5);
 
-  static const Color borderHairline = Color(0x14FFFFFF);
-  static const Color borderFocus = Color(0x38FFFFFF);
-  static const Color swissGridBorder = Color(0xFF262D38);
-  static const Color swissCellBorder = Color(0xFF1E242E);
+  static const Color borderHairline = Color(0x14EEF0F5);
+  static const Color borderChip = Color(0x24EEF0F5);
+  static const Color borderFocus = Color(0x2EEEF0F5);
+  static const Color borderChipHover = Color(0x47EEF0F5);
+  static const Color swissGridBorder = Color(0x24EEF0F5);
+  static const Color swissCellBorder = Color(0x14EEF0F5);
 
-  static const Color textPrimary = Color(0xFFF4F6F8);
-  static const Color textSecondary = Color(0xFF9AA4B2);
-  static const Color textMuted = Color(0xFF7A8594);
+  static const Color textPrimary = Color(0xFFEEF0F5);
+  static const Color textSecondary = Color(0xFFA3A9B8);
+  static const Color textMuted = Color(0xFF7A8296);
 
-  static const Color accentEngineering = Color(0xFF34D399);
+  static const Color accentEngineering = Color(0xFF4CC38A);
   static const Color accentNutriLens = Color(0xFFD2F07A);
   static const Color accentNutriLensDeep = Color(0xFF0C4E36);
   static const Color accentSetPoint = Color(0xFFC8E652);
   static const Color accentSetPointDeep = Color(0xFF229C80);
 
-  static const Color ctaInkOnAccent = Color(0xFF080A0C);
-  static const Color scrimHover = Color(0xB8080A0C);
+  static const Color ctaInkOnAccent = Color(0xFF07080D);
+  static const Color scrimHover = Color(0xB807080D);
 
   // NutriLens AI inner preview screen palette (derived from NutriLens app)
   static const Color nutriForestSlot = Color(0xFF185B47);

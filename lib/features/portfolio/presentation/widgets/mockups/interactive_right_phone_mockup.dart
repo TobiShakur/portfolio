@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:portfolio/core/theme/app_colors.dart';
+import 'package:portfolio/core/theme/app_spacing.dart';
 import 'package:portfolio/core/theme/app_text_styles.dart';
 import 'package:portfolio/features/portfolio/domain/entities/project_showcase.dart';
 import 'package:portfolio/features/portfolio/presentation/widgets/common/portfolio_action_button.dart';
@@ -25,7 +26,7 @@ class InteractiveRightPhoneMockup extends StatefulWidget {
     this.onScreenChanged,
   });
 
-  static const String ctaLabel = 'Launch Live Demo ↗';
+  static const String ctaLabel = 'Open live demo';
 
   final ProjectShowcase project;
   final double width;
@@ -62,12 +63,14 @@ class _InteractiveRightPhoneMockupState
   @override
   Widget build(BuildContext context) {
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
-    final duration =
-        reduceMotion ? Duration.zero : const Duration(milliseconds: 220);
+    final enableHoverOverlay =
+        MediaQuery.sizeOf(context).width >= AppSpacing.tablet;
+    final showOverlay = enableHoverOverlay && _showOverlay;
+    final duration = reduceMotion ? Duration.zero : AppMotion.hoverBlur;
 
     final mediaChild = PreviewMediaPlayer(
       project: widget.project,
-      isBlurred: _showOverlay,
+      isBlurred: showOverlay,
       reduceMotion: reduceMotion,
       previewAssetsOverride: widget.previewAssetsOverride,
       controlledIndex: widget.controlledIndex,
@@ -81,16 +84,20 @@ class _InteractiveRightPhoneMockupState
         label: '${widget.project.title}: ${InteractiveRightPhoneMockup.ctaLabel}',
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
-          onEnter: (_) {
-            if (!_isHovered) {
-              setState(() => _isHovered = true);
-            }
-          },
-          onExit: (_) {
-            if (_isHovered) {
-              setState(() => _isHovered = false);
-            }
-          },
+          onEnter: enableHoverOverlay
+              ? (_) {
+                  if (!_isHovered) {
+                    setState(() => _isHovered = true);
+                  }
+                }
+              : null,
+          onExit: enableHoverOverlay
+              ? (_) {
+                  if (_isHovered) {
+                    setState(() => _isHovered = false);
+                  }
+                }
+              : null,
           child: Focus(
             focusNode: _focusNode,
             onFocusChange: (focused) {
@@ -112,11 +119,11 @@ class _InteractiveRightPhoneMockupState
               child: IphoneBezelFrame(
                 width: widget.width,
                 ambientGlowColor: widget.project.accentColor,
-                showAmbientGlow: true,
+                showAmbientGlow: false,
                 child: TweenAnimationBuilder<double>(
-                  tween: Tween<double>(end: _showOverlay ? 1.0 : 0.0),
+                  tween: Tween<double>(end: showOverlay ? 1.0 : 0.0),
                   duration: duration,
-                  curve: Curves.easeOutCubic,
+                  curve: AppMotion.standardCurve,
                   child: mediaChild,
                   builder: (context, progress, child) {
                     final sigma = progress * 8.0;
@@ -148,14 +155,14 @@ class _InteractiveRightPhoneMockupState
                                 scale: 0.94 + (0.06 * progress),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0,
+                                    horizontal: 12.0,
                                   ),
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
-                                        horizontal: 14.0,
-                                        vertical: 10.0,
+                                        horizontal: 16.0,
+                                        vertical: 12.0,
                                       ),
                                       decoration: BoxDecoration(
                                         color: widget.project.accentColor,
@@ -174,12 +181,23 @@ class _InteractiveRightPhoneMockupState
                                           ),
                                         ],
                                       ),
-                                      child: Text(
-                                        InteractiveRightPhoneMockup.ctaLabel,
-                                        maxLines: 1,
-                                        style: AppTextStyles.buttonLabel(
-                                          color: AppColors.ctaInkOnAccent,
-                                        ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            InteractiveRightPhoneMockup.ctaLabel,
+                                            maxLines: 1,
+                                            style: AppTextStyles.buttonLabel(
+                                              color: AppColors.ctaInkOnAccent,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8.0),
+                                          const Icon(
+                                            Icons.north_east_rounded,
+                                            size: 15.0,
+                                            color: AppColors.ctaInkOnAccent,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),

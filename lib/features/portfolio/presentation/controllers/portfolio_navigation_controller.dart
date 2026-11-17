@@ -58,6 +58,17 @@ final class PortfolioNavigationController extends ChangeNotifier {
   bool _isProgrammaticScroll = false;
   bool _isSnapAnimating = false;
   bool _disposed = false;
+  bool _isBackgroundMotionPaused = false;
+
+  bool get isBackgroundMotionPaused => _isBackgroundMotionPaused;
+
+  void toggleBackgroundMotionPaused() {
+    if (_disposed) {
+      return;
+    }
+    _isBackgroundMotionPaused = !_isBackgroundMotionPaused;
+    notifyListeners();
+  }
 
   Timer? _copyResetTimer;
   Timer? _toastTimer;
@@ -281,7 +292,7 @@ final class PortfolioNavigationController extends ChangeNotifier {
           await scrollController.animateTo(
             targetOffset,
             duration: duration,
-            curve: Curves.easeOutCubic,
+            curve: AppMotion.standardCurve,
           );
         }
       }

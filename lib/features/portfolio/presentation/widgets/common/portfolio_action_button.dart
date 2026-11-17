@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/core/theme/app_colors.dart';
+import 'package:portfolio/core/theme/app_spacing.dart';
 import 'package:portfolio/core/theme/app_text_styles.dart';
 
 enum PortfolioButtonVariant {
@@ -45,8 +46,7 @@ class _PortfolioActionButtonState extends State<PortfolioActionButton> {
   Widget build(BuildContext context) {
     final active = _isHovered || _isFocused;
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
-    final duration =
-        reduceMotion ? Duration.zero : const Duration(milliseconds: 160);
+    final duration = reduceMotion ? Duration.zero : AppMotion.interactive;
 
     final Color background;
     final Color borderColor;
@@ -60,13 +60,13 @@ class _PortfolioActionButtonState extends State<PortfolioActionButton> {
         background = active ? const Color(0xFFFFFFFF) : AppColors.textPrimary;
         borderColor = active ? const Color(0xFFFFFFFF) : AppColors.textPrimary;
         foregroundColor = AppColors.ctaInkOnAccent;
-        radius = widget.borderRadiusOverride ?? 10.0;
+        radius = widget.borderRadiusOverride ?? 8.0;
       case PortfolioButtonVariant.secondary:
         background =
             active ? AppColors.bgSurfaceElevated : AppColors.bgSurface;
         borderColor = active ? AppColors.borderFocus : AppColors.borderHairline;
         foregroundColor = AppColors.textPrimary;
-        radius = widget.borderRadiusOverride ?? 10.0;
+        radius = widget.borderRadiusOverride ?? 8.0;
       case PortfolioButtonVariant.accentPill:
         final accent = widget.accentColor ?? AppColors.accentEngineering;
         background = active ? Color.lerp(accent, Colors.white, 0.12)! : accent;
@@ -95,14 +95,14 @@ class _PortfolioActionButtonState extends State<PortfolioActionButton> {
           onTap: widget.onPressed,
           child: AnimatedContainer(
             duration: duration,
-            curve: Curves.easeOutCubic,
+            curve: AppMotion.standardCurve,
             constraints: BoxConstraints(
               minHeight: widget.height,
               minWidth: 44.0,
             ),
             padding: EdgeInsets.symmetric(
               horizontal: widget.horizontalPadding,
-              vertical: 11.0,
+              vertical: 8.0,
             ),
             decoration: BoxDecoration(
               color: background,
@@ -111,15 +111,6 @@ class _PortfolioActionButtonState extends State<PortfolioActionButton> {
                 color: _isFocused ? focusRingColor : borderColor,
                 width: _isFocused ? 2.0 : 1.0,
               ),
-              boxShadow: _isFocused
-                  ? [
-                      BoxShadow(
-                        color: focusRingColor.withValues(alpha: 0.45),
-                        blurRadius: 0.0,
-                        spreadRadius: 2.0,
-                      ),
-                    ]
-                  : null,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
