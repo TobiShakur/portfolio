@@ -37,7 +37,7 @@ _flutter.buildConfig = {"engineRevision":"5a2a6a42cce67f965cf540fcecf616faca624a
 
 
 (function () {
-  var buildVersion = 'r9';
+  var buildVersion = 'r12';
   if (
     window._flutter &&
     _flutter.buildConfig &&
